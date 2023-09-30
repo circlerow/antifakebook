@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/shared/request.dart';
 
 abstract class UserRepository {
   Future<User> getUser(int id);
@@ -8,23 +11,22 @@ abstract class UserRepository {
 class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> getUser(int id) async {
-    // TODO: Implement getUser
-    // You can fetch the user data from a local database or a remote API here.
-    // For now, let's return a dummy user.
-    return User(id: id, name: 'Dummy User', email: 'dummy@example.com');
+    final response = await request('/users/$id', 'GET');
+    if (response.statusCode == 200) {
+      return User.fromMap(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user');
+    }
   }
 
   @override
   Future<List<User>> getAllUsers() async {
-    // TODO: Implement getAllUsers
-    // You can fetch all users data from a local database or a remote API here.
-    // For now, let's return a list of dummy users.
-    return List<User>.generate(
-      10,
-      (index) => User(
-          id: index,
-          name: 'Dummy User $index',
-          email: 'dummy$index@example.com'),
-    );
+    final response = await request('/users', 'GET');
+    if (response.statusCode == 200) {
+      Iterable list = json.decode(response.body);
+      return list.map((model) => User.fromMap(model)).toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
   }
 }
