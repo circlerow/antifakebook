@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/presentation/home.dart';
+
+import 'package:flutter_application/presentation/login/login.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
 
 void main() async {
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Home(),
+      debugShowCheckedModeBanner: false,
+      home: Login(),
     );
   }
 }
