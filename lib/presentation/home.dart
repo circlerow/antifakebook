@@ -11,13 +11,15 @@ class Home extends StatelessWidget {
         title: const Text('Home'),
       ),
       body: Center(
-        child: ElevatedButton(
-          child: const Text('Go to User Profile'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const UserProfile(userId: 1)),
-            );
+        child: TextFormField(
+          decoration: const InputDecoration(
+            hintText: 'Enter your email',
+          ),
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
           },
         ),
       ),
