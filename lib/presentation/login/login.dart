@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/presentation/home/home.dart';
+import 'package:flutter_application/presentation/signup/signUp.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key});
@@ -106,6 +107,14 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 },
                 child: Text('Đăng nhập'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => signUpPage()));
+                },
+                child: Text('Đăng ký'),
               ),
             ],
           ),
