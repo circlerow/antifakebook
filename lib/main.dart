@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/presentation/home.dart';
-import 'package:flutter_application/presentation/login.dart';
+
+import 'package:flutter_application/presentation/login/login.dart';
+import 'package:flutter_application/presentation/signup/signUp.dart';
+
 // import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
 
 void main() async {
-  // await dot_env.dotenv.load(fileName: '.env');
+  //await dot_env.dotenv.load();
   runApp(const MyApp());
 }
 
@@ -15,7 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
-    );
+        debugShowCheckedModeBanner: false,
+        //   home: Login(),
+        home: signUpPage());
   }
 }
