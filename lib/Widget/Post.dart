@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class PostScreen extends StatelessWidget {
   // This widget is the root of your application.
-  String userImage = "../assets/images/avatar.jpeg";
+  String userImage = 'assets/avatar.jpeg';
   String username, caption;
   String timeAgo = "time";
   String like = "1";
   String comments = "2";
   String shares = "3";
-  String imageURL = "../assets/images/content.jpeg";
+  String imageURL = 'assets/content.jpeg';
   PostScreen({super.key, required this.username, required this.caption});
 
   @override

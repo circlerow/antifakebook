@@ -11,6 +11,7 @@ class Home extends StatelessWidget {
       {"username": "test1", "caption": "caption1"},
       {"username": "test2", "caption": "caption2"}
     ];
+
     List<PostScreen> posts = data
         .map((json) =>
             PostScreen(username: json['username']!, caption: json['caption']!))
