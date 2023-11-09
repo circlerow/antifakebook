@@ -1,4 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/api/firebase_api.dart';
+import 'package:flutter_application/firebase_options.dart';
+import 'package:flutter_application/presentation/home/home.dart';
 
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:flutter_application/presentation/signup/signUp.dart';
@@ -7,11 +11,15 @@ import 'package:flutter_application/presentation/signup/signUp.dart';
 
 void main() async {
   //await dot_env.dotenv.load();
-  runApp(const MyApp());
+  await WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAPI().initNotifications();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // MyApp({super.key});
 
   // This widget is the root of your application.
   @override
