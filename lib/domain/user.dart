@@ -1,29 +1,52 @@
 class User {
-  final int id;
-  final String name;
-  final String email;
+  final String id;
+  final String username;
+  final DateTime created;
+  final String description;
+  final String avatar;
+  final String coverImage;
+  final String link;
+  final String address;
+  final String city;
+  final String country;
+  final String listing;
+  final String isFriend;
+  final String online;
+  final String coins;
 
   User({
     required this.id,
-    required this.name,
-    required this.email,
+    required this.username,
+    required this.created,
+    required this.description,
+    required this.avatar,
+    required this.coverImage,
+    required this.link,
+    required this.address,
+    required this.city,
+    required this.country,
+    required this.listing,
+    required this.isFriend,
+    required this.online,
+    required this.coins,
   });
 
-  // Named constructor that parses a Map object
-  factory User.fromMap(Map<String, dynamic> map) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
+      id: json['id'] ?? "",
+      username: json['username'] ?? "",
+      created: DateTime.parse(json['created'] ?? ""),
+      description: json['description'] ?? "",
+      avatar: json['avatar'] ?? "",
+      coverImage: json['cover_image'] ?? "",
+      link: json['link'] ?? "",
+      address: json['address'] ?? "",
+      city: json['city'] ?? "",
+      country: json['country'] ?? "",
+      listing: json['listing'] ?? "",
+      isFriend: json['is_friend'] ?? "",
+      online: json['online'] ?? "",
+      coins: json['coins'] ?? "",
     );
-  }
-
-  // Method that converts this object into a Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-    };
   }
 }

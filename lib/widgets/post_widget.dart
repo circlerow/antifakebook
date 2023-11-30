@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/models/post.dart';
+import 'package:flutter_application/domain/post.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
@@ -16,7 +18,7 @@ class PostWidget extends StatelessWidget {
           Row(
             children: <Widget>[
               CircleAvatar(
-                backgroundImage: AssetImage(post.profileImageUrl),
+                backgroundImage: NetworkImage(post.author.avatar),
                 radius: 20.0,
               ),
               SizedBox(width: 7.0),
@@ -24,18 +26,45 @@ class PostWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(post.username,
+                  Text(post.author.name,
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 17.0)),
                   SizedBox(height: 5.0),
-                  Text(post.time)
+                  Text(formatTimeDifference(post.created))
                 ],
               ),
             ],
           ),
           SizedBox(height: 20.0),
-          Text(post.content, style: TextStyle(fontSize: 15.0)),
+          RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              children: convertUrlsToTextSpans(post.described),
+            ),
+          ),
           SizedBox(height: 10.0),
+          Container(
+            width: double.infinity,
+            child: post.images.isNotEmpty
+                ? GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Số lượng ảnh trên một hàng
+                      mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
+                      crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
+                      childAspectRatio: 1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
+                    ),
+                    itemCount: post.images.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(
+                        post.images[index].url,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
+                : SizedBox.shrink(),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -43,13 +72,12 @@ class PostWidget extends StatelessWidget {
                 children: <Widget>[
                   Icon(FontAwesomeIcons.thumbsUp,
                       size: 15.0, color: Colors.blue),
-                  Text(' ${post.likes}'),
+                  Text(' ${post.feel}'),
                 ],
               ),
               Row(
                 children: <Widget>[
-                  Text('${post.comments} comments  •  '),
-                  Text('${post.shares} shares'),
+                  Text('${post.commentMark} comments  •  '),
                 ],
               ),
             ],
@@ -85,5 +113,72 @@ class PostWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String formatTimeDifference(String createdString) {
+    DateTime createdAt = DateTime.parse(createdString);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(createdAt);
+
+    if (difference.inMinutes < 1) {
+      return 'Vừa xong';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} giờ trước';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} ngày trước';
+    } else if (difference.inDays < 365) {
+      return '${difference.inDays} ngày trước';
+    } else {
+      return '${(difference.inDays / 365).floor()} năm trước';
+    }
+  }
+
+  List<TextSpan> convertUrlsToTextSpans(String text) {
+  List<TextSpan> textSpans = [];
+    RegExp urlRegex = RegExp(
+        r'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}');
+
+    Iterable<RegExpMatch> matches = urlRegex.allMatches(text);
+    int lastEnd = 0;
+
+    for (RegExpMatch match in matches) {
+      if (match.start > lastEnd) {
+        // Add non-URL text
+        textSpans.add(
+          TextSpan(
+            text: text.substring(lastEnd, match.start),
+            style: TextStyle(color: Colors.black),
+          ),
+        );
+      }
+
+      // Add URL text
+      textSpans.add(
+        TextSpan(
+          text: match.group(0),
+          style: TextStyle(color: Colors.blue),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              // Handle URL tap (open in browser or perform custom action)
+              // ignore: deprecated_member_use
+              await launch(match.group(0)!); // Open URL in browser when tapped
+            },
+        ),
+      );
+
+      lastEnd = match.end;
+    }
+
+    // Add any remaining non-URL text
+    if (lastEnd < text.length) {
+      textSpans.add(
+        TextSpan(
+          text: text.substring(lastEnd),
+          style: TextStyle(color: Colors.black),
+        ),
+      );
+    }
+
+    return textSpans;
   }
 }

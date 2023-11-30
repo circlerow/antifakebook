@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/auth_service.dart';
+import 'package:flutter_application/data/auth_repository.dart';
+import 'package:flutter_application/presentation/login/login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MenuTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+      final AuthService authService = new AuthService(authRepository: AuthRepositoryImpl());
+
     return SingleChildScrollView(
       child: Container(
           child: Column(
@@ -276,15 +281,24 @@ class MenuTab extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Icon(Icons.exit_to_app,
-                        size: 40.0, color: Colors.grey[700]),
-                    SizedBox(width: 10.0),
-                    Text('Logout', style: TextStyle(fontSize: 17.0)),
-                  ],
-                ),
+               GestureDetector(
+                    onTap: () async {
+                      await authService.logout();
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Icon(Icons.exit_to_app, size: 40.0, color: Colors.grey[700]),
+                        SizedBox(width: 10.0),
+                        Text('Logout', style: TextStyle(fontSize: 17.0)),
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
