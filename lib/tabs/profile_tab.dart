@@ -1,9 +1,57 @@
+import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/data/user_repository.dart';
+import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileTab extends StatelessWidget {
+class Profile extends StatefulWidget{
+  @override
+  ProfileTab createState() => ProfileTab();
+}
+
+
+class ProfileTab extends State<Profile> {
+
+  late User user;
+  late Future<void> _dataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _dataFuture = fetchData();
+  }
+
+  Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('user_id')!;
+    UserService userService = UserService(userRepository: UserRepositoryImpl());
+    User fetchedUser = await userService.getUserInfo(userId);
+    setState(() {
+      user = fetchedUser;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _dataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Dữ liệu đã tải xong, hiển thị giao diện
+          return buildContent(context);
+        } else if (snapshot.hasError) {
+          // Xử lý lỗi nếu có
+          return buildErrorWidget(snapshot.error.toString());
+        } else {
+          // Hiển thị màn hình loading trong quá trình tải dữ liệu
+          return buildLoadingWidget();
+        }
+      },
+    );
+  }
+
+  Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
@@ -24,11 +72,11 @@ class ProfileTab extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
+                    backgroundImage: NetworkImage(user.avatar.isNotEmpty ? user.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                     radius: 70.0,
                   ),
                   SizedBox(height: 20.0),
-                  Text('Mike Tyler',
+                  Text(user.username,
                       style: TextStyle(
                           fontSize: 24.0, fontWeight: FontWeight.bold)),
                   SizedBox(height: 20.0),
@@ -75,7 +123,7 @@ class ProfileTab extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.home, color: Colors.grey, size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('Lives in New York', style: TextStyle(fontSize: 16.0))
+                  Text('Lives in ' + user.address, style: TextStyle(fontSize: 16.0))
                 ],
               ),
               SizedBox(height: 15.0),
@@ -83,7 +131,7 @@ class ProfileTab extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.location_on, color: Colors.grey, size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('From New York', style: TextStyle(fontSize: 16.0))
+                  Text('From ' + user.country, style: TextStyle(fontSize: 16.0))
                 ],
               ),
               SizedBox(height: 15.0),
@@ -276,5 +324,23 @@ class ProfileTab extends StatelessWidget {
         SeparatorWidget()
       ],
     ));
+  }
+
+  Widget buildErrorWidget(String error) {
+    // Giao diện khi có lỗi
+    return Scaffold(
+      body: Center(
+        child: Text("Error: $error"),
+      ),
+    );
+  }
+
+  Widget buildLoadingWidget() {
+    // Giao diện loading
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

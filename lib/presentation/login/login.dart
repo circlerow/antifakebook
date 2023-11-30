@@ -1,12 +1,9 @@
-import 'dart:convert';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/api/firebase_api.dart';
+import 'package:flutter_application/data/auth_repository.dart';
+import 'package:flutter_application/domain/user_login.dart';
 import 'package:flutter_application/presentation/home/home.dart';
 import 'package:flutter_application/presentation/signup/signUp.dart';
-import 'package:flutter_application/shared/request.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_application/application/auth_service.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key});
@@ -34,6 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
+  final AuthService authService = new AuthService(authRepository: AuthRepositoryImpl());
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,35 +100,16 @@ class _LoginPageState extends State<LoginPage> {
                     String passWord = passWordController.text;
                     print("userName: $userName");
                     print("passWord: $passWord");
-                    var token = await FirebaseMessaging.instance.getToken();
-                    //
-                    Map<String, dynamic> data = {
-                      "username": userName,
-                      "password": passWord,
-                      "token": token.toString(),
-                    };
 
-                    print("body " + json.encode(data));
+                    bool isLogin = await authService.login(new UserLogin(email: userName, password: passWord, uuid: "string"));
 
-                    var headers = {
-                      'Content-Type': 'application/json',
-                      'Authorization': '',
-                    };
-                    try {
-                      var response = await http.post(
-                          Uri.parse('http://10.0.2.2:3333/login'),
-                          headers: headers,
-                          body: json.encode(data));
-                      print(response.statusCode);
-                    } catch (e) {
-                      print(e);
+                    if(isLogin){
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
                     }
-
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
                   }
                 },
                 child: Text('Đăng nhập'),

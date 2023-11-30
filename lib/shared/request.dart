@@ -2,15 +2,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<http.Response> requestLocal(String route, String method,
+Future<http.Response> request(String route, String method,
     {bool isToken = true, dynamic body}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
-  String baseUrl = dotenv.dotenv.get('localhost:3333');
+  String baseUrl = "https://it4788.catan.io.vn";
 
   http.Response response;
   var headers = {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
     'Authorization': isToken ? 'Bearer $token' : '',
   };
 
@@ -19,7 +19,6 @@ Future<http.Response> requestLocal(String route, String method,
       response = await http.get(Uri.parse('$baseUrl$route'), headers: headers);
       break;
     case 'POST':
-      print("hahahahah");
       response = await http.post(Uri.parse('$baseUrl$route'),
           headers: headers, body: body);
       break;

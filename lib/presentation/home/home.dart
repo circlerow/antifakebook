@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(controller: _tabController, children: [
         HomeTab(),
         FriendsTab(),
-        ProfileTab(),
+        Profile(),
         NotificationsTab(),
         MenuTab()
       ]),

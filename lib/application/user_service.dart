@@ -6,11 +6,9 @@ class UserService {
 
   UserService({required this.userRepository});
 
-  Future<User> getUser(int id) async {
-    return await userRepository.getUser(id);
-  }
-
-  Future<List<User>> getAllUsers() async {
-    return await userRepository.getAllUsers();
+  Future<User> getUserInfo(String userId) async {
+    final data =  await userRepository.getUserInfo(userId);
+    dynamic user = data['data'];
+    return User.fromJson(user);
   }
 }
