@@ -1,5 +1,12 @@
+import 'dart:convert';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/api/firebase_api.dart';
 import 'package:flutter_application/presentation/home/home.dart';
+import 'package:flutter_application/presentation/signup/signUp.dart';
+import 'package:flutter_application/shared/request.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   const Login({Key? key});
@@ -87,25 +94,53 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Kiểm tra và xác thực dữ liệu trước khi đăng nhập
                   if (_formKey.currentState!.validate()) {
                     String userName = userNameController.text;
                     String passWord = passWordController.text;
                     print("userName: $userName");
                     print("passWord: $passWord");
-
-                    // Thêm xử lý đăng nhập ở đây
-
+                    var token = await FirebaseMessaging.instance.getToken();
                     //
+                    Map<String, dynamic> data = {
+                      "username": userName,
+                      "password": passWord,
+                      "token": token.toString(),
+                    };
+
+                    print("body " + json.encode(data));
+
+                    var headers = {
+                      'Content-Type': 'application/json',
+                      'Authorization': '',
+                    };
+                    try {
+                      var response = await http.post(
+                          Uri.parse('http://10.0.2.2:3333/login'),
+                          headers: headers,
+                          body: json.encode(data));
+                      print(response.statusCode);
+                    } catch (e) {
+                      print(e);
+                    }
+
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   }
                 },
                 child: Text('Đăng nhập'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => signUpPage()));
+                },
+                child: Text('Đăng ký'),
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/shared/local.dart';
 import 'package:flutter_application/shared/request.dart';
 
 abstract class UserRepository {
