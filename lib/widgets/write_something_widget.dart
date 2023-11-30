@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/presentation/CreatePost.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
   @override
@@ -17,15 +18,24 @@ class WriteSomethingWidget extends StatelessWidget {
                   backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
                 ),
                 SizedBox(width: 7.0),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10.0),
-                  height: 70.0,
-                  width: MediaQuery.of(context).size.width / 1.4,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[400]!),
-                      borderRadius: BorderRadius.circular(30.0)),
-                  child: Text('Write something here...'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CreatePost()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    height: 50.0,
+                    width: MediaQuery.of(context).size.width / 1.4,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(width: 1.0, color: Colors.grey[400]!),
+                        borderRadius: BorderRadius.circular(30.0)),
+                    child: Text('What is on your mind?'),
+                  ),
                 )
               ],
             ),

@@ -24,7 +24,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Login());
+    return MaterialApp(
+        theme: ThemeData(
+          scaffoldBackgroundColor:
+              Colors.grey[200], // Thiết lập màu nền cho toàn bộ ứng dụng
+          // Các thiết lập theme khác
+        ),
+        debugShowCheckedModeBanner: false,
+        home: Login());
     //home: signUpPage());
   }
 }

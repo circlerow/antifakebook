@@ -13,8 +13,8 @@ class HomeTab extends StatelessWidget {
       child: Column(
         children: <Widget>[
           WriteSomethingWidget(),
-          SeparatorWidget(),
-          OnlineWidget(),
+          //SeparatorWidget(),
+          //OnlineWidget(),
           SeparatorWidget(),
           StoriesWidget(),
           for (Post post in posts)
