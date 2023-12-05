@@ -32,12 +32,13 @@ class HomeTabPage extends State<HomeTab> {
       "latitude": "1.0",
       "longitude": "1.0",
       "last_id": "0",
-      "index": "3",
+      "index": "0",
       "count": "20"
     });
 
     setState(() {
       posts = fetchedPosts;
+      print(posts);
     });
   }
 

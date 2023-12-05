@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
+import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/friend_repository.dart';
+import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
+import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 
 class FriendsTab extends StatefulWidget{
   @override
@@ -10,10 +14,14 @@ class FriendsTab extends StatefulWidget{
 
 class FriendsTabPage extends State<FriendsTab> {
 
+  FriendService friendService = FriendService(friendRepository: FriendRepositoryImpl());
+  UserService userService = UserService(userRepository: UserRepositoryImpl());
   late Future<void> _dataFuture;
   late List<Friend> friends = [];
   late List<Friend> friendSuggesteds = [];
   late String total;
+  List<bool> isFriendRequestSent = List.filled(1000, false);
+  List<bool> isFriendList = List.filled(1000, false);
 
   @override
   void initState() {
@@ -22,7 +30,6 @@ class FriendsTabPage extends State<FriendsTab> {
   }
 
   Future<void> fetchData() async {
-    FriendService friendService = FriendService(friendRepository: FriendRepositoryImpl());
     Map<String, dynamic> fetchedPosts = await friendService.getRequestedFriends({
       "index": "0",
       "count": "5"
@@ -118,9 +125,20 @@ class FriendsTabPage extends State<FriendsTab> {
                     children: [
                       Row(
                         children: <Widget>[
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
-                            radius: 40.0,
+                          GestureDetector(
+                            onTap: () async {
+                              User res = await userService.getUserInfo(friend.id);
+                              print(res.isFriend);
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
+                              );
+                            },
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                              radius: 40.0,
+                            ),
                           ),
                           SizedBox(width: 20.0),
                           Column(
@@ -135,27 +153,49 @@ class FriendsTabPage extends State<FriendsTab> {
                               SizedBox(height: 15.0),
                               Row(
                                 children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 35.0, vertical: 10.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                    child: Text('Chấp nhận',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 15.0)),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 35.0, vertical: 10.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                    child: Text('Xoá',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 15.0)),
-                                  ),
+                                  if (!isFriendList[int.tryParse(friend.id)!])
+                                    Row(
+                                      children: <Widget>[
+                                        GestureDetector(
+                                          onTap: () async {
+                                            bool sendRequest = await friendService.setAcceptFriend(friend.id,"1");
+                                            if(sendRequest){
+                                              setState(() {
+                                                isFriendList[int.tryParse(friend.id)!] = true;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.circular(5.0),
+                                            ),
+                                            child: Text(
+                                              'Xác nhận',
+                                              style: TextStyle(color: Colors.white, fontSize: 15.0),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(5.0),
+                                          ),
+                                          child: Text(
+                                            'Xoá',
+                                            style: TextStyle(color: Colors.black, fontSize: 15.0),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  else
+                                    Text(
+                                      'Lời mời được chấp nhận',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
                                 ],
                               )
                             ],
@@ -178,9 +218,21 @@ class FriendsTabPage extends State<FriendsTab> {
                     children: [
                       Row(
                         children: <Widget>[
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
-                            radius: 40.0,
+                          GestureDetector(
+                            onTap: () async {
+                              print(friend.id);
+                              User res = await userService.getUserInfo(friend.id);
+                              print(res.isFriend);
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
+                              );
+                            },
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                              radius: 40.0,
+                            ),
                           ),
                           SizedBox(width: 20.0),
                           Column(
@@ -195,27 +247,49 @@ class FriendsTabPage extends State<FriendsTab> {
                               SizedBox(height: 15.0),
                               Row(
                                 children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 35.0, vertical: 10.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                    child: Text('Thêm bạn bè',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 15.0)),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 35.0, vertical: 10.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                    child: Text('Gỡ',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 15.0)),
-                                  ),
+                                  if (!isFriendRequestSent[int.tryParse(friend.id)!])
+                                    Row(
+                                      children: <Widget>[
+                                        GestureDetector(
+                                          onTap: () async {
+                                            bool sendRequest = await friendService.setRequestFriend(friend.id);
+                                            if(sendRequest){
+                                              setState(() {
+                                                isFriendRequestSent[int.tryParse(friend.id)!] = true;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius: BorderRadius.circular(5.0),
+                                            ),
+                                            child: Text(
+                                              'Thêm bạn bè',
+                                              style: TextStyle(color: Colors.white, fontSize: 15.0),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.0),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(5.0),
+                                          ),
+                                          child: Text(
+                                            'Gỡ',
+                                            style: TextStyle(color: Colors.black, fontSize: 15.0),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  else
+                                    Text(
+                                      'Đã gửi lời mời kết bạn',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
                                 ],
                               )
                             ],

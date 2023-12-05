@@ -9,7 +9,7 @@ abstract class UserRepository {
 class UserRepositoryImpl implements UserRepository {
   @override
   Future<dynamic> getUserInfo(String userId) async {
-    final http.Response response = await request('/get_user_info', 'POST', isToken: true, body: jsonEncode({"id" : userId}));
+    final http.Response response = await request('/get_user_info', 'POST', isToken: true, body: {"user_id" : userId});
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }
