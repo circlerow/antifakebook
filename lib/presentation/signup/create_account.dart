@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/domain/user_signup.dart';
+import 'package:flutter_application/domain/verify_code.dart';
 
 import '../../application/auth_service.dart';
 import '../../data/auth_repository.dart';
 import 'name_and_avatar.dart';
+import 'verify_code.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -146,7 +148,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const NameAndAvatarScreen()),
+                                    const VerifyCodeScreen()),
+                          );
+                        }
+                        if (!isSignup) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text(
+                                  'Email đã được sử dụng, vui lòng sử dụng email khác'),
+                              backgroundColor:
+                                  Colors.red, // Màu nền của SnackBar
+                              action: SnackBarAction(
+                                label: 'Đóng',
+                                onPressed: () {
+                                  // Xử lý khi nút "Đóng" được nhấn
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                },
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.only(
+                                  bottom: 50,
+                                  left: 20,
+                                  right: 20), // Điều chỉnh vị trí xuất hiện
+                            ),
                           );
                         }
                       }
