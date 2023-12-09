@@ -1,16 +1,19 @@
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/domain/user_login.dart';
 import 'package:flutter_application/presentation/home/home.dart';
-import 'package:flutter_application/presentation/signup/signUp.dart';
 import 'package:flutter_application/application/auth_service.dart';
 
+import '../signup/create_account.dart';
+
 class Login extends StatelessWidget {
-  const Login({Key? key});
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Login',
       home: LoginPage(title: 'Login'),
@@ -19,7 +22,7 @@ class Login extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key, required this.title});
+  const LoginPage({super.key, required this.title});
 
   final String title;
 
@@ -31,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
-  final AuthService authService = new AuthService(authRepository: AuthRepositoryImpl());
-
+  final AuthService authService =
+      AuthService(authRepository: AuthRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 48.0,
                   bottom: 48.0,
                 ),
@@ -58,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: TextFormField(
                   controller: userNameController,
@@ -68,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Tên đăng nhập',
                     border: OutlineInputBorder(),
                   ),
@@ -86,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Mật khẩu',
                     border: OutlineInputBorder(),
                   ),
@@ -101,26 +104,27 @@ class _LoginPageState extends State<LoginPage> {
                     print("userName: $userName");
                     print("passWord: $passWord");
 
-                    bool isLogin = await authService.login(new UserLogin(email: userName, password: passWord, uuid: "string"));
+                    bool isLogin = await authService.login(UserLogin(
+                        email: userName, password: passWord, uuid: "string"));
 
-                    if(isLogin){
+                    if (isLogin) {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => const HomePage()),
                       );
                     }
                   }
                 },
-                child: Text('Đăng nhập'),
+                child: const Text('Đăng nhập'),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => signUpPage()));
+                      MaterialPageRoute(builder: (context) => RegisterScreen()));
                 },
-                child: Text('Đăng ký'),
+                child: const Text('Đăng ký'),
               ),
             ],
           ),
