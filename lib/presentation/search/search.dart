@@ -17,6 +17,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   late List<dynamic> searchSavedData;
+  bool isSearching = false;
+  late List<dynamic> searchData = [];
 
   @override
   void initState() {
@@ -59,16 +61,15 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-
-
   Future<void> search(String searchContext) async {
     try {
       SearchService searchService =
           SearchService(searchRepository: SearchRepositoryImpl());
       final response = await searchService.search(searchContext);
-      print(response);
-      var searchData = response.toList();
-      print(searchData[0]);
+      searchData = response.toList();
+      setState(() {
+        isSearching = true;
+      });
     } catch (error) {
       print(error);
     }
@@ -132,7 +133,19 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
+        children: [
+          buildMainContent(),
+          buildSearchResults(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMainContent() {
+    return Visibility(
+      visible: !isSearching,
+      child: Column(
         children: [
           Padding(
             padding:
@@ -153,7 +166,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onTap: () {
                     deleteAll();
                     setState(() {
-                    searchSavedData.clear();
+                      searchSavedData.clear();
                     });
                   },
                   child: const Text(
@@ -169,40 +182,88 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           Expanded(
-              child: ListView.builder(
-            itemCount: searchSavedData.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Row(
-                  children: [
-                    const Icon(Icons.access_time_outlined),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        searchSavedData[index].keyword,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+            child: ListView.builder(
+              itemCount: searchSavedData.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Row(
+                    children: [
+                      const Icon(Icons.access_time_outlined),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          searchSavedData[index].keyword,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          deleteId(searchSavedData[index].id);
-                          searchSavedData.removeAt(index);
-                        });
-                      },
-                      child: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-              );
-            },
-          )),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            deleteId(searchSavedData[index].id);
+                            searchSavedData.removeAt(index);
+                          });
+                        },
+                        child: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget buildSearchResults() {
+    return Visibility(
+      visible: isSearching,
+      child: Column(
+        children: [
+          const Text('Search Results'),
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchData.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(searchData[index].keyword),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SearchResultsScreen extends StatelessWidget {
+  final List<dynamic> searchData;
+
+  const SearchResultsScreen({Key? key, required this.searchData})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text('Search Results'),
+        Expanded(
+          child: ListView.builder(
+            itemCount: searchData.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(searchData[index].keyword),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
