@@ -5,7 +5,6 @@ import 'package:flutter_application/firebase_options.dart';
 import 'package:flutter_application/presentation/home/home.dart';
 
 import 'package:flutter_application/presentation/login/login.dart';
-import 'package:flutter_application/presentation/signup/signUp.dart';
 
 // import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
 

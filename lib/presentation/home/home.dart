@@ -7,6 +7,8 @@ import 'package:flutter_application/tabs/menu_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../search/search.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -45,11 +47,25 @@ class _HomePageState extends State<HomePage>
                         fontWeight: FontWeight.bold)),
               ],
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-              Icon(Icons.search, color: Colors.black),
-              SizedBox(width: 15.0),
-              Icon(FontAwesomeIcons.facebookMessenger, color: Colors.black)
-            ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    // Chuyển đến trang tìm kiếm khi ấn vào biểu tượng tìm kiếm
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                    );
+                  },
+                  child: Icon(Icons.search, color: Colors.black),
+                ),
+                SizedBox(width: 15.0),
+                Icon(Icons.message,
+                    color: Colors
+                        .black), // Thay thế FontAwesomeIcons.facebookMessenger bằng Icon thông thường
+              ],
+            ),
           ],
         ),
         backgroundColor: Colors.white,
