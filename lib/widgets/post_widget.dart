@@ -21,15 +21,15 @@ class PostWidget extends StatelessWidget {
                 backgroundImage: NetworkImage(post.author.avatar),
                 radius: 20.0,
               ),
-              SizedBox(width: 7.0),
+              const SizedBox(width: 7.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(post.author.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 17.0)),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   Text(formatTimeDifference(post.created))
                 ],
               ),
@@ -48,12 +48,14 @@ class PostWidget extends StatelessWidget {
             child: post.images.isNotEmpty
                 ? GridView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Số lượng ảnh trên một hàng
                       mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
                       crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
-                      childAspectRatio: 1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
+                      childAspectRatio:
+                          1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
                     ),
                     itemCount: post.images.length,
                     itemBuilder: (context, index) {
@@ -63,7 +65,7 @@ class PostWidget extends StatelessWidget {
                       );
                     },
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,8 +84,8 @@ class PostWidget extends StatelessWidget {
               ),
             ],
           ),
-          Divider(height: 30.0),
-          Row(
+          const Divider(height: 30.0),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -91,21 +93,21 @@ class PostWidget extends StatelessWidget {
                 children: <Widget>[
                   Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Like', style: TextStyle(fontSize: 14.0)),
+                  Text('Thích', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.commentAlt, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Comment', style: TextStyle(fontSize: 14.0)),
+                  Text('Bình luận', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.share, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                  Text('Chia sẻ', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
             ],
@@ -134,7 +136,7 @@ class PostWidget extends StatelessWidget {
   }
 
   List<TextSpan> convertUrlsToTextSpans(String text) {
-  List<TextSpan> textSpans = [];
+    List<TextSpan> textSpans = [];
     RegExp urlRegex = RegExp(
         r'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}');
 

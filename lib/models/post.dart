@@ -17,7 +17,7 @@ class Post {
       required this.shares});
 }
 
-List<Post> posts = [
+List<Post> Mockposts = [
   new Post(
       profileImageUrl: 'assets/Sam Wilson.jpg',
       username: 'Sam Wilson',

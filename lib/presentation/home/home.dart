@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
+  Image img = Image.asset('asset/img/nav/topHome.png');
 }
 
 class _HomePageState extends State<HomePage>
@@ -38,18 +39,17 @@ class _HomePageState extends State<HomePage>
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text('facebook',
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 27.0,
-                        fontWeight: FontWeight.bold)),
+                Image.asset('assets/img/nav/topHome.png',
+                    width: 120.0, height: 120.0),
               ],
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-              Icon(Icons.search, color: Colors.black),
-              SizedBox(width: 15.0),
-              Icon(FontAwesomeIcons.facebookMessenger, color: Colors.black)
-            ]),
+            const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Icon(Icons.search, color: Colors.black),
+                  SizedBox(width: 15.0),
+                  Icon(FontAwesomeIcons.facebookMessenger, color: Colors.black)
+                ]),
           ],
         ),
         backgroundColor: Colors.white,
@@ -60,11 +60,21 @@ class _HomePageState extends State<HomePage>
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.blueAccent,
           tabs: [
-            Tab(icon: Icon(Icons.home, size: 30.0)),
-            Tab(icon: Icon(Icons.people, size: 30.0)),
-            Tab(icon: Icon(Icons.account_circle, size: 30.0)),
-            Tab(icon: Icon(Icons.notifications, size: 30.0)),
-            Tab(icon: Icon(Icons.menu, size: 30.0))
+            Tab(
+                child: Image.asset('assets/img/nav/home.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/friends.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/profile.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/noti.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/menu.png',
+                    width: 20.0, height: 20.0))
           ],
         ),
       ),

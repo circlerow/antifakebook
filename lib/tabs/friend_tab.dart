@@ -3,13 +3,12 @@ import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 
-class FriendsTab extends StatefulWidget{
+class FriendsTab extends StatefulWidget {
   @override
   FriendsTabPage createState() => FriendsTabPage();
 }
 
 class FriendsTabPage extends State<FriendsTab> {
-
   late Future<void> _dataFuture;
   late List<Friend> friends = [];
   late List<Friend> friendSuggesteds = [];
@@ -22,16 +21,13 @@ class FriendsTabPage extends State<FriendsTab> {
   }
 
   Future<void> fetchData() async {
-    FriendService friendService = FriendService(friendRepository: FriendRepositoryImpl());
-    Map<String, dynamic> fetchedPosts = await friendService.getRequestedFriends({
-      "index": "0",
-      "count": "5"
-    });
+    FriendService friendService =
+        FriendService(friendRepository: FriendRepositoryImpl());
+    Map<String, dynamic> fetchedPosts =
+        await friendService.getRequestedFriends({"index": "0", "count": "5"});
 
-    List<Friend> fetchFriendSuggested = await friendService.getSuggestedFriends({
-      "index": "0",
-      "count": "10"
-    });
+    List<Friend> fetchFriendSuggested =
+        await friendService.getSuggestedFriends({"index": "0", "count": "10"});
 
     setState(() {
       friends = fetchedPosts['friends'];
@@ -58,7 +54,6 @@ class FriendsTabPage extends State<FriendsTab> {
       },
     );
   }
-
 
   Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
@@ -119,7 +114,10 @@ class FriendsTabPage extends State<FriendsTab> {
                       Row(
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                            backgroundImage: NetworkImage(friend
+                                    .avatar.isNotEmpty
+                                ? friend.avatar
+                                : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                             radius: 40.0,
                           ),
                           SizedBox(width: 20.0),
@@ -129,8 +127,9 @@ class FriendsTabPage extends State<FriendsTab> {
                             children: <Widget>[
                               Text(
                                 friend.username,
-                                style:
-                                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 15.0),
                               Row(
@@ -139,11 +138,13 @@ class FriendsTabPage extends State<FriendsTab> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 35.0, vertical: 10.0),
                                     decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5.0)),
+                                        color: Color.fromARGB(255, 33, 37, 243),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
                                     child: Text('Chấp nhận',
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 15.0)),
+                                            color: Colors.white,
+                                            fontSize: 15.0)),
                                   ),
                                   SizedBox(width: 10.0),
                                   Container(
@@ -151,10 +152,12 @@ class FriendsTabPage extends State<FriendsTab> {
                                         horizontal: 35.0, vertical: 10.0),
                                     decoration: BoxDecoration(
                                         color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(5.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
                                     child: Text('Xoá',
                                         style: TextStyle(
-                                            color: Colors.black, fontSize: 15.0)),
+                                            color: Colors.black,
+                                            fontSize: 15.0)),
                                   ),
                                 ],
                               )
@@ -179,7 +182,10 @@ class FriendsTabPage extends State<FriendsTab> {
                       Row(
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                            backgroundImage: NetworkImage(friend
+                                    .avatar.isNotEmpty
+                                ? friend.avatar
+                                : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                             radius: 40.0,
                           ),
                           SizedBox(width: 20.0),
@@ -188,9 +194,12 @@ class FriendsTabPage extends State<FriendsTab> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                friend.username.isNotEmpty ? friend.username : "(No Name)",
-                                style:
-                                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                friend.username.isNotEmpty
+                                    ? friend.username
+                                    : "(No Name)",
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 15.0),
                               Row(
@@ -199,11 +208,13 @@ class FriendsTabPage extends State<FriendsTab> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 35.0, vertical: 10.0),
                                     decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5.0)),
+                                        color: Color.fromARGB(255, 33, 37, 243),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
                                     child: Text('Thêm bạn bè',
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 15.0)),
+                                            color: Colors.white,
+                                            fontSize: 15.0)),
                                   ),
                                   SizedBox(width: 10.0),
                                   Container(
@@ -211,10 +222,12 @@ class FriendsTabPage extends State<FriendsTab> {
                                         horizontal: 35.0, vertical: 10.0),
                                     decoration: BoxDecoration(
                                         color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(5.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
                                     child: Text('Gỡ',
                                         style: TextStyle(
-                                            color: Colors.black, fontSize: 15.0)),
+                                            color: Colors.black,
+                                            fontSize: 15.0)),
                                   ),
                                 ],
                               )

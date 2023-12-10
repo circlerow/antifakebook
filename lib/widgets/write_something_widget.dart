@@ -8,16 +8,27 @@ class WriteSomethingWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 28.0,
-                  backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
+                const Stack(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 17.0,
+                      backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
+                    ),
+                    Positioned(
+                      right: 1.0,
+                      bottom: 1.0,
+                      child: CircleAvatar(
+                        radius: 6.0,
+                        backgroundColor: Colors.green,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 7.0),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -27,21 +38,38 @@ class WriteSomethingWidget extends StatelessWidget {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
-                    height: 50.0,
-                    width: MediaQuery.of(context).size.width / 1.4,
+                        horizontal: 10.0, vertical: 10.0),
+                    height: 40.0,
+                    width: MediaQuery.of(context).size.width / 1.5,
                     decoration: BoxDecoration(
-                        border:
-                            Border.all(width: 1.0, color: Colors.grey[400]!),
+                        color: Color.fromARGB(255, 234, 234, 234),
                         borderRadius: BorderRadius.circular(30.0)),
-                    child: Text('What is on your mind?'),
+                    child: Text(
+                      'What is on your mind?',
+                      style: TextStyle(
+                        fontSize: 16.0, // Kích thước chữ
+                        fontWeight: FontWeight.w400, // Chữ đậm
+                      ),
+                    ),
                   ),
-                )
+                ),
+                Container(
+                    child: Column(
+                  children: <Widget>[
+                    new Image.asset('assets/img/nav/photos.png',
+                        width: 30.0, height: 30.0),
+                    // SizedBox(height: 0),
+                    const Text(
+                      'photo',
+                      style: TextStyle(fontSize: 10),
+                    )
+                  ],
+                )),
               ],
             ),
           ),
-          Divider(),
-          Container(
+          //Divider(),
+          /*Container(
             margin: EdgeInsets.symmetric(vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -83,8 +111,7 @@ class WriteSomethingWidget extends StatelessWidget {
                   ],
                 ),
                 Container(
-                    height: 20,
-                    child: VerticalDivider(color: Colors.grey[600])),
+                    height: 5, child: VerticalDivider(color: Colors.grey[600])),
                 Row(
                   children: <Widget>[
                     Icon(
@@ -104,7 +131,7 @@ class WriteSomethingWidget extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ) */
         ],
       ),
     );

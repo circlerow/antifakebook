@@ -8,13 +8,12 @@ import 'package:flutter_application/widgets/stories_widget.dart';
 import 'package:flutter_application/widgets/online_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomeTab extends StatefulWidget{
+class HomeTab extends StatefulWidget {
   @override
   HomeTabPage createState() => HomeTabPage();
 }
 
 class HomeTabPage extends State<HomeTab> {
-  
   List<Post> posts = [];
 
   @override
@@ -35,9 +34,10 @@ class HomeTabPage extends State<HomeTab> {
       "index": "3",
       "count": "20"
     });
-
+    print(" DATA = " + fetchedPosts.toString());
     setState(() {
-      posts = fetchedPosts;
+      // posts = fetchedPosts;
+      posts = posts;
     });
   }
 
@@ -47,8 +47,8 @@ class HomeTabPage extends State<HomeTab> {
       child: Column(
         children: <Widget>[
           WriteSomethingWidget(),
-          //SeparatorWidget(),
-          //OnlineWidget(),
+          // SeparatorWidget(),
+          // OnlineWidget(),
           SeparatorWidget(),
           StoriesWidget(),
           for (Post post in posts)

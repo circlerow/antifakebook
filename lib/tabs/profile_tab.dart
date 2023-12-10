@@ -1,18 +1,17 @@
 import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/presentation/profile/option_profile.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatefulWidget{
+class Profile extends StatefulWidget {
   @override
   ProfileTab createState() => ProfileTab();
 }
 
-
 class ProfileTab extends State<Profile> {
-
   late User user;
   late Future<void> _dataFuture;
 
@@ -51,45 +50,130 @@ class ProfileTab extends State<Profile> {
     );
   }
 
+  void _showPopupBackGround(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Ảnh Bìa'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () {
+                // Hành động khi nhấn vào "Xem ảnh bìa"
+                Navigator.of(context).pop();
+                // Thêm hành động của bạn ở đây, ví dụ: điều hướng đến trang xem ảnh bìa
+              },
+              child: Text('Xem ảnh bìa'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                // Hành động khi nhấn vào "Tải ảnh bìa lên"
+                Navigator.of(context).pop();
+                // Thêm hành động của bạn ở đây, ví dụ: mở màn hình để tải ảnh lên
+              },
+              child: Text('Tải ảnh bìa lên'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPopupAvatar(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Ảnh đại diện'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () {
+                // Hành động khi nhấn vào "Xem ảnh bìa"
+                Navigator.of(context).pop();
+                // Thêm hành động của bạn ở đây, ví dụ: điều hướng đến trang xem ảnh bìa
+              },
+              child: Text('Xem ảnh đại diện'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                // Hành động khi nhấn vào "Tải ảnh bìa lên"
+                Navigator.of(context).pop();
+                // Thêm hành động của bạn ở đây, ví dụ: mở màn hình để tải ảnh lên
+              },
+              child: Text('Tải ảnh lên'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
       children: <Widget>[
         Container(
-          height: 360.0,
+          height: 330.0,
           child: Stack(
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-                height: 180.0,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/cover.jpg'),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(10.0)),
+              GestureDetector(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 0.0, vertical: 0.0),
+                  height: 180.0,
+                  decoration: BoxDecoration(
+                      image: const DecorationImage(
+                          image: AssetImage('assets/cover.jpg'),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.circular(00.0)),
+                ),
+                onTap: () {
+                  _showPopupBackGround(context);
+                },
+              ),
+              Positioned(
+                left: 20.0,
+                top: 70.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 75.0,
+                        child: GestureDetector(
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(user.avatar.isNotEmpty
+                                ? user.avatar
+                                : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                            radius: 70.0,
+                          ),
+                          onTap: () {
+                            print("press");
+                            _showPopupAvatar(context);
+                          },
+                        )),
+                    Text(user.username,
+                        style: const TextStyle(
+                            fontSize: 24.0, fontWeight: FontWeight.bold)),
+                    Text("tieu su",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400)),
+                  ],
+                ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(user.avatar.isNotEmpty ? user.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
-                    radius: 70.0,
-                  ),
-                  SizedBox(height: 20.0),
-                  Text(user.username,
-                      style: TextStyle(
-                          fontSize: 24.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
                         height: 40.0,
-                        width: MediaQuery.of(context).size.width - 80,
+                        width: MediaQuery.of(context).size.width / 8 * 6.5,
                         decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: const Color.fromARGB(255, 33, 40, 243),
                             borderRadius: BorderRadius.circular(5.0)),
-                        child: Center(
+                        child: const Center(
                             child: Text('Add to Story',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -98,7 +182,7 @@ class ProfileTab extends State<Profile> {
                       ),
                       Container(
                         height: 40.0,
-                        width: 45.0,
+                        width: MediaQuery.of(context).size.width / 8 * 1,
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(5.0)),
@@ -107,7 +191,7 @@ class ProfileTab extends State<Profile> {
                     ],
                   )
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -121,17 +205,23 @@ class ProfileTab extends State<Profile> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(Icons.home, color: Colors.grey, size: 30.0),
+                  Icon(Icons.home,
+                      color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('Lives in ' + user.address, style: TextStyle(fontSize: 16.0))
+                  Text('Sống tại ' + user.address,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w400))
                 ],
               ),
               SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Icon(Icons.location_on, color: Colors.grey, size: 30.0),
+                  Icon(Icons.location_on,
+                      color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('From ' + user.country, style: TextStyle(fontSize: 16.0))
+                  Text('Đến từ' + user.country,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w400))
                 ],
               ),
               SizedBox(height: 15.0),
@@ -143,18 +233,30 @@ class ProfileTab extends State<Profile> {
                 ],
               ),
               SizedBox(height: 15.0),
-              Container(
-                height: 40.0,
-                decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(5.0),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OptionProfile(
+                              user: user,
+                            )),
+                  );
+                },
+                child: Container(
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 33, 37, 243)
+                        .withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Center(
+                      child: Text('Chỉnh sửa chi tiết công khai',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 33, 37, 243),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0))),
                 ),
-                child: Center(
-                    child: Text('Edit Public Details',
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0))),
               ),
             ],
           ),
@@ -180,8 +282,10 @@ class ProfileTab extends State<Profile> {
                               fontSize: 16.0, color: Colors.grey[800])),
                     ],
                   ),
-                  Text('Find Friends',
-                      style: TextStyle(fontSize: 16.0, color: Colors.blue)),
+                  Text('See all',
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: const Color.fromARGB(255, 33, 37, 243))),
                 ],
               ),
               Padding(
