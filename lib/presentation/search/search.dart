@@ -22,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
+    searchSavedData=[];
     getsearchSavedData();
     super.initState();
   }
