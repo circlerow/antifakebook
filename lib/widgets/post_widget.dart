@@ -1,89 +1,111 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/post.dart';
+import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget{
   final Post post;
+  const PostWidget({super.key, required this.post });
 
-  PostWidget({required this.post});
+  @override
+  _PostWidgetPage createState() => _PostWidgetPage();
+}
+
+class _PostWidgetPage extends State<PostWidget> {
+
+  UserService userService = UserService(userRepository: UserRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(post.author.avatar),
-                radius: 20.0,
-              ),
-              SizedBox(width: 7.0),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(post.author.name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17.0)),
-                  SizedBox(height: 5.0),
-                  Text(formatTimeDifference(post.created))
-                ],
-              ),
-            ],
+          GestureDetector(
+            onTap: () async{
+              User res = await userService.getUserInfo(widget.post.author.id);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+              MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
+              );               
+            },
+            child:
+            Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.post.author.avatar),
+                  radius: 20.0,
+                ),
+                const SizedBox(width: 7.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(widget.post.author.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17.0)),
+                    const SizedBox(height: 5.0),
+                    Text(formatTimeDifference(widget.post.created))
+                  ],
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           RichText(
             textAlign: TextAlign.start,
             text: TextSpan(
-              children: convertUrlsToTextSpans(post.described),
+              children: convertUrlsToTextSpans(widget.post.described),
             ),
           ),
-          SizedBox(height: 10.0),
-          Container(
+          const SizedBox(height: 10.0),
+          SizedBox(
             width: double.infinity,
-            child: post.images.isNotEmpty
+            child: widget.post.images.isNotEmpty
                 ? GridView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Số lượng ảnh trên một hàng
                       mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
                       crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
                       childAspectRatio: 1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
                     ),
-                    itemCount: post.images.length,
+                    itemCount: widget.post.images.length,
                     itemBuilder: (context, index) {
                       return Image.network(
-                        post.images[index].url,
+                        widget.post.images[index].url,
                         fit: BoxFit.cover,
                       );
                     },
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp,
+                  const Icon(FontAwesomeIcons.thumbsUp,
                       size: 15.0, color: Colors.blue),
-                  Text(' ${post.feel}'),
+                  Text(' ${widget.post.feel}'),
                 ],
               ),
               Row(
                 children: <Widget>[
-                  Text('${post.commentMark} comments  •  '),
+                  Text('${widget.post.commentMark} comments  •  '),
                 ],
               ),
             ],
           ),
-          Divider(height: 30.0),
-          Row(
+          const Divider(height: 30.0),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -147,7 +169,7 @@ class PostWidget extends StatelessWidget {
         textSpans.add(
           TextSpan(
             text: text.substring(lastEnd, match.start),
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         );
       }
@@ -156,7 +178,7 @@ class PostWidget extends StatelessWidget {
       textSpans.add(
         TextSpan(
           text: match.group(0),
-          style: TextStyle(color: Colors.blue),
+          style: const TextStyle(color: Colors.blue),
           recognizer: TapGestureRecognizer()
             ..onTap = () async {
               // Handle URL tap (open in browser or perform custom action)
@@ -174,7 +196,7 @@ class PostWidget extends StatelessWidget {
       textSpans.add(
         TextSpan(
           text: text.substring(lastEnd),
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
       );
     }

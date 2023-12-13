@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/api/firebase_api.dart';
 import 'package:flutter_application/firebase_options.dart';
-import 'package:flutter_application/presentation/home/home.dart';
 
 import 'package:flutter_application/presentation/login/login.dart';
 
@@ -10,14 +9,16 @@ import 'package:flutter_application/presentation/login/login.dart';
 
 void main() async {
   //await dot_env.dotenv.load();
-  await WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAPI().initNotifications();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // MyApp({super.key});
 
   // This widget is the root of your application.
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
           // Các thiết lập theme khác
         ),
         debugShowCheckedModeBanner: false,
-        home: Login());
+        home: const Login());
     //home: signUpPage());
   }
 }

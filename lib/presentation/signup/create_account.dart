@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/domain/user_signup.dart';
-import 'package:flutter_application/domain/verify_code.dart';
 
 import '../../application/auth_service.dart';
 import '../../data/auth_repository.dart';
-import 'name_and_avatar.dart';
 import 'verify_code.dart';
 
 class RegisterScreen extends StatefulWidget {
