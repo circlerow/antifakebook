@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
+                        MaterialPageRoute(builder: (context) => const HomePage()),
                       );
                     }
                   }
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterScreen()));
+                      MaterialPageRoute(builder: (context) => const RegisterScreen()));
                 },
                 child: const Text('Đăng ký'),
               ),

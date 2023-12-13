@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 
 class CreatePost extends StatefulWidget {
+  const CreatePost({super.key});
+
   @override
   _CreatePostState createState() => _CreatePostState();
 }
 
 class _CreatePostState extends State<CreatePost> {
-  TextEditingController _postTextController = TextEditingController();
+  final TextEditingController _postTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Post'),
+        title: const Text('Create Post'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
+              leading: const CircleAvatar(
                 radius: 28.0,
                 backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
               ),
-              title: Text("Username Here"),
+              title: const Text("Username Here"),
               subtitle: Padding(
-                padding: EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.only(top: 0),
                 child: Row(
                   children: [
                     Expanded(
@@ -37,7 +39,7 @@ class _CreatePostState extends State<CreatePost> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                           side: const BorderSide(
                             width: 0,
                             style: BorderStyle.none,
@@ -46,8 +48,8 @@ class _CreatePostState extends State<CreatePost> {
                               const Color.fromARGB(255, 202, 202, 202),
                         ),
                         onPressed: () {},
-                        icon: Icon(Icons.group),
-                        label: Row(
+                        icon: const Icon(Icons.group),
+                        label: const Row(
                           children: [
                             Text('Friends'),
                             Expanded(
@@ -78,13 +80,13 @@ class _CreatePostState extends State<CreatePost> {
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 // Thực hiện xử lý khi người dùng nhấn nút đăng bài
                 _createPost();
               },
-              child: Text('Post'),
+              child: const Text('Post'),
             ),
           ],
         ),

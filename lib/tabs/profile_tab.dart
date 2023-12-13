@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget{
+  const Profile({super.key});
+
   @override
   ProfileTab createState() => ProfileTab();
 }
@@ -64,15 +66,15 @@ class ProfileTab extends State<Profile> {
     return SingleChildScrollView(
         child: Column(
         children: <Widget>[
-        Container(
+        SizedBox(
           height: 360.0,
           child: Stack(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+                margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
                 height: 180.0,
                 decoration: BoxDecoration(
-                    image: DecorationImage(
+                    image: const DecorationImage(
                         image: AssetImage('assets/cover.jpg'),
                         fit: BoxFit.cover),
                     borderRadius: BorderRadius.circular(10.0)),
@@ -84,11 +86,11 @@ class ProfileTab extends State<Profile> {
                     backgroundImage: NetworkImage(user.avatar.isNotEmpty ? user.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                     radius: 70.0,
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Text(user.username,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 24.0, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -98,7 +100,7 @@ class ProfileTab extends State<Profile> {
                         decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(5.0)),
-                        child: Center(
+                        child: const Center(
                             child: Text('Add to Story',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -111,7 +113,7 @@ class ProfileTab extends State<Profile> {
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(5.0)),
-                        child: Icon(Icons.more_horiz),
+                        child: const Icon(Icons.more_horiz),
                       )
                     ],
                   )
@@ -120,45 +122,45 @@ class ProfileTab extends State<Profile> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
           child: Divider(height: 40.0),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(Icons.home, color: Colors.grey, size: 30.0),
-                  SizedBox(width: 10.0),
-                  Text('Lives in ' + user.address, style: TextStyle(fontSize: 16.0))
+                  const Icon(Icons.home, color: Colors.grey, size: 30.0),
+                  const SizedBox(width: 10.0),
+                  Text('Lives in ${user.address}', style: const TextStyle(fontSize: 16.0))
                 ],
               ),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Icon(Icons.location_on, color: Colors.grey, size: 30.0),
-                  SizedBox(width: 10.0),
-                  Text('From ' + user.country, style: TextStyle(fontSize: 16.0))
+                  const Icon(Icons.location_on, color: Colors.grey, size: 30.0),
+                  const SizedBox(width: 10.0),
+                  Text('From ${user.country}', style: const TextStyle(fontSize: 16.0))
                 ],
               ),
-              SizedBox(height: 15.0),
-              Row(
+              const SizedBox(height: 15.0),
+              const Row(
                 children: <Widget>[
                   Icon(Icons.more_horiz, color: Colors.grey, size: 30.0),
                   SizedBox(width: 10.0),
                   Text('See your About Info', style: TextStyle(fontSize: 16.0))
                 ],
               ),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Container(
                 height: 40.0,
                 decoration: BoxDecoration(
                   color: Colors.lightBlueAccent.withOpacity(0.25),
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Center(
+                child: const Center(
                     child: Text('Edit Public Details',
                         style: TextStyle(
                             color: Colors.blue,
@@ -168,9 +170,9 @@ class ProfileTab extends State<Profile> {
             ],
           ),
         ),
-        Divider(height: 40.0),
+        const Divider(height: 40.0),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: <Widget>[
               Row(
@@ -180,11 +182,11 @@ class ProfileTab extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Bạn bè',
+                      const Text('Bạn bè',
                           style: TextStyle(
                               fontSize: 22.0, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 6.0),
-                      Text(total+' bạn bè',
+                      const SizedBox(height: 6.0),
+                      Text('$total bạn bè',
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.grey[800])),
                     ],
@@ -209,10 +211,10 @@ class ProfileTab extends State<Profile> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        SizedBox(height: 5.0),
+                        const SizedBox(height: 5.0),
                         Text(
                           friend.username,
-                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                         ),
                       ],
                     );
@@ -220,13 +222,13 @@ class ProfileTab extends State<Profile> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 15.0),
+                margin: const EdgeInsets.symmetric(vertical: 15.0),
                 height: 40.0,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Center(
+                child: const Center(
                     child: Text('See All Friends',
                         style: TextStyle(
                             color: Colors.black,
@@ -236,7 +238,7 @@ class ProfileTab extends State<Profile> {
             ],
           ),
         ),
-        SeparatorWidget()
+        const SeparatorWidget()
       ],
     ));
   }
@@ -252,7 +254,7 @@ class ProfileTab extends State<Profile> {
 
   Widget buildLoadingWidget() {
     // Giao diện loading
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),

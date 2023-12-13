@@ -5,11 +5,12 @@ import 'package:flutter_application/tabs/profile_tab.dart';
 import 'package:flutter_application/tabs/notifications_tab.dart';
 import 'package:flutter_application/tabs/menu_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../search/search.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
+            const Row(
               children: <Widget>[
                 Text('facebook',
                     style: TextStyle(
@@ -55,13 +56,13 @@ class _HomePageState extends State<HomePage>
                     // Chuyển đến trang tìm kiếm khi ấn vào biểu tượng tìm kiếm
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                      MaterialPageRoute(builder: (context) => const SearchScreen()),
                     );
                   },
-                  child: Icon(Icons.search, color: Colors.black),
+                  child: const Icon(Icons.search, color: Colors.black),
                 ),
-                SizedBox(width: 15.0),
-                Icon(Icons.message,
+                const SizedBox(width: 15.0),
+                const Icon(Icons.message,
                     color: Colors
                         .black), // Thay thế FontAwesomeIcons.facebookMessenger bằng Icon thông thường
               ],
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.blueAccent,
-          tabs: [
+          tabs: const [
             Tab(icon: Icon(Icons.home, size: 30.0)),
             Tab(icon: Icon(Icons.people, size: 30.0)),
             Tab(icon: Icon(Icons.account_circle, size: 30.0)),
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage>
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
+      body: TabBarView(controller: _tabController, children: const [
         HomeTab(),
         FriendsTab(),
         Profile(),

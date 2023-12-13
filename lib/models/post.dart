@@ -18,7 +18,7 @@ class Post {
 }
 
 List<Post> posts = [
-  new Post(
+  Post(
       profileImageUrl: 'assets/Sam Wilson.jpg',
       username: 'Sam Wilson',
       time: '5h',
@@ -27,7 +27,7 @@ List<Post> posts = [
       likes: '63',
       comments: '11',
       shares: '2'),
-  new Post(
+  Post(
       profileImageUrl: 'assets/jeremy.jpg',
       username: 'Jeremy',
       time: '13h',
@@ -36,7 +36,7 @@ List<Post> posts = [
       likes: '52',
       comments: '1',
       shares: '6'),
-  new Post(
+  Post(
       profileImageUrl: 'assets/mathew.jpg',
       username: 'Mathew Hallberg',
       time: '2d',
@@ -45,7 +45,7 @@ List<Post> posts = [
       likes: '61',
       comments: '3',
       shares: '2'),
-  new Post(
+  Post(
       profileImageUrl: 'assets/eddison.jpg',
       username: 'Eddison',
       time: '1w',
@@ -54,7 +54,7 @@ List<Post> posts = [
       likes: '233',
       comments: '6',
       shares: '4'),
-  new Post(
+  Post(
       profileImageUrl: 'assets/olivia.jpg',
       username: 'Olivia',
       time: '3w',
