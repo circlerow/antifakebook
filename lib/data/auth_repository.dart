@@ -37,6 +37,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> signUp(UserSignup user) async {
     final http.Response response =
         await request('/signup', 'POST', isToken: false, body: user.toJson());
+    print('object');
+    print(json.decode(response.body));
     Map<String, dynamic> data = json.decode(response.body);
     if (data["code"] == "1000") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -73,7 +75,8 @@ class AuthRepositoryImpl implements AuthRepository {
     final http.StreamedResponse response = await multipartRequest(
         '/change_profile_after_signup', 'POST',
         isToken: true, infoAfter: infoAfter);
-    Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+    Map<String, dynamic> data =
+        json.decode(await response.stream.bytesToString());
     if (data["code"] == "1000") {
       return true;
     }
