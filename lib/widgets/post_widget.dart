@@ -8,16 +8,15 @@ import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PostWidget extends StatefulWidget{
+class PostWidget extends StatefulWidget {
   final Post post;
-  const PostWidget({super.key, required this.post });
+  const PostWidget({super.key, required this.post});
 
   @override
   _PostWidgetPage createState() => _PostWidgetPage();
 }
 
 class _PostWidgetPage extends State<PostWidget> {
-
   UserService userService = UserService(userRepository: UserRepositoryImpl());
 
   @override
@@ -27,16 +26,18 @@ class _PostWidgetPage extends State<PostWidget> {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () async{
+            onTap: () async {
               User res = await userService.getUserInfo(widget.post.author.id);
               Navigator.pop(context);
               Navigator.push(
                 context,
-              MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
-              );               
+                MaterialPageRoute(
+                    builder: (context) => FriendInfo(
+                          friend: res,
+                        )),
+              );
             },
-            child:
-            Row(
+            child: Row(
               children: <Widget>[
                 CircleAvatar(
                   backgroundImage: NetworkImage(widget.post.author.avatar),
@@ -71,11 +72,13 @@ class _PostWidgetPage extends State<PostWidget> {
                 ? GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Số lượng ảnh trên một hàng
                       mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
                       crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
-                      childAspectRatio: 1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
+                      childAspectRatio:
+                          1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
                     ),
                     itemCount: widget.post.images.length,
                     itemBuilder: (context, index) {
@@ -113,21 +116,21 @@ class _PostWidgetPage extends State<PostWidget> {
                 children: <Widget>[
                   Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Like', style: TextStyle(fontSize: 14.0)),
+                  Text('Thích', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.commentAlt, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Comment', style: TextStyle(fontSize: 14.0)),
+                  Text('Bình luận', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.share, size: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                  Text('Chia sẻ', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
             ],
@@ -156,7 +159,7 @@ class _PostWidgetPage extends State<PostWidget> {
   }
 
   List<TextSpan> convertUrlsToTextSpans(String text) {
-  List<TextSpan> textSpans = [];
+    List<TextSpan> textSpans = [];
     RegExp urlRegex = RegExp(
         r'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}');
 

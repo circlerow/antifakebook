@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 import '../search/search.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
+  Image img = Image.asset('asset/img/nav/topHome.png');
 }
 
 class _HomePageState extends State<HomePage>
@@ -39,13 +40,10 @@ class _HomePageState extends State<HomePage>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Row(
+            Row(
               children: <Widget>[
-                Text('facebook',
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 27.0,
-                        fontWeight: FontWeight.bold)),
+                Image.asset('assets/img/nav/topHome.png',
+                    width: 120.0, height: 120.0),
               ],
             ),
             Row(
@@ -56,7 +54,8 @@ class _HomePageState extends State<HomePage>
                     // Chuyển đến trang tìm kiếm khi ấn vào biểu tượng tìm kiếm
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SearchScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()),
                     );
                   },
                   child: const Icon(Icons.search, color: Colors.black),
@@ -76,12 +75,22 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.blueAccent,
-          tabs: const [
-            Tab(icon: Icon(Icons.home, size: 30.0)),
-            Tab(icon: Icon(Icons.people, size: 30.0)),
-            Tab(icon: Icon(Icons.account_circle, size: 30.0)),
-            Tab(icon: Icon(Icons.notifications, size: 30.0)),
-            Tab(icon: Icon(Icons.menu, size: 30.0))
+          tabs: [
+            Tab(
+                child: Image.asset('assets/img/nav/home.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/friends.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/profile.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/noti.png',
+                    width: 20.0, height: 20.0)),
+            Tab(
+                child: Image.asset('assets/img/nav/menu.png',
+                    width: 20.0, height: 20.0))
           ],
         ),
       ),

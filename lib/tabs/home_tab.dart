@@ -7,7 +7,7 @@ import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/stories_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomeTab extends StatefulWidget{
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
   @override
@@ -15,7 +15,6 @@ class HomeTab extends StatefulWidget{
 }
 
 class HomeTabPage extends State<HomeTab> {
-  
   List<Post> posts = [];
 
   @override
@@ -36,9 +35,10 @@ class HomeTabPage extends State<HomeTab> {
       "index": "0",
       "count": "20"
     });
-
+    print(" DATA = " + fetchedPosts.toString());
     setState(() {
       posts = fetchedPosts;
+      //posts = posts;
     });
   }
 

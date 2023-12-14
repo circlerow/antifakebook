@@ -2,13 +2,13 @@ class User {
   final String id;
   final String username;
   final DateTime created;
-  final String description;
+  String description;
   final String avatar;
   final String coverImage;
   final String link;
-  final String address;
+  String address;
   final String city;
-  final String country;
+  String country;
   final String listing;
   final String isFriend;
   final String online;
