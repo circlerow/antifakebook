@@ -25,19 +25,19 @@ class HomeTabPage extends State<HomeTab> {
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
     List<Post> fetchedPosts = await postService.getListPost({
-      "user_id": "1",
+      "user_id": "",
       "in_campaign": "1",
       "campaign_id": "1",
       "latitude": "1.0",
       "longitude": "1.0",
-      "last_id": "0",
+      "last_id": "",
       "index": "3",
       "count": "20"
     });
     print(" DATA = " + fetchedPosts.toString());
     setState(() {
-      // posts = fetchedPosts;
-      posts = posts;
+      posts = fetchedPosts;
+      //posts = posts;
     });
   }
 
@@ -49,8 +49,8 @@ class HomeTabPage extends State<HomeTab> {
           WriteSomethingWidget(),
           // SeparatorWidget(),
           // OnlineWidget(),
-          SeparatorWidget(),
-          StoriesWidget(),
+          //SeparatorWidget(),
+          //StoriesWidget(),
           for (Post post in posts)
             Column(
               children: <Widget>[
