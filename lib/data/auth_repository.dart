@@ -72,7 +72,8 @@ class AuthRepositoryImpl implements AuthRepository {
     final http.StreamedResponse response = await multipartRequest(
         '/change_profile_after_signup', 'POST',
         isToken: true, infoAfter: infoAfter);
-    Map<String, dynamic> data = json.decode(await response.stream.bytesToString());
+    Map<String, dynamic> data =
+        json.decode(await response.stream.bytesToString());
     if (data["code"] == "1000") {
       return true;
     }
@@ -81,6 +82,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("token");
+    await prefs.remove("user_id");
     await request('/logout', 'POST', isToken: true);
   }
 }
