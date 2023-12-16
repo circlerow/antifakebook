@@ -24,6 +24,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final http.Response response =
         await request('/login', 'POST', isToken: false, body: user.toJson());
     Map<String, dynamic> data = json.decode(response.body);
+    print(data);
     if (data["code"] == "1000") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", data["data"]["token"]);

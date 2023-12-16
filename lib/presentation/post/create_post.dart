@@ -7,11 +7,15 @@ import 'package:flutter_application/domain/user.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../application/post_service.dart';
 import '../../application/user_service.dart';
+import '../../data/post_repository.dart';
 import '../../data/user_repository.dart';
+import '../../domain/post.dart';
+import '../home/home.dart';
+import 'status.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -24,9 +28,12 @@ class _CreatePostState extends State<CreatePost> {
   late Future<void> _dataFuture;
   final TextEditingController _postTextController = TextEditingController();
   late User user;
-  final List<XFile> _selectedImages = [];
-  final List<XFile> _selectedImagesVideos = [];
-  final List<String> _selectedVideos = [];
+  late String status = 'Nice';
+  List<File>? _selectedImages;
+  List<File>? _selectedImagesVideos;
+  File? _selectedVideos;
+  final PostService postService =
+      PostService(postRepository: PostRepositoryImpl());
 
   @override
   void initState() {
@@ -45,10 +52,37 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _pickImage() async {
-    if (_selectedImages.length >= 4) {
+    print('hello');
+    if (_selectedImages != null) {
+      if (_selectedImages!.length >= 4) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Chỉ được chọn tối đa 4 ảnh.'),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          ),
+        );
+        return;
+      }
+    }
+    XFile? pickedImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    _selectedImages ??= [];
+    if (pickedImage != null) {
+      setState(() {
+        _selectedImages?.add(File(pickedImage.path));
+      });
+    }
+  }
+
+  Future<void> _pickVideo() async {
+    if (_selectedImagesVideos!.length == 1) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Chỉ được chọn tối đa 4 ảnh.'),
+          content: const Text('Chỉ được chọn tối đa 1 video.'),
           action: SnackBarAction(
             label: 'OK',
             onPressed: () {},
@@ -57,28 +91,15 @@ class _CreatePostState extends State<CreatePost> {
       );
       return;
     }
-    XFile? pickedImage = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImages.add(pickedImage);
-      });
-    }
-  }
-
-  Future<void> _pickVideo() async {
-    final XFile? pickedVideo = await ImagePicker().pickVideo(
+    final pickedVideo = await ImagePicker().pickVideo(
       source: ImageSource.gallery,
     );
 
     if (pickedVideo != null) {
       final thumbnailPath = await createThumbnail(pickedVideo.path);
       setState(() {
-        _selectedVideos.add(pickedVideo.path); // Store the video path
-        _selectedImagesVideos
-            .add(XFile(thumbnailPath!)); // Convert to XFile and store
+        _selectedVideos = File(pickedVideo.path);
+        _selectedImagesVideos?.add(File(thumbnailPath!));
       });
     }
   }
@@ -115,6 +136,13 @@ class _CreatePostState extends State<CreatePost> {
           InkResponse(
             onTap: () {
               _createPost();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      HomePage(),
+                ),
+              );
             },
             child: Container(
               padding: const EdgeInsets.all(12.0),
@@ -145,13 +173,32 @@ class _CreatePostState extends State<CreatePost> {
                     ? user.avatar
                     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
               ),
-              title: Text(
-                user.username,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              title: Row(
+                children: [
+                  Text(
+                    user.username,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  if (status.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            '-  Đang cảm thấy $status',
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -206,7 +253,11 @@ class _CreatePostState extends State<CreatePost> {
                   ),
                   const SizedBox(height: 16.0),
                   SizedBox(
-                    height: ((_selectedImages.length / 2).ceil() * 180),
+                    height: ((((_selectedImages?.length) ?? 0) +
+                                    ((_selectedImagesVideos?.length) ?? 0)) /
+                                2)
+                            .ceil() *
+                        180,
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -214,116 +265,52 @@ class _CreatePostState extends State<CreatePost> {
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 8.0,
                       ),
-                      itemCount:
-                          _selectedImages.length + _selectedVideos.length,
+                      itemCount: (_selectedImages?.length ?? 0) +
+                          (_selectedImagesVideos?.length ?? 0),
                       itemBuilder: (context, index) {
-                        if (index < _selectedImages.length) {
+                        if (index < _selectedImages!.length) {
                           return _buildImageItem(index);
                         } else {
-                          final videoIndex = index - _selectedImages.length;
+                          final videoIndex = index - _selectedImages!.length;
                           return _buildVideoItem(videoIndex);
                         }
                       },
                     ),
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(width: 1.0, color: Colors.grey),
-                        bottom: BorderSide(width: 1.0, color: Colors.grey),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            onPressed: _pickImage,
-                            icon: const Row(
-                              children: [
-                                Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.green,
-                                ),
-                                SizedBox(width: 8.0),
-                                Text(
-                                  'Add Image',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  CustomIconButton(
+                    icon: Icons.image_outlined,
+                    text: 'Add Image',
+                    iconColor: Colors.green,
+                    textColor: Colors.blue,
+                    onPressed: _pickImage,
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(width: 1.0, color: Colors.grey),
-                        bottom: BorderSide(width: 1.0, color: Colors.grey),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            onPressed: _pickVideo,
-                            icon: const Row(
-                              children: [
-                                Icon(
-                                  Icons.ondemand_video,
-                                  color: Colors.blue,
-                                ),
-                                SizedBox(width: 8.0),
-                                Text(
-                                  'Add Video',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  CustomIconButton(
+                    icon: Icons.ondemand_video,
+                    text: 'Add Video',
+                    iconColor: Colors.blue,
+                    textColor: Colors.blue,
+                    onPressed: _pickVideo,
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        top: BorderSide(width: 1.0, color: Colors.grey),
-                        bottom: BorderSide(width: 1.0, color: Colors.grey),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Row(
-                              children: [
-                                Icon(
-                                  Icons.emoji_emotions_outlined,
-                                  color: Colors.yellow,
-                                ),
-                                SizedBox(width: 8.0),
-                                Text(
-                                  'Add Status',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
+                  CustomIconButton(
+                    icon: Icons.emoji_emotions_outlined,
+                    text: 'Add Status',
+                    iconColor: Colors.yellow,
+                    textColor: Colors.blue,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StatusScreen(
+                            initialStatus: status,
+                            onStatusChanged: (newStatus, icon) {
+                              setState(() {
+                                status = newStatus;
+                              });
+                            },
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -346,7 +333,7 @@ class _CreatePostState extends State<CreatePost> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.file(
-                File(_selectedImages[index].path),
+                File(_selectedImages![index].path),
                 fit: BoxFit.cover,
               ),
             ),
@@ -359,7 +346,7 @@ class _CreatePostState extends State<CreatePost> {
             icon: const Icon(Icons.close),
             onPressed: () {
               setState(() {
-                _selectedImages.removeAt(index);
+                _selectedImages!.removeAt(index);
               });
             },
           ),
@@ -382,7 +369,7 @@ class _CreatePostState extends State<CreatePost> {
               child: Stack(
                 children: [
                   Image.file(
-                    File(_selectedImagesVideos[videoIndex].path),
+                    File(_selectedImagesVideos![index].path),
                     fit: BoxFit.cover,
                   ),
                   const Center(
@@ -404,8 +391,7 @@ class _CreatePostState extends State<CreatePost> {
             icon: const Icon(Icons.close),
             onPressed: () {
               setState(() {
-                _selectedImagesVideos.removeAt(videoIndex);
-                _selectedVideos.removeAt(videoIndex);
+                _selectedImagesVideos!.removeAt(videoIndex);
               });
             },
           ),
@@ -414,12 +400,22 @@ class _CreatePostState extends State<CreatePost> {
     );
   }
 
-  void _createPost() {
-    String postContent = _postTextController.text;
+  Future<void> _createPost() async {
+    String described = _postTextController.text;
+
+    bool isChangeInfoAfterSignUp = await postService.createPost(
+      PostCreate(
+        image: _selectedImages,
+        video: _selectedVideos,
+        described: described,
+        status: status,
+        autoAccept: '1',
+      ),
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Post created: $postContent'),
+        content: Text('Post created: $described'),
       ),
     );
   }
@@ -444,5 +440,59 @@ class _CreatePostState extends State<CreatePost> {
   void dispose() {
     _postTextController.dispose();
     super.dispose();
+  }
+}
+
+class CustomIconButton extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color iconColor;
+  final Color textColor;
+  final VoidCallback onPressed;
+
+  const CustomIconButton({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.iconColor,
+    required this.textColor,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 1.0, color: Colors.grey),
+          bottom: BorderSide(width: 1.0, color: Colors.grey),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: IconButton(
+              onPressed: onPressed,
+              icon: Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: iconColor,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: textColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
