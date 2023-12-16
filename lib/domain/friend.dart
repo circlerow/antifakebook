@@ -2,7 +2,7 @@ class Friend {
   final String id;
   final String username;
   final String avatar;
-  final int sameFriends;
+  final String sameFriends;
   final DateTime created;
 
   Friend({
@@ -18,7 +18,7 @@ class Friend {
       id: json['id'] ?? '',
       username: json['username'] ?? '',
       avatar: json['avatar'] ?? '',
-      sameFriends: int.parse(json['same_friends'] ?? '0'),
+      sameFriends: json['same_friends'] ?? '0',
       created: DateTime.parse(json['created'] ?? ''),
     );
   }

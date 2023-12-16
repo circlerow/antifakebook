@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
+import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/friend_repository.dart';
+import 'package:flutter_application/data/user_repository.dart';
+import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
-import 'package:flutter_application/presentation/home/home.dart';
+import 'package:flutter_application/presentation/friend/FriendList.dart';
 
 class FriendInfo extends StatefulWidget {
-  final User friend;
-  const FriendInfo({super.key, required this.friend});
+  final String friendId;
+  const FriendInfo({super.key, required this.friendId});
 
   @override
   _FriendInfoState createState() => _FriendInfoState();
@@ -15,105 +18,204 @@ class FriendInfo extends StatefulWidget {
 class _FriendInfoState extends State<FriendInfo> {
   final FriendService _friendService =
       FriendService(friendRepository: FriendRepositoryImpl());
+  final UserService _userService = UserService(userRepository: UserRepositoryImpl());
+  
+  late String isFriends;
+  late User friend;
+  late Future<void> _dataFuture;
+  late List<Friend> friends; 
+  late String total;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _dataFuture = fetchData();
+  }
+
+  Future<void> fetchData() async {
+    Map<String, dynamic> fetchedPosts =
+        await _friendService.getUserFriends("0", "6", widget.friendId);
+    
+    friend = await _userService.getUserInfo(widget.friendId);
+
+    setState(() {
+      friends = fetchedPosts['friends'];
+      total = fetchedPosts['total'];
+      isFriends = friend.isFriend;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _dataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Dữ liệu đã tải xong, hiển thị giao diện
+          return buildContent(context);
+        } else if (snapshot.hasError) {
+          // Xử lý lỗi nếu có
+          return buildErrorWidget(snapshot.error.toString());
+        } else {
+          // Hiển thị màn hình loading trong quá trình tải dữ liệu
+          return buildLoadingWidget();
+        }
+      },
+    );
+  }
+
+  Widget buildContent(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.friend.username),
+        title: Text(friend.username),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
           },
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        height: 360.0,
-        child: Stack(
+      body: 
+      SingleChildScrollView(
+        child: Column(
           children: <Widget>[
             Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-              height: 180.0,
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
-                      image: AssetImage('assets/cover.jpg'), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(10.0)),
+              color: Colors.white,
+              height: 360,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+                    height: 180.0,
+                    decoration: BoxDecoration(
+                        image: const DecorationImage(
+                            image: AssetImage('assets/cover.jpg'), fit: BoxFit.cover),
+                        borderRadius: BorderRadius.circular(10.0)),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(friend.avatar.isNotEmpty
+                            ? friend.avatar
+                            : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                        radius: 70.0,
+                      ),
+                      const SizedBox(height: 20.0),
+                      Text(
+                          friend.username.isNotEmpty
+                              ? friend.username
+                              : "(No Name)",
+                          style: const TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                              height: 40.0,
+                              width: ((MediaQuery.of(context).size.width - 80) / 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Center(
+                                child: GestureDetector(
+                                    onTap: () async {
+                                      _handleIsFriend(isFriends);
+                                    },
+                                    child: Text(
+                                        _convertIsFriend(isFriends),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0))),
+                              )),
+                          Container(
+                              height: 40.0,
+                              width: ((MediaQuery.of(context).size.width - 80) / 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Center(
+                                child: GestureDetector(
+                                    onTap: () async {},
+                                    child: const Text("Nhắn tin",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0))),
+                              )),
+                          Container(
+                            height: 40.0,
+                            width: 45.0,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: const Icon(Icons.more_horiz),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.friend.avatar.isNotEmpty
-                      ? widget.friend.avatar
-                      : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
-                  radius: 70.0,
-                ),
-                const SizedBox(height: 20.0),
-                Text(
-                    widget.friend.username.isNotEmpty
-                        ? widget.friend.username
-                        : "(No Name)",
-                    style: const TextStyle(
-                        fontSize: 24.0, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                        height: 40.0,
-                        width: ((MediaQuery.of(context).size.width - 80) / 2),
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: Center(
-                          child: GestureDetector(
-                              onTap: () async {
-                                _handleIsFriend(widget.friend.isFriend);
-                              },
-                              child: Text(
-                                  _convertIsFriend(widget.friend.isFriend),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0))),
-                        )),
-                    Container(
-                        height: 40.0,
-                        width: ((MediaQuery.of(context).size.width - 80) / 2),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: Center(
-                          child: GestureDetector(
-                              onTap: () async {},
-                              child: const Text("Nhắn tin",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0))),
-                        )),
-                    Container(
-                      height: 40.0,
-                      width: 45.0,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: const Icon(Icons.more_horiz),
-                    )
-                  ],
-                )
-              ],
+            const Padding(
+              padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+              child: Divider(height: 40.0),
+            ),            
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.home,
+                          color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
+                      SizedBox(width: 10.0),
+                      Text.rich(
+                        TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(text: 'Sống tại '),
+                            TextSpan(
+                                text: friend.address,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.location_on,
+                          color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
+                      SizedBox(width: 10.0),
+                      Text.rich(
+                        TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(text: 'Đến từ '),
+                            TextSpan(
+                                text: friend.city,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                ],
+              ),
+            ),
+            const Divider(height: 40.0),
+            Container(
+              child: FriendList(friends: friends, total: total),
             )
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 
@@ -134,12 +236,41 @@ class _FriendInfoState extends State<FriendInfo> {
   void _handleIsFriend(String isFriend) async {
     switch (isFriend) {
       case "0":
-        await _friendService.setRequestFriend(widget.friend.id);
+        await _friendService.setRequestFriend(friend.id);
+        setState(() {
+          isFriends = '2';
+        });
+        break;
       case "2":
-        await _friendService.delRequestFriend(widget.friend.id);
+        await _friendService.delRequestFriend(friend.id);
+        setState(() {
+          isFriends = '0';
+        });
+        break;
       case "3":
-        await _friendService.setAcceptFriend(widget.friend.id, "1");
+        await _friendService.setAcceptFriend(friend.id, "1");
+        setState(() {
+          isFriends = '1';
+        });
+        break;
     }
-    setState(() {});
+  }
+
+    Widget buildErrorWidget(String error) {
+    // Giao diện khi có lỗi
+    return Scaffold(
+      body: Center(
+        child: Text("Error: $error"),
+      ),
+    );
+  }
+
+  Widget buildLoadingWidget() {
+    // Giao diện loading
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
