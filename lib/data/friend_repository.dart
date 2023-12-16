@@ -8,6 +8,8 @@ abstract class FriendRepository {
   Future<dynamic> getSuggestedFriends(dynamic body);
   Future<dynamic> setRequestFriend(String userId);
   Future<dynamic> setAcceptFriend(String userId, String isAccept);
+  Future<dynamic> unFriend(String userId);
+  Future<dynamic> delRequestFriend(String userId);
 }
 
 class FriendRepositoryImpl implements FriendRepository {
@@ -42,6 +44,20 @@ class FriendRepositoryImpl implements FriendRepository {
   @override
   Future<dynamic> setAcceptFriend(String userId, String isAccept) async {
     final http.Response response = await request('/set_accept_friend', 'POST', isToken: true, body: {"user_id" : userId , "is_accept": isAccept});
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> unFriend(String userId) async {
+    final http.Response response = await request('/unfriend', 'POST', isToken: true, body: {"user_id" : userId});
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> delRequestFriend(String userId) async {
+    final http.Response response = await request('/del_request_friend', 'POST', isToken: true, body: {"user_id" : userId});
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }

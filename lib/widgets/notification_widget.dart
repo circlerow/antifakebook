@@ -4,14 +4,14 @@ import 'package:flutter_application/models/user_notification.dart';
 class NotificationWidget extends StatelessWidget {
   final UserNotification notification;
 
-  NotificationWidget({required this.notification});
+  const NotificationWidget({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 100.0,
-      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -22,21 +22,21 @@ class NotificationWidget extends StatelessWidget {
                 backgroundImage: AssetImage(notification.imageUrl),
                 radius: 35.0,
               ),
-              SizedBox(width: 15.0),
+              const SizedBox(width: 15.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(notification.content,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 17.0, fontWeight: FontWeight.bold)),
                   Text(notification.time,
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey)),
+                      style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
                 ],
               ),
             ],
           ),
-          Column(
+          const Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Icon(Icons.more_horiz),

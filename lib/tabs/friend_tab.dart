@@ -7,21 +7,23 @@ import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 
-class FriendsTab extends StatefulWidget{
+class FriendsTab extends StatefulWidget {
+  const FriendsTab({super.key});
+
   @override
   FriendsTabPage createState() => FriendsTabPage();
 }
 
 class FriendsTabPage extends State<FriendsTab> {
-
-  FriendService friendService = FriendService(friendRepository: FriendRepositoryImpl());
+  FriendService friendService =
+      FriendService(friendRepository: FriendRepositoryImpl());
   UserService userService = UserService(userRepository: UserRepositoryImpl());
   late Future<void> _dataFuture;
   late List<Friend> friends = [];
   late List<Friend> friendSuggesteds = [];
   late String total;
-  List<bool> isFriendRequestSent = List.filled(1000, false);
-  List<bool> isFriendList = List.filled(1000, false);
+  List<bool> isFriendRequestSent = List.filled(10000, false);
+  List<int> isFriendList = List.filled(10000, 0);
 
   @override
   void initState() {
@@ -30,15 +32,11 @@ class FriendsTabPage extends State<FriendsTab> {
   }
 
   Future<void> fetchData() async {
-    Map<String, dynamic> fetchedPosts = await friendService.getRequestedFriends({
-      "index": "0",
-      "count": "5"
-    });
+    Map<String, dynamic> fetchedPosts =
+        await friendService.getRequestedFriends({"index": "0", "count": "5"});
 
-    List<Friend> fetchFriendSuggested = await friendService.getSuggestedFriends({
-      "index": "0",
-      "count": "10"
-    });
+    List<Friend> fetchFriendSuggested =
+        await friendService.getSuggestedFriends({"index": "0", "count": "10"});
 
     setState(() {
       friends = fetchedPosts['friends'];
@@ -66,59 +64,58 @@ class FriendsTabPage extends State<FriendsTab> {
     );
   }
 
-
   Widget buildContent(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Bạn bè',
+              const Text('Bạn bè',
                   style:
                       TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 15.0),
+              const SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10.0),
                     decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(30.0)),
-                    child: Text('Gợi ý',
+                    child: const Text('Gợi ý',
                         style: TextStyle(
                             fontSize: 17.0, fontWeight: FontWeight.bold)),
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 10.0),
                     decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(30.0)),
-                    child: Text('Tất cả bạn bè',
+                    child: const Text('Tất cả bạn bè',
                         style: TextStyle(
                             fontSize: 17.0, fontWeight: FontWeight.bold)),
                   )
                 ],
               ),
-              Divider(height: 30.0),
+              const Divider(height: 30.0),
               Row(
                 children: <Widget>[
-                  Text('Lời mời kết bạn',
+                  const Text('Lời mời kết bạn',
                       style: TextStyle(
                           fontSize: 21.0, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   Text(total,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 21.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.red)),
                 ],
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Column(
                 children: friends.map((friend) {
                   return Column(
@@ -127,73 +124,116 @@ class FriendsTabPage extends State<FriendsTab> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () async {
-                              User res = await userService.getUserInfo(friend.id);
-                              print(res.isFriend);
+                              User res =
+                                  await userService.getUserInfo(friend.id);
                               Navigator.pop(context);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
+                                MaterialPageRoute(
+                                    builder: (context) => FriendInfo(
+                                          friend: res,
+                                        )),
                               );
                             },
                             child: CircleAvatar(
-                              backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                              backgroundImage: NetworkImage(friend
+                                      .avatar.isNotEmpty
+                                  ? friend.avatar
+                                  : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                               radius: 40.0,
                             ),
                           ),
-                          SizedBox(width: 20.0),
+                          const SizedBox(width: 20.0),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 friend.username,
-                                style:
-                                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 15.0),
+                              const SizedBox(height: 15.0),
                               Row(
                                 children: <Widget>[
-                                  if (!isFriendList[int.tryParse(friend.id)!])
+                                  if (isFriendList[int.tryParse(friend.id)!] ==
+                                      0)
                                     Row(
                                       children: <Widget>[
                                         GestureDetector(
                                           onTap: () async {
-                                            bool sendRequest = await friendService.setAcceptFriend(friend.id,"1");
-                                            if(sendRequest){
+                                            bool sendRequest =
+                                                await friendService
+                                                    .setAcceptFriend(
+                                                        friend.id, "1");
+                                            if (sendRequest) {
                                               setState(() {
-                                                isFriendList[int.tryParse(friend.id)!] = true;
+                                                isFriendList[int.tryParse(
+                                                    friend.id)!] = 1;
                                               });
                                             }
                                           },
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 35.0,
+                                                vertical: 10.0),
                                             decoration: BoxDecoration(
                                               color: Colors.blue,
-                                              borderRadius: BorderRadius.circular(5.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               'Xác nhận',
-                                              style: TextStyle(color: Colors.white, fontSize: 15.0),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.0),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 10.0),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius: BorderRadius.circular(5.0),
-                                          ),
-                                          child: Text(
-                                            'Xoá',
-                                            style: TextStyle(color: Colors.black, fontSize: 15.0),
-                                          ),
-                                        ),
+                                        const SizedBox(width: 10.0),
+                                        GestureDetector(
+                                            onTap: () async {
+                                              bool sendRequest =
+                                                  await friendService
+                                                      .setAcceptFriend(
+                                                          friend.id, '0');
+                                              if (sendRequest) {
+                                                setState(() {
+                                                  isFriendList[int.tryParse(
+                                                      friend.id)!] = 2;
+                                                });
+                                              }
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 35.0,
+                                                      vertical: 10.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              child: const Text(
+                                                'Xoá',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15.0),
+                                              ),
+                                            )),
                                       ],
                                     )
-                                  else
-                                    Text(
+                                  else if (isFriendList[
+                                          int.tryParse(friend.id)!] ==
+                                      1)
+                                    const Text(
                                       'Lời mời được chấp nhận',
+                                      style: TextStyle(fontSize: 15.0),
+                                    )
+                                  else
+                                    const Text(
+                                      'Đã gỡ lời mời kết bạn',
                                       style: TextStyle(fontSize: 15.0),
                                     ),
                                 ],
@@ -202,16 +242,16 @@ class FriendsTabPage extends State<FriendsTab> {
                           )
                         ],
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                     ],
                   );
                 }).toList(),
               ),
-              Divider(height: 30.0),
-              Text('Những người bạn có thể biết',
+              const Divider(height: 30.0),
+              const Text('Những người bạn có thể biết',
                   style:
                       TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Column(
                 children: friendSuggesteds.map((friend) {
                   return Column(
@@ -220,73 +260,100 @@ class FriendsTabPage extends State<FriendsTab> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () async {
-                              print(friend.id);
-                              User res = await userService.getUserInfo(friend.id);
-                              print(res.isFriend);
+                              User res =
+                                  await userService.getUserInfo(friend.id);
                               Navigator.pop(context);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FriendInfo(friend: res,)),
+                                MaterialPageRoute(
+                                    builder: (context) => FriendInfo(
+                                          friend: res,
+                                        )),
                               );
                             },
                             child: CircleAvatar(
-                              backgroundImage: NetworkImage(friend.avatar.isNotEmpty ? friend.avatar : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                              backgroundImage: NetworkImage(friend
+                                      .avatar.isNotEmpty
+                                  ? friend.avatar
+                                  : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
                               radius: 40.0,
                             ),
                           ),
-                          SizedBox(width: 20.0),
+                          const SizedBox(width: 20.0),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                friend.username.isNotEmpty ? friend.username : "(No Name)",
-                                style:
-                                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                friend.username.isNotEmpty
+                                    ? friend.username
+                                    : "(No Name)",
+                                style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 15.0),
+                              const SizedBox(height: 15.0),
                               Row(
                                 children: <Widget>[
-                                  if (!isFriendRequestSent[int.tryParse(friend.id)!])
+                                  if (!isFriendRequestSent[
+                                      int.tryParse(friend.id)!])
                                     Row(
                                       children: <Widget>[
                                         GestureDetector(
                                           onTap: () async {
-                                            bool sendRequest = await friendService.setRequestFriend(friend.id);
-                                            if(sendRequest){
+                                            bool sendRequest =
+                                                await friendService
+                                                    .setRequestFriend(
+                                                        friend.id);
+                                            if (sendRequest) {
                                               setState(() {
-                                                isFriendRequestSent[int.tryParse(friend.id)!] = true;
+                                                isFriendRequestSent[
+                                                    int.tryParse(
+                                                        friend.id)!] = true;
                                               });
                                             }
                                           },
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 35.0,
+                                                vertical: 10.0),
                                             decoration: BoxDecoration(
                                               color: Colors.blue,
-                                              borderRadius: BorderRadius.circular(5.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               'Thêm bạn bè',
-                                              style: TextStyle(color: Colors.white, fontSize: 15.0),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15.0),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 10.0),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius: BorderRadius.circular(5.0),
-                                          ),
-                                          child: Text(
-                                            'Gỡ',
-                                            style: TextStyle(color: Colors.black, fontSize: 15.0),
+                                        const SizedBox(width: 10.0),
+                                        GestureDetector(
+                                          onTap: () async {},
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 35.0,
+                                                vertical: 10.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            child: const Text(
+                                              'Gỡ',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15.0),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     )
                                   else
-                                    Text(
+                                    const Text(
                                       'Đã gửi lời mời kết bạn',
                                       style: TextStyle(fontSize: 15.0),
                                     ),
@@ -296,7 +363,7 @@ class FriendsTabPage extends State<FriendsTab> {
                           )
                         ],
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                     ],
                   );
                 }).toList(),
@@ -317,7 +384,7 @@ class FriendsTabPage extends State<FriendsTab> {
 
   Widget buildLoadingWidget() {
     // Giao diện loading
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),

@@ -1,11 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 import '../../application/search_service.dart';
 import '../../data/search_repository.dart';
-import '../../domain/search.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

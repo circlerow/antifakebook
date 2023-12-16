@@ -11,7 +11,7 @@ class FriendService {
     Map<String, dynamic> data = res["data"];
     List<dynamic> friendsJson = data['friends'] ?? [];
     List<Friend> friends = friendsJson.map((postJson) => Friend.fromJson(postJson)).toList();
-    Map<String, dynamic> result = new Map<String, dynamic>();
+    Map<String, dynamic> result = <String, dynamic>{};
     result["total"] = data["total"];
     result["friends"] = friends;
     return result;
@@ -22,7 +22,7 @@ class FriendService {
     Map<String, dynamic> data = res["data"];
     List<dynamic> friendsJson = data['requests'] ?? [];
     List<Friend> friends = friendsJson.map((postJson) => Friend.fromJson(postJson)).toList();
-    Map<String, dynamic> result = new Map<String, dynamic>();
+    Map<String, dynamic> result = <String, dynamic>{};
     result["total"] = data["total"];
     result["friends"] = friends;
     return result;
@@ -42,6 +42,18 @@ class FriendService {
 
   Future<bool> setAcceptFriend(String userId, String isAccept) async {
     dynamic res = await friendRepository.setAcceptFriend(userId, isAccept);
+    if(res['code'] == "1000")return true;
+    return false;
+  }
+
+  Future<bool> unFriend(String userId) async {
+    dynamic res = await friendRepository.unFriend(userId);
+    if(res['code'] == "1000")return true;
+    return false;
+  }
+
+  Future<bool> delRequestFriend(String userId) async {
+    dynamic res = await friendRepository.delRequestFriend(userId);
     if(res['code'] == "1000")return true;
     return false;
   }

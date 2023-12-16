@@ -5,16 +5,16 @@ import 'package:flutter_application/widgets/write_something_widget.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/stories_widget.dart';
-import 'package:flutter_application/widgets/online_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomeTab extends StatefulWidget{
+class HomeTab extends StatefulWidget {
+  const HomeTab({super.key});
+
   @override
   HomeTabPage createState() => HomeTabPage();
 }
 
 class HomeTabPage extends State<HomeTab> {
-  
   List<Post> posts = [];
 
   @override
@@ -35,10 +35,10 @@ class HomeTabPage extends State<HomeTab> {
       "index": "0",
       "count": "20"
     });
-
+    print(" DATA = " + fetchedPosts.toString());
     setState(() {
       posts = fetchedPosts;
-      print(posts);
+      //posts = posts;
     });
   }
 
@@ -48,18 +48,18 @@ class HomeTabPage extends State<HomeTab> {
       child: Column(
         children: <Widget>[
           const WriteSomethingWidget(),
-          SeparatorWidget(),
-          OnlineWidget(),
-          SeparatorWidget(),
-          StoriesWidget(),
+          //SeparatorWidget(),
+          //OnlineWidget(),
+          const SeparatorWidget(),
+          const StoriesWidget(),
           for (Post post in posts)
             Column(
               children: <Widget>[
-                SeparatorWidget(),
+                const SeparatorWidget(),
                 PostWidget(post: post),
               ],
             ),
-          SeparatorWidget(),
+          const SeparatorWidget(),
         ],
       ),
     );
