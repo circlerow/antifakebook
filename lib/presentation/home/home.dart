@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
 
@@ -23,7 +25,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 6);
+    _tabController = TabController(vsync: this, length: 5);
   }
 
   @override
