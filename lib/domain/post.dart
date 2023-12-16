@@ -1,3 +1,8 @@
+
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 class Post {
   final String id;
   final String name;
@@ -87,3 +92,31 @@ class Author {
     );
   }
 }
+
+class PostCreate{
+  final List<File>? image;
+  final File? video;
+  final String? described;
+  final String? status;
+  final String? autoAccept;
+
+  PostCreate({
+    required this.image,
+    required this.video,
+    required this.described,
+    required this.status,
+    required this.autoAccept,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'video': video,
+      'described': described,
+      'status': status,
+      'auto_accept': autoAccept,
+    };
+  }
+}
+
+

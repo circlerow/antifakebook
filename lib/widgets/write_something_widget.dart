@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/presentation/CreatePost.dart';
+
+import '../presentation/post/create_post.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
   const WriteSomethingWidget({super.key});
