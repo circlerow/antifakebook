@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
-import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/friend_repository.dart';
-import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
-import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendInfo.dart';
+import 'package:flutter_application/presentation/friend/FriendView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FriendsTab extends StatefulWidget {
   const FriendsTab({super.key});
@@ -17,11 +16,12 @@ class FriendsTab extends StatefulWidget {
 class FriendsTabPage extends State<FriendsTab> {
   FriendService friendService =
       FriendService(friendRepository: FriendRepositoryImpl());
-  UserService userService = UserService(userRepository: UserRepositoryImpl());
+
   late Future<void> _dataFuture;
   late List<Friend> friends = [];
   late List<Friend> friendSuggesteds = [];
   late String total;
+  String userId = '0';
   List<bool> isFriendRequestSent = List.filled(10000, false);
   List<int> isFriendList = List.filled(10000, 0);
 
@@ -37,6 +37,9 @@ class FriendsTabPage extends State<FriendsTab> {
 
     List<Friend> fetchFriendSuggested =
         await friendService.getSuggestedFriends({"index": "0", "count": "10"});
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('user_id')!;
 
     setState(() {
       friends = fetchedPosts['friends'];
@@ -78,26 +81,48 @@ class FriendsTabPage extends State<FriendsTab> {
               const SizedBox(height: 15.0),
               Row(
                 children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: const Text('Gợi ý',
-                        style: TextStyle(
-                            fontSize: 17.0, fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FriendsView(isListFriend: false, userId: userId )
+                                )
+                              );
+                    },
+                    child:
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 10.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: const Text('Gợi ý',
+                          style: TextStyle(
+                              fontSize: 17.0, fontWeight: FontWeight.bold)),
+                    )
                   ),
                   const SizedBox(width: 10.0),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 10.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: const Text('Tất cả bạn bè',
-                        style: TextStyle(
-                            fontSize: 17.0, fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FriendsView(isListFriend: true, userId: userId )
+                                )
+                              );
+                    },
+                    child:
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 10.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(30.0)),
+                      child: const Text('Tất cả bạn bè',
+                          style: TextStyle(
+                              fontSize: 17.0, fontWeight: FontWeight.bold)),
+                    )
                   )
                 ],
               ),
@@ -123,15 +148,12 @@ class FriendsTabPage extends State<FriendsTab> {
                       Row(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () async {
-                              User res =
-                                  await userService.getUserInfo(friend.id);
-                              Navigator.pop(context);
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => FriendInfo(
-                                          friend: res,
+                                          friendId: friend.id,
                                         )),
                               );
                             },
@@ -259,15 +281,12 @@ class FriendsTabPage extends State<FriendsTab> {
                       Row(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () async {
-                              User res =
-                                  await userService.getUserInfo(friend.id);
-                              Navigator.pop(context);
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => FriendInfo(
-                                          friend: res,
+                                          friendId: friend.id,
                                         )),
                               );
                             },

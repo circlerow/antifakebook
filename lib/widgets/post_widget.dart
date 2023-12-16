@@ -1,9 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/application/user_service.dart';
-import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/post.dart';
-import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,8 +14,7 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetPage extends State<PostWidget> {
-  UserService userService = UserService(userRepository: UserRepositoryImpl());
-
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,14 +22,12 @@ class _PostWidgetPage extends State<PostWidget> {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () async {
-              User res = await userService.getUserInfo(widget.post.author.id);
-              Navigator.pop(context);
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => FriendInfo(
-                          friend: res,
+                          friendId: widget.post.author.id,
                         )),
               );
             },

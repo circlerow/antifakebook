@@ -7,6 +7,7 @@ import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
+import 'package:flutter_application/presentation/friend/FriendList.dart';
 import 'package:flutter_application/presentation/profile/option_profile.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,6 @@ class ProfileTab extends State<Profile> {
     dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
 
     ///dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
-    print("user = " + fetchedUser.toString());
     http.Response avatarHttp = await http.get(Uri.parse(fetchedUser
             .avatar.isNotEmpty
         ? fetchedUser.avatar
@@ -340,74 +340,7 @@ class ProfileTab extends State<Profile> {
           ),
         ),
         const Divider(height: 40.0),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('Bạn bè',
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 6.0),
-                      Text('$total bạn bè',
-                          style: TextStyle(
-                              fontSize: 16.0, color: Colors.grey[800])),
-                    ],
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: friends.map((friend) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery.of(context).size.width / 3 - 20,
-                          width: MediaQuery.of(context).size.width / 3 - 20,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(friend.avatar),
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        const SizedBox(height: 5.0),
-                        Text(
-                          friend.username,
-                          style: const TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    );
-                  }).toList(), // Chuyển danh sách thành List
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 15.0),
-                height: 40.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: const Center(
-                    child: Text('See All Friends',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0))),
-              ),
-            ],
-          ),
-        ),
+        FriendList(friends: friends, total: total),
         const SeparatorWidget()
       ],
     ));

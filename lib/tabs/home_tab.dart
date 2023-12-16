@@ -35,7 +35,6 @@ class HomeTabPage extends State<HomeTab> {
       "index": "0",
       "count": "20"
     });
-    print(" DATA = " + fetchedPosts.toString());
     setState(() {
       posts = fetchedPosts;
       //posts = posts;
