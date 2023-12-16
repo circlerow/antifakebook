@@ -1,15 +1,20 @@
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/auth_service.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../presentation/setting/deposit_coin.dart';
+
 class MenuTab extends StatelessWidget {
   const MenuTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-      final AuthService authService = AuthService(authRepository: AuthRepositoryImpl());
+    final AuthService authService =
+        AuthService(authRepository: AuthRepositoryImpl());
 
     return SingleChildScrollView(
       child: Container(
@@ -51,7 +56,8 @@ class MenuTab extends StatelessWidget {
             child: Divider(height: 20.0),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -98,7 +104,8 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -144,7 +151,8 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -190,7 +198,8 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -236,6 +245,9 @@ class MenuTab extends StatelessWidget {
               ],
             ),
           ),
+          const Divider(),
+          const MyWidget(),
+          const Divider(),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 65.0,
@@ -243,24 +255,59 @@ class MenuTab extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Icon(Icons.help, size: 40.0, color: Colors.grey[700]),
-                    const SizedBox(width: 10.0),
-                    const Text('Help & Support', style: TextStyle(fontSize: 17.0)),
-                  ],
-                ),
-                const Icon(Icons.arrow_drop_down, size: 30.0),
+                GestureDetector(
+                  onTap: () async {
+                    await authService.logout();
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Icon(Icons.exit_to_app,
+                          size: 40.0, color: Colors.grey[700]),
+                      const SizedBox(width: 10.0),
+                      const Text('Logout', style: TextStyle(fontSize: 17.0)),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
-          const Divider(),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 65.0,
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Row(
+        ],
+      )),
+    );
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  bool _isExpanded = false;
+  final Color _backgroundColor = Colors.transparent;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
+      child: Container(
+        color: _backgroundColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Column(
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
@@ -272,40 +319,59 @@ class MenuTab extends StatelessWidget {
                         style: TextStyle(fontSize: 17.0)),
                   ],
                 ),
-                const Icon(Icons.arrow_drop_down, size: 30.0),
+                Icon(
+                  _isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                  size: 30.0,
+                ),
               ],
             ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 65.0,
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-               GestureDetector(
-                    onTap: () async {
-                      await authService.logout();
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Login()),
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Icon(Icons.exit_to_app, size: 40.0, color: Colors.grey[700]),
-                        const SizedBox(width: 10.0),
-                        const Text('Logout', style: TextStyle(fontSize: 17.0)),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: _isExpanded ? 155.0 : 0.0,
+              child: _isExpanded
+                  ? ListView(
+                      shrinkWrap: true,
+                      children: [
+                        _depositCoin('Nạp Coin'),
+                        const Divider(),
+                        _buildOptionButton('Cài đặt thông báo'),
+                        const Divider(),
+                        _buildOptionButton('Thiết lập mã thiết bị'),
                       ],
-                    ),
-                  )
-              ],
+                    )
+                  : null,
             ),
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton(String optionText) {
+    return SizedBox(
+      height: 40.0,
+      child: ListTile(
+        title: Text(optionText),
+        onTap: () {
+          print('$optionText tapped!');
+        },
+      ),
+    );
+  }
+
+  Widget _depositCoin(String optionText) {
+    return SizedBox(
+      height: 40.0, 
+      child: ListTile(
+        leading: const Icon(Icons.attach_money, size: 40.0, color: Color.fromARGB(255, 211, 211, 11)),
+        title: Text(optionText),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DepositScreen()),
+          );
+        },
+      ),
     );
   }
 }
