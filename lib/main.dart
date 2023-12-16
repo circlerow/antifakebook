@@ -2,36 +2,35 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/api/firebase_api.dart';
 import 'package:flutter_application/firebase_options.dart';
-
+import 'package:flutter_application/presentation/home/home.dart';
 import 'package:flutter_application/presentation/login/login.dart';
-
-// import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  //await dot_env.dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAPI().initNotifications();
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+  Widget initWidget = token != null && token.isNotEmpty ? HomePage() : const Login();
+  runApp(MyApp(
+    initialWidget: initWidget,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget? initialWidget;
 
-  // MyApp({super.key});
+  const MyApp({Key? key, required this.initialWidget}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-          scaffoldBackgroundColor:
-              Colors.grey[200], // Thiết lập màu nền cho toàn bộ ứng dụng
-          // Các thiết lập theme khác
-        ),
-        debugShowCheckedModeBanner: false,
-        home: const Login());
-    //home: signUpPage());
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.grey[200],
+      ),
+      debugShowCheckedModeBanner: false,
+      home: initialWidget ?? Container(),
+    );
   }
 }

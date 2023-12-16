@@ -85,6 +85,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
     await request('/logout', 'POST', isToken: true);
   }
 }
