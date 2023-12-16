@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, unnecessary_null_comparison
+// ignore_for_file: library_private_types_in_public_api, unnecessary_null_comparison, use_build_context_synchronously
 
 import 'dart:io';
 
@@ -28,7 +28,7 @@ class _CreatePostState extends State<CreatePost> {
   late Future<void> _dataFuture;
   final TextEditingController _postTextController = TextEditingController();
   late User user;
-  late String status = 'Nice';
+  late String status = 'Bình thường';
   List<File>? _selectedImages;
   List<File>? _selectedImagesVideos;
   File? _selectedVideos;
@@ -38,6 +38,7 @@ class _CreatePostState extends State<CreatePost> {
   @override
   void initState() {
     super.initState();
+    _selectedImages ??= [];
     _dataFuture = fetchData();
   }
 
@@ -52,7 +53,6 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _pickImage() async {
-    print('hello');
     if (_selectedImages != null) {
       if (_selectedImages!.length >= 4) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -70,7 +70,7 @@ class _CreatePostState extends State<CreatePost> {
     XFile? pickedImage = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
-    _selectedImages ??= [];
+
     if (pickedImage != null) {
       setState(() {
         _selectedImages?.add(File(pickedImage.path));
@@ -79,27 +79,31 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> _pickVideo() async {
-    if (_selectedImagesVideos!.length == 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Chỉ được chọn tối đa 1 video.'),
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
+    if (_selectedImagesVideos != null) {
+      if (_selectedImagesVideos!.length == 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Chỉ được chọn tối đa 1 video.'),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
           ),
-        ),
-      );
-      return;
+        );
+        return;
+      }
     }
-    final pickedVideo = await ImagePicker().pickVideo(
+    XFile? pickedVideo = await ImagePicker().pickVideo(
       source: ImageSource.gallery,
     );
 
+    _selectedImagesVideos ??= [];
     if (pickedVideo != null) {
       final thumbnailPath = await createThumbnail(pickedVideo.path);
       setState(() {
         _selectedVideos = File(pickedVideo.path);
         _selectedImagesVideos?.add(File(thumbnailPath!));
+        print(_selectedImagesVideos);
       });
     }
   }
@@ -136,11 +140,11 @@ class _CreatePostState extends State<CreatePost> {
           InkResponse(
             onTap: () {
               _createPost();
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      HomePage(),
+                  builder: (context) => HomePage(),
                 ),
               );
             },
@@ -173,38 +177,32 @@ class _CreatePostState extends State<CreatePost> {
                     ? user.avatar
                     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
               ),
-              title: Row(
-                children: [
-                  Text(
-                    user.username,
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+              title: RichText(
+                text: TextSpan(
+                  text: user.username,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
-                  if (status.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            '-  Đang cảm thấy $status',
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: Color.fromARGB(255, 0, 0, 0),
-                            ),
-                          ),
-                        ],
+                  children: [
+                    if (status.isNotEmpty)
+                      TextSpan(
+                        text: ' -  Đang cảm thấy $status',
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
               subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 5.0),
                 child: Row(
                   children: [
                     SizedBox(
+                      height: 30,
                       width: 130.0,
                       child: OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(
@@ -403,7 +401,7 @@ class _CreatePostState extends State<CreatePost> {
   Future<void> _createPost() async {
     String described = _postTextController.text;
 
-    bool isChangeInfoAfterSignUp = await postService.createPost(
+    await postService.createPost(
       PostCreate(
         image: _selectedImages,
         video: _selectedVideos,
