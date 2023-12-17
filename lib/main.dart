@@ -12,7 +12,8 @@ void main() async {
   await FirebaseAPI().initNotifications();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? token = prefs.getString('token');
-  Widget initWidget = token != null && token.isNotEmpty ? HomePage() : const Login();
+  Widget initWidget =
+      token != null && token.isNotEmpty ? HomePage() : const Login();
   runApp(MyApp(
     initialWidget: initWidget,
   ));
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.grey[200],
+        scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
       home: initialWidget ?? Container(),
