@@ -2,13 +2,17 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_application/application/friend_service.dart';
+import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/friend_repository.dart';
+import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
+import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendList.dart';
 import 'package:flutter_application/presentation/profile/option_profile.dart';
+import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +35,7 @@ class ProfileTab extends State<Profile> {
   File? selectedAvatar;
   Uint8List? _backGr;
   File? selectedBackGr;
-
+  late List<Post> posts;
   @override
   void initState() {
     _dataFuture = fetchData();
@@ -39,25 +43,66 @@ class ProfileTab extends State<Profile> {
   }
 
   Future<void> fetchData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('user_id')!;
+    PostService postService = PostService(postRepository: PostRepositoryImpl());
     UserService userService = UserService(userRepository: UserRepositoryImpl());
     FriendService friendService =
         FriendService(friendRepository: FriendRepositoryImpl());
+
+    List<Future> furures = [];
+    // List<Post> fetchedPosts = await postService.getListPost({
+    //   "user_id": "",
+    //   "in_campaign": "1",
+    //   "campaign_id": "1",
+    //   "latitude": "1.0",
+    //   "longitude": "1.0",
+    //   "last_id": "",
+    //   "index": "0",
+    //   "count": "20"
+    // });
+    //furures.add(SharedPreferences.getInstance());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String userId = prefs.getString('user_id')!;
     User fetchedUser = await userService.getUserInfo(userId);
-    dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
+
+    furures.add(postService.getListPost({
+      "user_id": userId,
+      "in_campaign": "1",
+      "campaign_id": "1",
+      "latitude": "1.0",
+      "longitude": "1.0",
+      "last_id": "",
+      "index": "0",
+      "count": "20"
+    }));
+
+    furures.add(friendService.getUserFriends("0", "6", userId));
+    //dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
 
     ///dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
-    http.Response avatarHttp = await http.get(Uri.parse(fetchedUser
-            .avatar.isNotEmpty
+    furures.add(http.get(Uri.parse(fetchedUser.avatar.isNotEmpty
         ? fetchedUser.avatar
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
-
-    http.Response backgrHttp = await http.get(Uri.parse(fetchedUser
-            .coverImage.isNotEmpty
+        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
+    // http.Response avatarHttp = await http.get(Uri.parse(fetchedUser
+    //         .avatar.isNotEmpty
+    //     ? fetchedUser.avatar
+    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
+    furures.add(http.get(Uri.parse(fetchedUser.coverImage.isNotEmpty
         ? fetchedUser.coverImage
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
+        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
 
+    // http.Response backgrHttp = await http.get(Uri.parse(fetchedUser
+    //         .coverImage.isNotEmpty
+    //     ? fetchedUser.coverImage
+    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
+
+    List<dynamic> result = await Future.wait(furures);
+
+    List<Post> fetchedPosts = result[0];
+    dynamic listFriend = result[1];
+    http.Response avatarHttp = result[2];
+    http.Response backgrHttp = result[3];
+    print(" Total " + fetchedPosts.length.toString() + " Posts");
     setState(() async {
       friends = listFriend["friends"];
       total = listFriend["total"];
@@ -66,6 +111,7 @@ class ProfileTab extends State<Profile> {
       selectedAvatar = File.fromRawPath(_avatar!);
       _backGr = backgrHttp.bodyBytes;
       selectedBackGr = File.fromRawPath(_backGr!);
+      posts = fetchedPosts;
     });
   }
 
@@ -310,7 +356,7 @@ class ProfileTab extends State<Profile> {
                   Text('See your About Info', style: TextStyle(fontSize: 16.0))
                 ],
               ),
-              SizedBox(height: 15.0),
+              SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -339,9 +385,17 @@ class ProfileTab extends State<Profile> {
             ],
           ),
         ),
-        const Divider(height: 40.0),
+        const Divider(height: 20.0),
         FriendList(friends: friends, total: total),
-        const SeparatorWidget()
+        const SeparatorWidget(),
+        // for (Post post in posts)
+        //   Column(
+        //     children: <Widget>[
+        //       const SeparatorWidget(),
+        //       PostWidget(post: post),
+        //     ],
+        //   ),
+        // const SeparatorWidget(),
       ],
     ));
   }
