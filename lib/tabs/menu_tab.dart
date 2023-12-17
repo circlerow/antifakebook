@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/application/auth_service.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
+import 'package:flutter_application/presentation/setting/change_password.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../presentation/setting/deposit_coin.dart';
 import '../presentation/setting/setting_notification.dart';
@@ -327,7 +328,7 @@ class _MyWidgetState extends State<MyWidget> {
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              height: _isExpanded ? 155.0 : 0.0,
+              height: _isExpanded ? 215.0 : 0.0,
               child: _isExpanded
                   ? ListView(
                       shrinkWrap: true,
@@ -337,6 +338,8 @@ class _MyWidgetState extends State<MyWidget> {
                         _settingNotification('Cài đặt thông báo'),
                         const Divider(),
                         _buildOptionButton('Thiết lập mã thiết bị'),
+                        const Divider(),
+                        _changePassword('Đổi mật khẩu'),
                       ],
                     )
                   : null,
@@ -369,6 +372,22 @@ class _MyWidgetState extends State<MyWidget> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const DepositScreen()),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _changePassword(String optionText) {
+    return SizedBox(
+      height: 40.0, 
+      child: ListTile(
+        leading: const Icon(Icons.lock_outline, size: 40.0, color: Color.fromARGB(255, 255, 0, 162)),
+        title: Text(optionText),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
           );
         },
       ),

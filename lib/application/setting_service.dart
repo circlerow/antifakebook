@@ -20,4 +20,9 @@ class SettingService {
     dynamic data = await settingRepository.setPushSetting(pushSetting);
     return data;
   }
+
+  Future<dynamic> changePassword(ChangePassWord changePassWord) async {
+    dynamic data = await settingRepository.changePassword(changePassWord);
+    return data;
+  }
 }
