@@ -8,6 +8,7 @@ abstract class SettingRepository {
   Future<dynamic> depositCoin(String amount);
   Future<dynamic> getPushSetting();
   Future<dynamic> setPushSetting(PushSetting pushSetting);
+  Future<dynamic> changePassword(ChangePassWord changePassWord);
 }
 
 class SettingRepositoryImpl implements SettingRepository {
@@ -45,6 +46,18 @@ class SettingRepositoryImpl implements SettingRepository {
     };
     final http.Response response =
         await request('/set_push_settings', 'POST', isToken: true, body: body);
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> changePassword(ChangePassWord changePassWord) async {
+    var body = {
+      "password": changePassWord.password,
+      "new_password": changePassWord.newPassword
+    };
+    final http.Response response =
+        await request('/change_password', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }

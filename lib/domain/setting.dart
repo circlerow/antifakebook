@@ -42,3 +42,20 @@ class PushSetting {
     );
   }
 }
+
+class ChangePassWord{
+  final String password;
+  final String newPassword;
+
+  ChangePassWord({
+    required this.password,
+    required this.newPassword,
+  });
+
+  factory ChangePassWord.fromJson(Map<String, dynamic> json) {
+    return ChangePassWord(
+      password: json['password'] ?? '',
+      newPassword: json['new_password'] ?? '',
+    );
+  }
+}
