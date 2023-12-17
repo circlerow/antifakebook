@@ -15,17 +15,6 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  bool showReactions = false; // Trạng thái của nút "Like"
-  int likeCount = 0;
-
-  // Các biểu tượng phản ứng
-  List<IconData> reactions = [
-    FontAwesomeIcons.heart,
-    FontAwesomeIcons.smile,
-    FontAwesomeIcons.laugh,
-    // Thêm các biểu tượng khác tại đây
-  ];
-
   IconData selectedReaction = FontAwesomeIcons.thumbsUp;
 
   @override
@@ -45,12 +34,39 @@ class _PostWidgetState extends State<PostWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(widget.post.author.name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17.0)),
+                  Text(
+                    widget.post.author.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17.0,
+                    ),
+                  ),
                   SizedBox(height: 5.0),
-                  Text(formatTimeDifference(widget.post.created))
+                  Text(formatTimeDifference(widget.post.created)),
                 ],
+              ),
+              Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
+              PopupMenuButton(
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      child: Text('Chỉnh sửa bài'),
+                      value: 'edit',
+                    ),
+                    PopupMenuItem(
+                      child: Text('Xóa bài'),
+                      value: 'delete',
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    // Xử lý sự kiện chỉnh sửa bài
+                  } else if (value == 'delete') {
+                    // Xử lý sự kiện xóa bài
+                  }
+                },
+                icon: Icon(Icons.more_vert),
               ),
             ],
           ),
