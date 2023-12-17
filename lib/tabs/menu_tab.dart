@@ -1,12 +1,12 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/auth_service.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../presentation/setting/deposit_coin.dart';
+import '../presentation/setting/setting_notification.dart';
 
 class MenuTab extends StatelessWidget {
   const MenuTab({super.key});
@@ -334,7 +334,7 @@ class _MyWidgetState extends State<MyWidget> {
                       children: [
                         _depositCoin('Nạp Coin'),
                         const Divider(),
-                        _buildOptionButton('Cài đặt thông báo'),
+                        _settingNotification('Cài đặt thông báo'),
                         const Divider(),
                         _buildOptionButton('Thiết lập mã thiết bị'),
                       ],
@@ -369,6 +369,22 @@ class _MyWidgetState extends State<MyWidget> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const DepositScreen()),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _settingNotification(String optionText) {
+    return SizedBox(
+      height: 40.0, 
+      child: ListTile(
+        leading: const Icon(Icons.circle_notifications_outlined, size: 40.0, color: Color.fromARGB(255, 21, 15, 195)),
+        title: Text(optionText),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettingsScreen()),
           );
         },
       ),
