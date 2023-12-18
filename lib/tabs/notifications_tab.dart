@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/domain/notification.dart';
 import 'package:flutter_application/widgets/notification_widget.dart';
-import 'package:flutter_application/models/user_notification.dart';
+
+import '../widgets/separator_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
   late NotificationController ctrl;
@@ -37,7 +38,12 @@ class _NotificationsTabState extends State<NotificationsTab> {
               ),
             ),
             for (Noti notification in NotificationController.notifications)
-              NotificationWidget(noti: notification)
+              Column(
+                children: [
+                  NotificationWidget(noti: notification),
+                  const SeparatorWidget()
+                ],
+              )
           ],
         ),
       ),

@@ -235,10 +235,10 @@ class ProfileTab extends State<Profile> {
                             radius: 70.0,
                           ),
                           onTap: () {
-                            print("press");
                             _showPopupAvatar(context);
                           },
                         )),
+                    SizedBox(height: 20.0),
                     Text(user.username,
                         style: const TextStyle(
                             fontSize: 24.0, fontWeight: FontWeight.bold)),
@@ -248,6 +248,45 @@ class ProfileTab extends State<Profile> {
                   ],
                 ),
               ),
+              Positioned(
+                  left: 52.0,
+                  top: 190.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: 40.0,
+                        width: MediaQuery.of(context).size.width / 8 * 2,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 233, 242, 252),
+                          borderRadius: BorderRadius.circular(45.0),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Căn giữa các thành phần trong hàng ngang
+                            children: [
+                              Image.asset(
+                                'assets/coin.png',
+                                width: 20.0,
+                                height: 20.0,
+                              ),
+                              SizedBox(
+                                  width: 5.0), // Khoảng cách giữa icon và text
+                              Text(
+                                '${user.coins} coin',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 1, 101, 255),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -258,7 +297,7 @@ class ProfileTab extends State<Profile> {
                         height: 40.0,
                         width: MediaQuery.of(context).size.width / 8 * 6.5,
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 33, 40, 243),
+                            color: const Color.fromARGB(255, 1, 101, 255),
                             borderRadius: BorderRadius.circular(5.0)),
                         child: const Center(
                             child: Text('Add to Story',
@@ -298,10 +337,12 @@ class ProfileTab extends State<Profile> {
                   Text.rich(
                     TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: 'Sống tại '),
+                        TextSpan(
+                            text: 'Sống tại ', style: TextStyle(fontSize: 18)),
                         TextSpan(
                             text: '${user.address}',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18)),
                       ],
                     ),
                   )
@@ -316,10 +357,12 @@ class ProfileTab extends State<Profile> {
                   Text.rich(
                     TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: 'Đến từ '),
+                        TextSpan(
+                            text: 'Đến từ ', style: TextStyle(fontSize: 18)),
                         TextSpan(
                             text: '${user.country}',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0)),
                       ],
                     ),
                   )
@@ -330,7 +373,8 @@ class ProfileTab extends State<Profile> {
                 children: <Widget>[
                   Icon(Icons.more_horiz, color: Colors.grey, size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('See your About Info', style: TextStyle(fontSize: 16.0))
+                  Text('Xem thông tin giới thiệu của bạn',
+                      style: TextStyle(fontSize: 18.0))
                 ],
               ),
               SizedBox(height: 20.0),
@@ -347,14 +391,14 @@ class ProfileTab extends State<Profile> {
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 33, 37, 243)
-                        .withOpacity(0.10),
+                    color:
+                        const Color.fromARGB(255, 1, 101, 255).withOpacity(1),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: Center(
                       child: Text('Chỉnh sửa chi tiết công khai',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 33, 37, 243),
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16.0))),
                 ),

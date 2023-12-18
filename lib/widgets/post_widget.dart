@@ -170,7 +170,7 @@ class _PostWidgetState extends State<PostWidget> {
                             child: () {
                               if (isFeltKudo == '-1') {
                                 return Image.asset(
-                                  'assets/img/reaction/ic_like.png',
+                                  'assets/like.png',
                                   width: 20,
                                   height: 20,
                                 );
@@ -182,7 +182,7 @@ class _PostWidgetState extends State<PostWidget> {
                                 );
                               } else {
                                 return Image.asset(
-                                  'assets/img/reaction/ic_like_fill.png',
+                                  'assets/liked.png',
                                   width: 20,
                                   height: 20,
                                 );
@@ -194,19 +194,25 @@ class _PostWidgetState extends State<PostWidget> {
                               return const Text(
                                 "Like",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             } else if (isFeltKudo == '0') {
                               return const Text(
                                 "Phẫn nộ",
-                                style:
-                                    TextStyle(color: Colors.pink, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.pink,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             } else {
                               return const Text(
                                 "Like",
-                                style:
-                                    TextStyle(color: Colors.blue, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             }
                           }(),
@@ -298,9 +304,14 @@ class _PostWidgetState extends State<PostWidget> {
                     },
                     child: Row(
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+                        //Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+
+                        Image.asset('assets/comment.png',
+                            width: 20.0, height: 20.0),
                         SizedBox(width: 5.0),
-                        Text('Comment', style: TextStyle(fontSize: 14.0)),
+                        Text('Comment',
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -308,9 +319,11 @@ class _PostWidgetState extends State<PostWidget> {
               ),
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.share, size: 20.0),
+                  Image.asset('assets/share.png', width: 20.0, height: 20.0),
                   SizedBox(width: 5.0),
-                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                  Text('Share',
+                      style: TextStyle(
+                          fontSize: 14.0, fontWeight: FontWeight.bold)),
                 ],
               ),
             ],
