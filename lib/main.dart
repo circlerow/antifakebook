@@ -8,9 +8,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAPI().initNotifications();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  final Widget? initialWidget;
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
