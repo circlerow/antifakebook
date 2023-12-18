@@ -389,6 +389,10 @@ class ProfileTab extends State<Profile> {
                   // if (result != null && result == true) {
                   setState(() {
                     user = UserController.user;
+                    selectedAvatar = File(UserController.fileAvatar);
+                    _avatar = File(UserController.fileAvatar).readAsBytesSync();
+                    selectedBackGr = File(UserController.fileBackGr);
+                    _backGr = File(UserController.fileBackGr).readAsBytesSync();
                   });
                   //  }
                 },
