@@ -37,13 +37,15 @@ dev_dependencies:
     flutter_lints: ^2.0.0
 
 flutter:
-    uses-material-design: true
-    assets:
-        - assets/
-        - assets/chinhsach.html
-        - assets/img/nav/
-    # An image asset can refer to one or more resolution-specific "variants", see
-    # https://flutter.dev/assets-and-images/#resolution-aware
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/chinhsach.html
+    - assets/img/nav/
+    - assets/img/reaction/
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
 
     # For details regarding adding assets from package dependencies, see
     # https://flutter.dev/assets-and-images/#from-packages
