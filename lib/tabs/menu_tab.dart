@@ -6,6 +6,7 @@ import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:flutter_application/presentation/setting/change_password.dart';
+import 'package:flutter_application/presentation/video_pages/videoPage.dart';
 import 'package:flutter_application/widgets/avatar/avatar.dart';
 import 'package:flutter_application/widgets/avatar/username.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,8 +44,8 @@ class MenuTab extends StatelessWidget {
                   UsernameWidget(),
                   SizedBox(height: 5.0),
                   Text(
-                    'See your profile',
-                    style: TextStyle(color: Colors.grey),
+                    'Xem trang cá nhân của bạn',
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   )
                 ],
               ),
@@ -127,23 +128,34 @@ class MenuTab extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => VideoPage()),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2 - 30,
+                    height: 85.0,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Đổi màu nền thành màu trắng
                       border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.history, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Memories',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Image.asset('assets/img/icon/video.png',
+                            width: 30.0, height: 30.0),
+                        SizedBox(height: 5.0),
+                        Text('Video',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ),
                 )
               ],
