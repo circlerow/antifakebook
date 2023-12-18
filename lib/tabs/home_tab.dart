@@ -50,7 +50,7 @@ class HomeTabPage extends State<HomeTab> {
           //SeparatorWidget(),
           //OnlineWidget(),
           const SeparatorWidget(),
-          const StoriesWidget(),
+          //const StoriesWidget(),
           for (Post post in posts)
             Column(
               children: <Widget>[

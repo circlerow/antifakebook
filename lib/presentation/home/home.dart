@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 
+import 'package:flutter_application/controller/notificationController.dart';
+import 'package:flutter_application/models/user_notification.dart';
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
 
@@ -13,6 +15,8 @@ import '../search/search.dart';
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  late NotificationController notificationController;
+
   @override
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
@@ -25,6 +29,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    print("RUNNN HOME");
+    print("RUNNN HOME");
+    print("RUNNN HOME");
+    widget.notificationController = new NotificationController();
+
     _tabController = TabController(vsync: this, length: 5);
   }
 
@@ -75,7 +84,7 @@ class _HomePageState extends State<HomePage>
         bottom: TabBar(
           indicatorColor: Colors.blueAccent,
           controller: _tabController,
-          unselectedLabelColor: Colors.grey,
+          unselectedLabelColor: const Color.fromARGB(255, 255, 255, 255),
           labelColor: Colors.blueAccent,
           tabs: [
             Tab(
@@ -96,11 +105,13 @@ class _HomePageState extends State<HomePage>
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: const [
+      body: TabBarView(controller: _tabController, children: [
         HomeTab(),
         FriendsTab(),
         Profile(),
-        NotificationsTab(),
+        NotificationsTab(
+          ctrl: widget.notificationController,
+        ),
         MenuTab()
       ]),
     );
