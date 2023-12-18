@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage>
     print("RUNNN HOME");
     widget.notificationController = new NotificationController();
     widget.userController = new UserController();
-
+    widget.userController.init();
     _tabController = TabController(vsync: this, length: 5);
   }
 
@@ -110,7 +110,9 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(controller: _tabController, children: [
         HomeTab(),
         FriendsTab(),
-        Profile(),
+        Profile(
+          userCtrl: widget.userController,
+        ),
         NotificationsTab(
           ctrl: widget.notificationController,
         ),

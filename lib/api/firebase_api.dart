@@ -8,6 +8,8 @@ import 'package:flutter_application/models/user_notification.dart';
 class FirebaseAPI {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
+  NotificationController notiCrtl = NotificationController();
+
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
     final fCMToken = await _firebaseMessaging.getToken();
@@ -21,7 +23,7 @@ class FirebaseAPI {
 
       Noti noti = Noti.fromJson(message.data);
 
-      NotificationController.addNotification(noti);
+      notiCrtl.addNotification(noti);
     });
     print('token Firebase = $fCMToken');
     setting.setDevToken(fCMToken!);

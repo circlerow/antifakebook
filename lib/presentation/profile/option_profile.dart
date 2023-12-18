@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
@@ -393,7 +394,7 @@ class _OptionProfileState extends State<OptionProfile> {
                   newUser.address = _addressEdit.text;
                   newUser.country = _countryEdit.text;
                 });
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
               child: Text('Lưu'),
             ),
@@ -426,7 +427,7 @@ class _OptionProfileState extends State<OptionProfile> {
                 setState(() {
                   newUser.description = _tieusuEdit.text;
                 });
-                Navigator.of(context).pop();
+                Navigator.pop(context, true);
               },
               child: Text('Lưu'),
             ),
@@ -445,6 +446,13 @@ class _OptionProfileState extends State<OptionProfile> {
     print("newUser" + newUser.city);
     print("newUser" + newUser.country);
     print("newUser" + selectedBackGr!.path);
+
+    await UserController.setAvatar(selectedAvatar!);
+
+    await UserController.setBackGr(selectedBackGr!);
+
+    UserController.updatedInfo(newUser);
+
     UserService userService = UserService(userRepository: UserRepositoryImpl());
     await userService.setUserInfo(
         newUser.username,

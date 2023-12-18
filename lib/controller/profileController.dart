@@ -13,6 +13,7 @@ class UserController {
   static late String fileAvatar;
   static late String fileBackGr;
   static late Future initState;
+  static bool needUpdated = false;
 
   UserService userService = UserService(userRepository: UserRepositoryImpl());
 
@@ -41,12 +42,17 @@ class UserController {
             .coverImage.isNotEmpty
         ? fetchedUser.coverImage
         : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
-    File(fileBackGr).writeAsBytes(backgrHttp.bodyBytes);
+    await File(fileBackGr).writeAsBytes(backgrHttp.bodyBytes);
   }
 
   String getExtensionFromUrl(String url) {
     int index = url.lastIndexOf('.');
     return index != -1 ? url.substring(index + 1) : '';
+  }
+
+  void update() {
+    initState = init();
+    return;
   }
 
   static Future<String> getAvatar() async {
@@ -57,5 +63,22 @@ class UserController {
   static Future<String> getUsername() async {
     await Future.wait([initState]);
     return user.username;
+  }
+
+  static Future<User> getUser() async {
+    await Future.wait([initState]);
+    return user;
+  }
+
+  static Future<void> setAvatar(File newAvatar) async {
+    await File(fileAvatar).writeAsBytes(newAvatar.readAsBytesSync());
+  }
+
+  static Future<void> setBackGr(File backGr) async {
+    await File(fileBackGr).writeAsBytes(backGr.readAsBytesSync());
+  }
+
+  static void updatedInfo(User newUser) {
+    user = newUser;
   }
 }

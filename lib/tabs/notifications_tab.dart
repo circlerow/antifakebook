@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/domain/notification.dart';
 import 'package:flutter_application/widgets/notification_widget.dart';
-import 'package:flutter_application/models/user_notification.dart';
+
+import '../widgets/separator_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
   late NotificationController ctrl;
@@ -21,7 +22,7 @@ class _NotificationsTabState extends State<NotificationsTab> {
     print(" RUN ================ ");
     print(" RUN ================ ");
     print(" So luong thong bao hien tai " +
-        NotificationController.notifications.length.toString());
+        widget.ctrl.notifications.length.toString());
 
     return SingleChildScrollView(
       child: Container(
@@ -36,8 +37,13 @@ class _NotificationsTabState extends State<NotificationsTab> {
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
-            for (Noti notification in NotificationController.notifications)
-              NotificationWidget(noti: notification)
+            for (Noti notification in widget.ctrl.notifications)
+              Column(
+                children: [
+                  NotificationWidget(noti: notification),
+                  const SeparatorWidget()
+                ],
+              )
           ],
         ),
       ),
