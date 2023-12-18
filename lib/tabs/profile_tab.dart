@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/data/user_repository.dart';
@@ -20,7 +21,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  late UserController userCtrl;
+  Profile({super.key, required this.userCtrl});
 
   @override
   ProfileTab createState() => ProfileTab();
@@ -36,8 +38,12 @@ class ProfileTab extends State<Profile> {
   Uint8List? _backGr;
   File? selectedBackGr;
   late List<Post> posts;
+
   @override
   void initState() {
+    print(" RUN");
+    print(" RUN");
+    print(" RUN");
     _dataFuture = fetchData();
     super.initState();
   }
@@ -45,13 +51,14 @@ class ProfileTab extends State<Profile> {
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
     UserService userService = UserService(userRepository: UserRepositoryImpl());
+
     FriendService friendService =
         FriendService(friendRepository: FriendRepositoryImpl());
 
     List<Future> furures = [];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id')!;
-    User fetchedUser = await userService.getUserInfo(userId);
+    User fetchedUser = await UserController.getUser();
     furures.add(postService.getListPost({
       "user_id": userId,
       "in_campaign": "1",
@@ -64,30 +71,21 @@ class ProfileTab extends State<Profile> {
     }));
 
     furures.add(friendService.getUserFriends("0", "6", userId));
-
-    furures.add(http.get(Uri.parse(fetchedUser.avatar.isNotEmpty
-        ? fetchedUser.avatar
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-
-    furures.add(http.get(Uri.parse(fetchedUser.coverImage.isNotEmpty
-        ? fetchedUser.coverImage
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-
     List<dynamic> result = await Future.wait(furures);
-
     List<Post> fetchedPosts = result[0];
     dynamic listFriend = result[1];
-    http.Response avatarHttp = result[2];
-    http.Response backgrHttp = result[3];
     print(" Total " + fetchedPosts.length.toString() + " Posts");
     setState(() async {
       friends = listFriend["friends"];
       total = listFriend["total"];
       user = fetchedUser;
-      _avatar = avatarHttp.bodyBytes;
-      selectedAvatar = File.fromRawPath(_avatar!);
-      _backGr = backgrHttp.bodyBytes;
-      selectedBackGr = File.fromRawPath(_backGr!);
+
+      selectedAvatar = File(UserController.fileAvatar);
+
+      selectedBackGr = File(UserController.fileBackGr);
+
+      _avatar = selectedAvatar!.readAsBytesSync();
+      _backGr = selectedBackGr!.readAsBytesSync();
       posts = fetchedPosts;
     });
   }
@@ -203,7 +201,7 @@ class ProfileTab extends State<Profile> {
         child: Column(
       children: <Widget>[
         Container(
-          height: 330.0,
+          height: 350.0,
           child: Stack(
             children: <Widget>[
               GestureDetector(
@@ -379,14 +377,20 @@ class ProfileTab extends State<Profile> {
               ),
               SizedBox(height: 20.0),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OptionProfile(
                               user: user,
                             )),
                   );
+                  //  print("Result = " + result);
+                  // if (result != null && result == true) {
+                  setState(() {
+                    user = UserController.user;
+                  });
+                  //  }
                 },
                 child: Container(
                   height: 40.0,
