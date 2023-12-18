@@ -25,6 +25,7 @@ class HomeTabPage extends State<HomeTab> {
 
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
+    
     List<Post> fetchedPosts = await postService.getListPost({
       "user_id": "",
       "in_campaign": "1",

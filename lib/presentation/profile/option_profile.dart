@@ -183,7 +183,7 @@ class _OptionProfileState extends State<OptionProfile> {
             const SizedBox(height: 16.0),
             Row(
               children: [
-                Text(
+                const Text(
                   'Ảnh bìa',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
                 ),
@@ -192,7 +192,7 @@ class _OptionProfileState extends State<OptionProfile> {
                   onTap: () async {
                     await updateBackGr();
                   },
-                  child: Text(
+                  child: const Text(
                     'Chỉnh sửa',
                     style: TextStyle(fontSize: 16, color: Colors.blue),
                   ),
