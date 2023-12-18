@@ -13,4 +13,8 @@ class PostService {
     return postsJson.map((postJson) => Post.fromJson(postJson)).toList();
   }
 
+  Future<bool> createPost(PostCreate body) async {
+    return await postRepository.createPost(body);
+  }
+
 }

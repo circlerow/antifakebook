@@ -19,6 +19,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   @override
   void initState() {
+    initialCode = '';
     super.initState();
     _focusNodes = List.generate(6, (index) => FocusNode());
     _controllers = List.generate(6, (index) => TextEditingController());
