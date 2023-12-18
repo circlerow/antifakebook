@@ -21,7 +21,7 @@ class _NotificationsTabState extends State<NotificationsTab> {
     print(" RUN ================ ");
     print(" RUN ================ ");
     print(" So luong thong bao hien tai " +
-        widget.ctrl.notifications.length.toString());
+        NotificationController.notifications.length.toString());
 
     return SingleChildScrollView(
       child: Container(
@@ -36,7 +36,7 @@ class _NotificationsTabState extends State<NotificationsTab> {
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
-            for (Noti notification in widget.ctrl.notifications)
+            for (Noti notification in NotificationController.notifications)
               NotificationWidget(noti: notification)
           ],
         ),
