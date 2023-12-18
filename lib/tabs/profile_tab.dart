@@ -49,22 +49,9 @@ class ProfileTab extends State<Profile> {
         FriendService(friendRepository: FriendRepositoryImpl());
 
     List<Future> furures = [];
-    // List<Post> fetchedPosts = await postService.getListPost({
-    //   "user_id": "",
-    //   "in_campaign": "1",
-    //   "campaign_id": "1",
-    //   "latitude": "1.0",
-    //   "longitude": "1.0",
-    //   "last_id": "",
-    //   "index": "0",
-    //   "count": "20"
-    // });
-    //furures.add(SharedPreferences.getInstance());
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     String userId = prefs.getString('user_id')!;
     User fetchedUser = await userService.getUserInfo(userId);
-
     furures.add(postService.getListPost({
       "user_id": userId,
       "in_campaign": "1",
@@ -77,24 +64,14 @@ class ProfileTab extends State<Profile> {
     }));
 
     furures.add(friendService.getUserFriends("0", "6", userId));
-    //dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
-
-    ///dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
+   
     furures.add(http.get(Uri.parse(fetchedUser.avatar.isNotEmpty
         ? fetchedUser.avatar
         : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-    // http.Response avatarHttp = await http.get(Uri.parse(fetchedUser
-    //         .avatar.isNotEmpty
-    //     ? fetchedUser.avatar
-    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
+
     furures.add(http.get(Uri.parse(fetchedUser.coverImage.isNotEmpty
         ? fetchedUser.coverImage
         : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-
-    // http.Response backgrHttp = await http.get(Uri.parse(fetchedUser
-    //         .coverImage.isNotEmpty
-    //     ? fetchedUser.coverImage
-    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
 
     List<dynamic> result = await Future.wait(furures);
 

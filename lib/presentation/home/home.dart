@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 
 import 'package:flutter_application/controller/notificationController.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/models/user_notification.dart';
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   late NotificationController notificationController;
-
+  late UserController userController;
   @override
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage>
     print("RUNNN HOME");
     print("RUNNN HOME");
     widget.notificationController = new NotificationController();
+    widget.userController = new UserController();
 
     _tabController = TabController(vsync: this, length: 5);
   }

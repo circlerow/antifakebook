@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/widgets/avatar/avatar.dart';
 
 import '../presentation/post/create_post.dart';
 
@@ -18,10 +19,7 @@ class WriteSomethingWidget extends StatelessWidget {
               children: <Widget>[
                 const Stack(
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 17.0,
-                      backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
-                    ),
+                    AvatarWidget(),
                     Positioned(
                       right: 1.0,
                       bottom: 1.0,
