@@ -64,7 +64,7 @@ class ProfileTab extends State<Profile> {
     }));
 
     furures.add(friendService.getUserFriends("0", "6", userId));
-   
+
     furures.add(http.get(Uri.parse(fetchedUser.avatar.isNotEmpty
         ? fetchedUser.avatar
         : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
@@ -365,14 +365,14 @@ class ProfileTab extends State<Profile> {
         const Divider(height: 20.0),
         FriendList(friends: friends, total: total),
         const SeparatorWidget(),
-        // for (Post post in posts)
-        //   Column(
-        //     children: <Widget>[
-        //       const SeparatorWidget(),
-        //       PostWidget(post: post),
-        //     ],
-        //   ),
-        // const SeparatorWidget(),
+        for (Post post in posts)
+          Column(
+            children: <Widget>[
+              const SeparatorWidget(),
+              PostWidget(post: post),
+            ],
+          ),
+        const SeparatorWidget(),
       ],
     ));
   }

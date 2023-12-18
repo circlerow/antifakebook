@@ -25,4 +25,8 @@ class SettingService {
     dynamic data = await settingRepository.changePassword(changePassWord);
     return data;
   }
+
+  Future<void> setDevToken(String token) async {
+    await settingRepository.setDevToken(token);
+  }
 }
