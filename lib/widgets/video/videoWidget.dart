@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application/controller/videoControllrt.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   late String url;
@@ -12,6 +13,7 @@ class VideoPlayerWidget extends StatefulWidget {
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
+  bool inited = false;
 
   @override
   void initState() {
@@ -23,7 +25,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       setState(() {});
     });
     _controller.setLooping(false);
-    _controller.initialize();
   }
 
   @override
@@ -37,28 +38,45 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(0),
-            child: AspectRatio(
-              aspectRatio: 1, // Sử dụng tỷ lệ 1:1 cho ô vuông
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: <Widget>[
-                  Container(
-                    color: Colors.black, // Màu nền đen
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
+          VisibilityDetector(
+            key: Key(widget.url),
+            child: Container(
+              padding: const EdgeInsets.all(0),
+              child: AspectRatio(
+                aspectRatio: 1, // Sử dụng tỷ lệ 1:1 cho ô vuông
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      color: Colors.black, // Màu nền đen
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        ),
                       ),
                     ),
-                  ),
-                  _ControlsOverlay(controller: _controller),
-                  VideoProgressIndicator(_controller, allowScrubbing: true),
-                ],
+                    _ControlsOverlay(controller: _controller),
+                    VideoProgressIndicator(_controller, allowScrubbing: true),
+                  ],
+                ),
               ),
             ),
-          ),
+            onVisibilityChanged: (VisibilityInfo info) {
+              debugPrint(
+                  "ket: ${info.key} has ${info.visibleFraction} of my widget is visible");
+              if (info.visibleFraction > 0.9) {
+                if (inited == false) {
+                  _controller.initialize();
+                  inited = true;
+                }
+                _controller.play();
+              }
+              if (info.visibleFraction < 0.4) {
+                _controller.pause();
+              }
+            },
+          )
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/post_widget.dart';
+import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter_application/widgets/video/video_post_widget.dart';
 
 class VideoPage extends StatefulWidget {
@@ -12,20 +13,47 @@ class VideoPage extends StatefulWidget {
 
 class VideoPageState extends State<VideoPage> {
   List<Post> posts = [];
+  final ScrollController _scrollController = ScrollController();
+  PostService postService = PostService(postRepository: PostRepositoryImpl());
+
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+
+    _scrollController.addListener(() {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.position.pixels;
+      double delta = 0.0; // or something else..
+      if (maxScroll - currentScroll <= delta) {
+        print("Loading more data...");
+        _loadMoreData();
+      }
+    });
   }
 
   Future<void> fetchData() async {
-    PostService postService = PostService(postRepository: PostRepositoryImpl());
-
-    List<Post> fetchedPosts = await postService.getListVideos(1000, 3);
+    List<Post> fetchedPosts = await postService.getListVideos(3000, 3);
     setState(() {
       posts = fetchedPosts;
     });
+  }
+
+  Future<void> _loadMoreData() async {
+    if (!_isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      List<Post> morePosts = await postService.getListVideos(
+          int.parse(posts[posts.length - 1].id), 3);
+      setState(() {
+        posts.addAll(morePosts);
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -41,9 +69,23 @@ class VideoPageState extends State<VideoPage> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        child: Column(children: <Widget>[
-          for (Post post in posts) VideoPostWidget(post: post),
-        ]),
+        controller: _scrollController,
+        child: Column(
+          children: <Widget>[
+            for (Post post in posts)
+              Column(
+                children: <Widget>[
+                  const SeparatorWidget(),
+                  VideoPostWidget(post: post)
+                ],
+              ),
+            if (_isLoading)
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -122,7 +122,7 @@ class _PostWidgetState extends State<PostWidget> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp,
+                  const Icon(FontAwesomeIcons.thumbsUp,
                       size: 15.0, color: Colors.blue),
                   Text(' ${widget.post.feel}'),
                 ],
