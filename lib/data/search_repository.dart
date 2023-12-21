@@ -5,7 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class SearchRepository {
   Future<dynamic> getSavedSearch();
-  Future<dynamic> getSearch(String keyword);
+  Future<dynamic> getSearch(dynamic body);
+  Future<dynamic> getSearchUser(dynamic body);
   Future<dynamic> deleteSearchById(String id);
   Future<dynamic> deleteSearchAll();
 }
@@ -21,20 +22,21 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<dynamic> getSearch(String keyword) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('user_id');
-    var body = {
-      "keyword": keyword,
-      "user_id": userId,
-      "index": "0",
-      "count": "10"
-    };
+  Future<dynamic> getSearch(dynamic body) async {
     final http.Response response =
         await request('/search', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }
+
+  @override
+  Future<dynamic> getSearchUser(dynamic body) async {
+    final http.Response response =
+        await request('/search_user', 'POST', isToken: true, body: body);
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
 
   @override
   Future<dynamic> deleteSearchById(String id) async {
