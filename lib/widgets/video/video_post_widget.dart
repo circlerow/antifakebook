@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/video/likeShareButton.dart';
-import 'package:flutter_application/widgets/video/showLikeShare.dart';
+
 import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -45,8 +45,8 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
                     Text(
                       widget.post.author.name,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -70,7 +70,7 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
             ),
           ),
           VideoPlayerWidget(url: widget.post.video.url),
-          LikeShareButton(),
+          LikeShareButton(post: widget.post),
         ],
       ),
     );

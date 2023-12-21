@@ -18,6 +18,9 @@ class Post {
   final String state;
   final Author author;
 
+  late int kudos;
+  late int disappointed;
+
   Post({
     required this.id,
     required this.name,
@@ -36,6 +39,8 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
+    var id = json['id'] ?? '';
+
     return Post(
       id: json['id'] ?? '',
       name: json['name'] ?? '',

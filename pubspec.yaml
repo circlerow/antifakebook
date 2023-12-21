@@ -30,7 +30,7 @@ dependencies:
     http_parser: ^4.0.2
     cached_network_image: ^3.3.0
     visibility_detector: ^0.4.0+2
-
+    flutter_reaction_button: ^3.0.0+3
 dev_dependencies:
     flutter_test:
         sdk: flutter
@@ -46,6 +46,8 @@ flutter:
         - assets/img/reaction/
         - assets/img/icon/
         - assets/img/bar/
+        - assets/images/menu/
+        - assets/img/notification/
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
 
