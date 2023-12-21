@@ -10,6 +10,7 @@ import 'package:flutter_application/widgets/avatar/avatar.dart';
 import 'package:flutter_application/widgets/avatar/username.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../presentation/setting/deposit_coin.dart';
+import '../presentation/setting/list_block.dart';
 import '../presentation/setting/setting_notification.dart';
 
 class MenuTab extends StatelessWidget {
@@ -314,7 +315,7 @@ class _MyWidgetState extends State<MyWidget> {
                   children: <Widget>[
                     Icon(Icons.settings, size: 40.0, color: Colors.grey[700]),
                     const SizedBox(width: 10.0),
-                    const Text('Settings & Privacy',
+                    const Text('Settings',
                         style: TextStyle(fontSize: 17.0)),
                   ],
                 ),
@@ -335,7 +336,7 @@ class _MyWidgetState extends State<MyWidget> {
                         const Divider(),
                         _settingNotification('Cài đặt thông báo'),
                         const Divider(),
-                        _buildOptionButton('Thiết lập mã thiết bị'),
+                        _listBlock('Danh sách chặn'),
                         const Divider(),
                         _changePassword('Đổi mật khẩu'),
                       ],
@@ -348,13 +349,18 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 
-  Widget _buildOptionButton(String optionText) {
+  Widget _listBlock(String optionText) {
     return SizedBox(
       height: 40.0,
       child: ListTile(
+        leading: const Icon(Icons.block,
+            size: 40.0, color: Color.fromARGB(255, 21, 237, 132)),
         title: Text(optionText),
         onTap: () {
-          print('$optionText tapped!');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListBlockScreen()),
+          );
         },
       ),
     );
