@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/data/user_repository.dart';
@@ -20,7 +21,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  late UserController userCtrl;
+  Profile({super.key, required this.userCtrl});
 
   @override
   ProfileTab createState() => ProfileTab();
@@ -36,8 +38,12 @@ class ProfileTab extends State<Profile> {
   Uint8List? _backGr;
   File? selectedBackGr;
   late List<Post> posts;
+
   @override
   void initState() {
+    print(" RUN");
+    print(" RUN");
+    print(" RUN");
     _dataFuture = fetchData();
     super.initState();
   }
@@ -45,26 +51,14 @@ class ProfileTab extends State<Profile> {
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
     UserService userService = UserService(userRepository: UserRepositoryImpl());
+
     FriendService friendService =
         FriendService(friendRepository: FriendRepositoryImpl());
 
     List<Future> furures = [];
-    // List<Post> fetchedPosts = await postService.getListPost({
-    //   "user_id": "",
-    //   "in_campaign": "1",
-    //   "campaign_id": "1",
-    //   "latitude": "1.0",
-    //   "longitude": "1.0",
-    //   "last_id": "",
-    //   "index": "0",
-    //   "count": "20"
-    // });
-    //furures.add(SharedPreferences.getInstance());
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     String userId = prefs.getString('user_id')!;
-    User fetchedUser = await userService.getUserInfo(userId);
-
+    User fetchedUser = await UserController.getUser();
     furures.add(postService.getListPost({
       "user_id": userId,
       "in_campaign": "1",
@@ -77,40 +71,21 @@ class ProfileTab extends State<Profile> {
     }));
 
     furures.add(friendService.getUserFriends("0", "6", userId));
-    //dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
-
-    ///dynamic listFriend = await friendService.getUserFriends("0", "6", userId);
-    furures.add(http.get(Uri.parse(fetchedUser.avatar.isNotEmpty
-        ? fetchedUser.avatar
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-    // http.Response avatarHttp = await http.get(Uri.parse(fetchedUser
-    //         .avatar.isNotEmpty
-    //     ? fetchedUser.avatar
-    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
-    furures.add(http.get(Uri.parse(fetchedUser.coverImage.isNotEmpty
-        ? fetchedUser.coverImage
-        : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png")));
-
-    // http.Response backgrHttp = await http.get(Uri.parse(fetchedUser
-    //         .coverImage.isNotEmpty
-    //     ? fetchedUser.coverImage
-    //     : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"));
-
     List<dynamic> result = await Future.wait(furures);
-
     List<Post> fetchedPosts = result[0];
     dynamic listFriend = result[1];
-    http.Response avatarHttp = result[2];
-    http.Response backgrHttp = result[3];
     print(" Total " + fetchedPosts.length.toString() + " Posts");
     setState(() async {
       friends = listFriend["friends"];
       total = listFriend["total"];
       user = fetchedUser;
-      _avatar = avatarHttp.bodyBytes;
-      selectedAvatar = File.fromRawPath(_avatar!);
-      _backGr = backgrHttp.bodyBytes;
-      selectedBackGr = File.fromRawPath(_backGr!);
+
+      selectedAvatar = File(UserController.fileAvatar);
+
+      selectedBackGr = File(UserController.fileBackGr);
+
+      _avatar = selectedAvatar!.readAsBytesSync();
+      _backGr = selectedBackGr!.readAsBytesSync();
       posts = fetchedPosts;
     });
   }
@@ -226,7 +201,7 @@ class ProfileTab extends State<Profile> {
         child: Column(
       children: <Widget>[
         Container(
-          height: 330.0,
+          height: 350.0,
           child: Stack(
             children: <Widget>[
               GestureDetector(
@@ -258,10 +233,10 @@ class ProfileTab extends State<Profile> {
                             radius: 70.0,
                           ),
                           onTap: () {
-                            print("press");
                             _showPopupAvatar(context);
                           },
                         )),
+                    SizedBox(height: 20.0),
                     Text(user.username,
                         style: const TextStyle(
                             fontSize: 24.0, fontWeight: FontWeight.bold)),
@@ -271,6 +246,45 @@ class ProfileTab extends State<Profile> {
                   ],
                 ),
               ),
+              Positioned(
+                  left: 52.0,
+                  top: 190.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: 40.0,
+                        width: MediaQuery.of(context).size.width / 8 * 2,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 233, 242, 252),
+                          borderRadius: BorderRadius.circular(45.0),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Căn giữa các thành phần trong hàng ngang
+                            children: [
+                              Image.asset(
+                                'assets/coin.png',
+                                width: 20.0,
+                                height: 20.0,
+                              ),
+                              SizedBox(
+                                  width: 5.0), // Khoảng cách giữa icon và text
+                              Text(
+                                '${user.coins} coin',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 1, 101, 255),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -281,7 +295,7 @@ class ProfileTab extends State<Profile> {
                         height: 40.0,
                         width: MediaQuery.of(context).size.width / 8 * 6.5,
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 33, 40, 243),
+                            color: const Color.fromARGB(255, 1, 101, 255),
                             borderRadius: BorderRadius.circular(5.0)),
                         child: const Center(
                             child: Text('Add to Story',
@@ -321,10 +335,12 @@ class ProfileTab extends State<Profile> {
                   Text.rich(
                     TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: 'Sống tại '),
+                        TextSpan(
+                            text: 'Sống tại ', style: TextStyle(fontSize: 18)),
                         TextSpan(
                             text: '${user.address}',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18)),
                       ],
                     ),
                   )
@@ -339,10 +355,12 @@ class ProfileTab extends State<Profile> {
                   Text.rich(
                     TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: 'Đến từ '),
+                        TextSpan(
+                            text: 'Đến từ ', style: TextStyle(fontSize: 18)),
                         TextSpan(
                             text: '${user.country}',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0)),
                       ],
                     ),
                   )
@@ -353,31 +371,42 @@ class ProfileTab extends State<Profile> {
                 children: <Widget>[
                   Icon(Icons.more_horiz, color: Colors.grey, size: 30.0),
                   SizedBox(width: 10.0),
-                  Text('See your About Info', style: TextStyle(fontSize: 16.0))
+                  Text('Xem thông tin giới thiệu của bạn',
+                      style: TextStyle(fontSize: 18.0))
                 ],
               ),
               SizedBox(height: 20.0),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OptionProfile(
                               user: user,
                             )),
                   );
+                  //  print("Result = " + result);
+                  // if (result != null && result == true) {
+                  setState(() {
+                    user = UserController.user;
+                    selectedAvatar = File(UserController.fileAvatar);
+                    _avatar = File(UserController.fileAvatar).readAsBytesSync();
+                    selectedBackGr = File(UserController.fileBackGr);
+                    _backGr = File(UserController.fileBackGr).readAsBytesSync();
+                  });
+                  //  }
                 },
                 child: Container(
                   height: 40.0,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 33, 37, 243)
-                        .withOpacity(0.10),
+                    color:
+                        const Color.fromARGB(255, 1, 101, 255).withOpacity(1),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: Center(
                       child: Text('Chỉnh sửa chi tiết công khai',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 33, 37, 243),
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16.0))),
                 ),
@@ -388,14 +417,14 @@ class ProfileTab extends State<Profile> {
         const Divider(height: 20.0),
         FriendList(friends: friends, total: total),
         const SeparatorWidget(),
-        // for (Post post in posts)
-        //   Column(
-        //     children: <Widget>[
-        //       const SeparatorWidget(),
-        //       PostWidget(post: post),
-        //     ],
-        //   ),
-        // const SeparatorWidget(),
+        for (Post post in posts)
+          Column(
+            children: <Widget>[
+              const SeparatorWidget(),
+              PostWidget(post: post),
+            ],
+          ),
+        const SeparatorWidget(),
       ],
     ));
   }

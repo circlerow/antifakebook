@@ -20,6 +20,10 @@ class NotificationWidget extends StatelessWidget {
         return _FriendAccepted(context, noti);
       case NotificationType.PostFelt:
         return _PostFelt(context, noti);
+      case NotificationType.PostAdded:
+        return _PostAdded(context, noti);
+      case NotificationType.PostUpdated:
+        return _PostUpdated(context, noti);
       default:
         return _Default(context, noti);
     }
@@ -62,6 +66,54 @@ class NotificationWidget extends StatelessWidget {
     return _Custom(context, noti, content);
   }
 
+  Widget _PostAdded(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: 'vừa đăng một bài viết mới',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.post!.described}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+
+    return _Custom(context, noti, content);
+  }
+
+  Widget _PostUpdated(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: 'vừa cập nhập bài viết ',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.post!.described}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+
+    return _Custom(context, noti, content);
+  }
+
   Widget _PostFelt(BuildContext context, Noti noti) {
     String emote = "";
     if (noti.feel!.type == "0") emote = "thích bài viết của bạn: ";
@@ -82,6 +134,102 @@ class NotificationWidget extends StatelessWidget {
         ),
       ],
     ));
+
+    return _Custom(context, noti, content);
+  }
+
+  Widget _PostMarked(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: 'đã bình luận bài viết của bạn ',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.post!.described}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+
+    return _Custom(context, noti, content);
+  }
+
+  Widget _MarkCommented(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: ' đã trả lời bình luận của bạn ',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.mark!.content}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+
+    return _Custom(context, noti, content);
+  }
+
+  Widget _VideoAdded(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: 'vừa đăng một video ',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.post!.described}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
+
+    return _Custom(context, noti, content);
+  }
+
+  Widget _PostComment(BuildContext context, Noti noti) {
+    dynamic content = Text.rich(
+      TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: '${noti.user!.username} ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: 'đã bình luận bài viết của bạn ',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+          TextSpan(
+              text: '${noti.post!.described}',
+              style: TextStyle(fontWeight: FontWeight.bold))
+        ],
+      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
 
     return _Custom(context, noti, content);
   }
