@@ -9,6 +9,7 @@ abstract class SettingRepository {
   Future<dynamic> getPushSetting();
   Future<dynamic> setPushSetting(PushSetting pushSetting);
   Future<dynamic> changePassword(ChangePassWord changePassWord);
+  Future<void> setDevToken(String token);
 }
 
 class SettingRepositoryImpl implements SettingRepository {
@@ -60,5 +61,11 @@ class SettingRepositoryImpl implements SettingRepository {
         await request('/change_password', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
     return data;
+  }
+
+  Future<void> setDevToken(String token) async {
+    var body = {"devtype": "1", "devtoken": token};
+    final http.Response response =
+        await request('/set_devtoken', 'POST', isToken: true, body: body);
   }
 }

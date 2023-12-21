@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/auth_service.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:flutter_application/presentation/setting/change_password.dart';
+import 'package:flutter_application/widgets/avatar/avatar.dart';
+import 'package:flutter_application/widgets/avatar/username.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../presentation/setting/deposit_coin.dart';
 import '../presentation/setting/setting_notification.dart';
@@ -31,18 +34,13 @@ class MenuTab extends StatelessWidget {
           const Row(
             children: <Widget>[
               SizedBox(width: 15.0),
-              CircleAvatar(
-                radius: 25.0,
-                backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
-              ),
+              AvatarWidget(),
               SizedBox(width: 20.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Mike Tyler',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18.0)),
+                  UsernameWidget(),
                   SizedBox(height: 5.0),
                   Text(
                     'See your profile',
@@ -364,9 +362,10 @@ class _MyWidgetState extends State<MyWidget> {
 
   Widget _depositCoin(String optionText) {
     return SizedBox(
-      height: 40.0, 
+      height: 40.0,
       child: ListTile(
-        leading: const Icon(Icons.attach_money, size: 40.0, color: Color.fromARGB(255, 211, 211, 11)),
+        leading: const Icon(Icons.attach_money,
+            size: 40.0, color: Color.fromARGB(255, 211, 211, 11)),
         title: Text(optionText),
         onTap: () {
           Navigator.push(
@@ -380,9 +379,10 @@ class _MyWidgetState extends State<MyWidget> {
 
   Widget _changePassword(String optionText) {
     return SizedBox(
-      height: 40.0, 
+      height: 40.0,
       child: ListTile(
-        leading: const Icon(Icons.lock_outline, size: 40.0, color: Color.fromARGB(255, 255, 0, 162)),
+        leading: const Icon(Icons.lock_outline,
+            size: 40.0, color: Color.fromARGB(255, 255, 0, 162)),
         title: Text(optionText),
         onTap: () {
           Navigator.push(
@@ -396,9 +396,10 @@ class _MyWidgetState extends State<MyWidget> {
 
   Widget _settingNotification(String optionText) {
     return SizedBox(
-      height: 40.0, 
+      height: 40.0,
       child: ListTile(
-        leading: const Icon(Icons.circle_notifications_outlined, size: 40.0, color: Color.fromARGB(255, 21, 15, 195)),
+        leading: const Icon(Icons.circle_notifications_outlined,
+            size: 40.0, color: Color.fromARGB(255, 21, 15, 195)),
         title: Text(optionText),
         onTap: () {
           Navigator.push(

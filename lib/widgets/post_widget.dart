@@ -6,6 +6,8 @@ import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../presentation/friend/FriendInfo.dart';
+
 class PostWidget extends StatefulWidget {
   final Post post;
 
@@ -21,40 +23,52 @@ class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(widget.post.author.avatar),
-                radius: 20.0,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FriendInfo(
+                              friendId: widget.post.author.id,
+                            )),
+                  );
+                },
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(widget.post.author.avatar),
+                  radius: 20.0,
+                ),
               ),
-              SizedBox(width: 7.0),
+              const SizedBox(width: 7.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     widget.post.author.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17.0,
+                      color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   Text(formatTimeDifference(widget.post.created)),
                 ],
               ),
-              Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
+              const Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
               PopupMenuButton(
                 itemBuilder: (BuildContext context) {
                   return [
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: Text('Chỉnh sửa bài'),
                       value: 'edit',
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: Text('Xóa bài'),
                       value: 'delete',
                     ),
@@ -67,25 +81,28 @@ class _PostWidgetState extends State<PostWidget> {
                     // Xử lý sự kiện xóa bài
                   }
                 },
-                icon: Icon(Icons.more_vert),
+                icon: const Icon(Icons.more_vert),
               ),
             ],
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           RichText(
             textAlign: TextAlign.start,
             text: TextSpan(
-              children: convertUrlsToTextSpans(widget.post.described),
-            ),
+                children: convertUrlsToTextSpans(widget.post.described),
+                style: TextStyle(
+                  color: Colors.black,
+                )),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Container(
             width: double.infinity,
             child: widget.post.images.isNotEmpty
                 ? GridView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Số lượng ảnh trên một hàng
                       mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
                       crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
@@ -117,14 +134,18 @@ class _PostWidgetState extends State<PostWidget> {
                       );
                     },
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[
+<<<<<<< HEAD
                   Icon(FontAwesomeIcons.thumbsUp,
+=======
+                  const Icon(FontAwesomeIcons.thumbsUp,
+>>>>>>> 92b546305d3c35e2911ded87f9d228ec0b40accf
                       size: 15.0, color: Colors.blue),
                   Text(' ${widget.post.feel}'),
                 ],
@@ -215,7 +236,7 @@ class _PostWidgetState extends State<PostWidget> {
               ),
             ],
           ),
-          Divider(height: 30.0),
+          const Divider(height: 30.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -251,7 +272,7 @@ class _PostWidgetState extends State<PostWidget> {
                             child: () {
                               if (isFeltKudo == '-1') {
                                 return Image.asset(
-                                  'assets/img/reaction/ic_like.png',
+                                  'assets/like.png',
                                   width: 20,
                                   height: 20,
                                 );
@@ -263,7 +284,7 @@ class _PostWidgetState extends State<PostWidget> {
                                 );
                               } else {
                                 return Image.asset(
-                                  'assets/img/reaction/ic_like_fill.png',
+                                  'assets/liked.png',
                                   width: 20,
                                   height: 20,
                                 );
@@ -275,19 +296,25 @@ class _PostWidgetState extends State<PostWidget> {
                               return const Text(
                                 "Like",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             } else if (isFeltKudo == '0') {
                               return const Text(
                                 "Phẫn nộ",
-                                style:
-                                    TextStyle(color: Colors.pink, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.pink,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             } else {
                               return const Text(
                                 "Like",
-                                style:
-                                    TextStyle(color: Colors.blue, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               );
                             }
                           }(),
@@ -311,9 +338,14 @@ class _PostWidgetState extends State<PostWidget> {
                     },
                     child: Row(
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.commentAlt, size: 20.0),
-                        SizedBox(width: 5.0),
-                        Text('Comment', style: TextStyle(fontSize: 14.0)),
+                        //Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+
+                        Image.asset('assets/comment.png',
+                            width: 20.0, height: 20.0),
+                        const SizedBox(width: 5.0),
+                        const Text('Comment',
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -321,9 +353,11 @@ class _PostWidgetState extends State<PostWidget> {
               ),
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.share, size: 20.0),
-                  SizedBox(width: 5.0),
-                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                  Image.asset('assets/share.png', width: 20.0, height: 20.0),
+                  const SizedBox(width: 5.0),
+                  const Text('Share',
+                      style: TextStyle(
+                          fontSize: 14.0, fontWeight: FontWeight.bold)),
                 ],
               ),
             ],
@@ -380,7 +414,7 @@ class _PostWidgetState extends State<PostWidget> {
         textSpans.add(
           TextSpan(
             text: url,
-            style: TextStyle(color: Colors.blue),
+            style: const TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 launchUrl(url);

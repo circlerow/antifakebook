@@ -7,7 +7,8 @@ import 'package:flutter_application/presentation/friend/FriendInfo.dart';
 class FriendsView extends StatefulWidget {
   final String userId;
   final bool isListFriend;
-  const FriendsView({super.key, required this.isListFriend, required this.userId});
+  const FriendsView(
+      {super.key, required this.isListFriend, required this.userId});
 
   @override
   FriendsViewPage createState() => FriendsViewPage();
@@ -15,37 +16,56 @@ class FriendsView extends StatefulWidget {
 
 class FriendsViewPage extends State<FriendsView> {
   String title = "Danh sách bạn bè";
-
+  bool isLoading = false;
   FriendService friendService =
       FriendService(friendRepository: FriendRepositoryImpl());
   late Future<void> _dataFuture;
   late List<Friend> friends = [];
   late String total;
+  int currentPage = 0;
   List<bool> isFriendRequestSent = List.filled(10000, false);
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _dataFuture = fetchData();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      fetchData();
+    }
   }
 
   Future<void> fetchData() async {
-    Map<String, dynamic> fetchedPosts =
-        await friendService.getUserFriends("0", "50", widget.userId);
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
-    List<Friend> fetchFriendSuggested =
-        await friendService.getSuggestedFriends({"index": "0", "count": "50"});
+    Map<String, dynamic> fetchedPosts =
+        await friendService.getUserFriends("$currentPage", "20", widget.userId);
+
+    List<Friend> fetchFriendSuggested = await friendService
+        .getSuggestedFriends({"index": "$currentPage", "count": "20"});
 
     setState(() {
-      title = widget.isListFriend ? "Danh sách bạn bè" : "Những người bạn có thể biết";
-      if(widget.isListFriend){
+      title = widget.isListFriend
+          ? "Danh sách bạn bè"
+          : "Những người bạn có thể biết";
+      if (widget.isListFriend) {
         friends = fetchedPosts['friends'];
         total = fetchedPosts['total'];
-      }
-      else {
+      } else {
         friends = fetchFriendSuggested;
         total = '0';
       }
+      currentPage += friends.length;
     });
   }
 
@@ -68,150 +88,135 @@ class FriendsViewPage extends State<FriendsView> {
     );
   }
 
-  Widget buildContent(BuildContext context){
+  Widget buildContent(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          title: Text(title),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              for (Friend friend in friends)
-                Column(
-                  children: <Widget>[
-                    FriendItem(friend)
-                  ],
-                ),
-              ],
-            ),
-          )
-        )
-    );
+        body: SingleChildScrollView(
+            controller: _scrollController,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: <Widget>[
+                  for (Friend friend in friends)
+                    Column(
+                      children: <Widget>[FriendItem(friend)],
+                    ),
+                  if (isLoading) const CircularProgressIndicator(),
+                ],
+              ),
+            )));
   }
 
-  Widget FriendItem(Friend friend){
+  Widget FriendItem(Friend friend) {
     return Column(
-                    children: [
+      children: [
+        Row(
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FriendInfo(
+                            friendId: friend.id,
+                          )),
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(friend.avatar.isNotEmpty
+                    ? friend.avatar
+                    : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
+                radius: 40.0,
+              ),
+            ),
+            const SizedBox(width: 20.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  friend.username.isNotEmpty ? friend.username : "(No Name)",
+                  style: const TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 15.0),
+                Row(
+                  children: <Widget>[
+                    if (!isFriendRequestSent[int.tryParse(friend.id)!] &&
+                        !widget.isListFriend)
                       Row(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FriendInfo(
-                                          friendId: friend.id,
-                                        )),
-                              );
+                            onTap: () async {
+                              bool sendRequest = await friendService
+                                  .setRequestFriend(friend.id);
+                              if (sendRequest) {
+                                setState(() {
+                                  isFriendRequestSent[
+                                      int.tryParse(friend.id)!] = true;
+                                });
+                              }
                             },
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(friend
-                                      .avatar.isNotEmpty
-                                  ? friend.avatar
-                                  : "https://it4788.catan.io.vn/files/avatar-1701276452055-138406189.png"),
-                              radius: 40.0,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 35.0, vertical: 10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Text(
+                                'Thêm bạn bè',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15.0),
+                              ),
                             ),
                           ),
-                          const SizedBox(width: 20.0),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                friend.username.isNotEmpty
-                                    ? friend.username
-                                    : "(No Name)",
-                                style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold),
+                          const SizedBox(width: 10.0),
+                          GestureDetector(
+                            onTap: () async {},
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 35.0, vertical: 10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
-                              const SizedBox(height: 15.0),
-                              Row(
-                                children: <Widget>[
-                                  if (!isFriendRequestSent[
-                                      int.tryParse(friend.id)!] && !widget.isListFriend)
-                                    Row(
-                                      children: <Widget>[
-                                        GestureDetector(
-                                          onTap: () async {
-                                            bool sendRequest =
-                                                await friendService
-                                                    .setRequestFriend(
-                                                        friend.id);
-                                            if (sendRequest) {
-                                              setState(() {
-                                                isFriendRequestSent[
-                                                    int.tryParse(
-                                                        friend.id)!] = true;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 35.0,
-                                                vertical: 10.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                            ),
-                                            child: const Text(
-                                              'Thêm bạn bè',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15.0),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10.0),
-                                        GestureDetector(
-                                          onTap: () async {},
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 35.0,
-                                                vertical: 10.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                            ),
-                                            child: const Text(
-                                              'Gỡ',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15.0),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  else if(!widget.isListFriend)
-                                    const Text(
-                                      'Đã gửi lời mời kết bạn',
-                                      style: TextStyle(fontSize: 15.0),
-                                    )
-                                    else 
-                                    Text(
-                                      '${friend.sameFriends} bạn chung',
-                                      style: TextStyle(fontSize: 15.0),
-                                    ),
-                                ],
-                              )
-                            ],
-                          )
+                              child: const Text(
+                                'Gỡ',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15.0),
+                              ),
+                            ),
+                          ),
                         ],
+                      )
+                    else if (!widget.isListFriend)
+                      const Text(
+                        'Đã gửi lời mời kết bạn',
+                        style: TextStyle(fontSize: 15.0),
+                      )
+                    else
+                      Text(
+                        '${friend.sameFriends} bạn chung',
+                        style: TextStyle(fontSize: 15.0),
                       ),
-                      const SizedBox(height: 20.0),
-                    ],
-                  );
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+        const SizedBox(height: 20.0),
+      ],
+    );
   }
 
   Widget buildErrorWidget(String error) {

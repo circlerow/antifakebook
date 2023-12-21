@@ -107,7 +107,7 @@ class UserRepositoryImpl implements UserRepository {
     } else {
       //var responseData = await response.stream.bytesToString();
 
-      throw Exception('Failed to update user info');
+      //throw Exception('Failed to update user info');
     }
   }
 
