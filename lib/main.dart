@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(
           scaffoldBackgroundColor:
-              Color.fromARGB(255, 255, 255, 255), // Thiết lập màu nền cho toàn bộ ứng dụng
+              Colors.grey[200], // Thiết lập màu nền cho toàn bộ ứng dụng
           // Các thiết lập theme khác
         ),
         debugShowCheckedModeBanner: false,

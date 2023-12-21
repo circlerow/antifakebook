@@ -41,7 +41,6 @@ class _NotificationsTabState extends State<NotificationsTab> {
               Column(
                 children: [
                   NotificationWidget(noti: notification),
-                  const SeparatorWidget()
                 ],
               )
           ],
