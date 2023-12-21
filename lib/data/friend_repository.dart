@@ -10,6 +10,9 @@ abstract class FriendRepository {
   Future<dynamic> setAcceptFriend(String userId, String isAccept);
   Future<dynamic> unFriend(String userId);
   Future<dynamic> delRequestFriend(String userId);
+  Future<dynamic> blockFriend(String userId);
+  Future<dynamic> listBlock(dynamic body);
+  Future<dynamic> unBlockFriend(String userId);
 }
 
 class FriendRepositoryImpl implements FriendRepository {
@@ -58,6 +61,28 @@ class FriendRepositoryImpl implements FriendRepository {
   @override
   Future<dynamic> delRequestFriend(String userId) async {
     final http.Response response = await request('/del_request_friend', 'POST', isToken: true, body: {"user_id" : userId});
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+
+  @override
+  Future<dynamic> blockFriend(String userId) async {
+    final http.Response response = await request('/set_block', 'POST', isToken: true, body: {"user_id" : userId});
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> listBlock(dynamic body) async {
+    final http.Response response = await request('/get_list_blocks', 'POST', isToken: true, body: body);
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> unBlockFriend(String userId) async {
+    final http.Response response = await request('/unblock', 'POST', isToken: true, body: {"user_id" : userId});
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }
