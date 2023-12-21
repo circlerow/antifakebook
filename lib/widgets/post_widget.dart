@@ -105,6 +105,7 @@ class _PostWidgetState extends State<PostWidget> {
                             MaterialPageRoute(
                               builder: (context) => ImageDetailPage(
                                 imageUrls: widget.post.images,
+                                initialIndex: index,
                               ),
                             ),
                           );
@@ -123,94 +124,25 @@ class _PostWidgetState extends State<PostWidget> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp,
-                      size: 15.0, color: Colors.blue),
-                  Text(' ${widget.post.feel}'),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        FontAwesomeIcons.thumbsUp,
+                        size: 15.0,
+                        color: Colors.blue,
+                      ),
+                      Text(' ${widget.post.feel}'),
+                    ],
+                  ),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              'Comments',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(FontAwesomeIcons.thumbsUp,
-                                              size: 15.0, color: Colors.blue),
-                                          Text(' ${widget.post.feel}'),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                              '${widget.post.commentMark} comments  •  '),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                    width: 500,
-                                  ),
-                                  Container(
-                                    height: 200.0,
-                                    width: 500,
-                                    child: PageView.builder(
-                                      itemCount: 1,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Text(
-                                          "Comment",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          decoration: InputDecoration(
-                                              hintText: 'Write a comment...',
-                                              fillColor: Colors.black),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.send),
-                                        onPressed: () {
-                                          // Xử lý khi người dùng gửi bình luận
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Text('${widget.post.commentMark} comments  •  '),
-                  )
-                ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text('${widget.post.commentMark} comments  •  '),
+                  ],
+                ),
               ),
             ],
           ),
@@ -326,7 +258,7 @@ class _PostWidgetState extends State<PostWidget> {
                 ],
               ),
             ],
-          )
+          ),
         ],
       ),
     );
