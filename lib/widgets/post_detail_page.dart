@@ -22,6 +22,8 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
         leading: GestureDetector(
           onTap: () {
             // Xử lý sự kiện khi nhấn nút lùi lại
@@ -37,214 +39,195 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
             },
           ),
         ],
-        title: Text('Tên tác giả bài viết'),
+        title: Text(
+          widget.post.author.name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17.0,
+          ),
+        ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.post.author.avatar),
-                  radius: 20.0,
-                ),
-                SizedBox(width: 7.0),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      widget.post.author.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(16),
+                    child: Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(widget.post.author.avatar),
+                          radius: 20.0,
+                        ),
+                        SizedBox(width: 7.0),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.post.author.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0,
+                              ),
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(formatTimeDifference(widget.post.created)),
+                          ],
+                        ),
+                        Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
+                        PopupMenuButton(
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                child: Text('Chỉnh sửa bài'),
+                                value: 'edit',
+                              ),
+                              PopupMenuItem(
+                                child: Text('Xóa bài'),
+                                value: 'delete',
+                              ),
+                            ];
+                          },
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              // Xử lý sự kiện chỉnh sửa bài
+                            } else if (value == 'delete') {
+                              // Xử lý sự kiện xóa bài
+                            }
+                          },
+                          icon: Icon(Icons.more_vert),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0, left: 10),
+                    child: RichText(
+                      textAlign: TextAlign.start,
+                      text: TextSpan(
+                        children: convertUrlsToTextSpans(widget.post.described),
                       ),
                     ),
-                    SizedBox(height: 5.0),
-                    Text(formatTimeDifference(widget.post.created)),
-                  ],
-                ),
-                Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
-                PopupMenuButton(
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        child: Text('Chỉnh sửa bài'),
-                        value: 'edit',
-                      ),
-                      PopupMenuItem(
-                        child: Text('Xóa bài'),
-                        value: 'delete',
-                      ),
-                    ];
-                  },
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      // Xử lý sự kiện chỉnh sửa bài
-                    } else if (value == 'delete') {
-                      // Xử lý sự kiện xóa bài
-                    }
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.0),
-            RichText(
-              textAlign: TextAlign.start,
-              text: TextSpan(
-                children: convertUrlsToTextSpans(widget.post.described),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.all(16),
+                    child: widget.post.images.isNotEmpty
+                        ? Column(
+                            children: [
+                              for (int i = 0;
+                                  i < widget.post.images.length;
+                                  i++) ...[
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ImageDetailPage(
+                                          imageUrls: widget.post.images,
+                                          initialIndex: i,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child:
+                                      // padding: EdgeInsets.symmetric(
+                                      //     vertical:
+                                      //         1.0), // Khoảng cách dọc giữa các ảnh
+                                      Image.network(
+                                    widget.post.images[i].url,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                if (i !=
+                                    widget.post.images.length -
+                                        1) // Kiểm tra trước khi thêm đường ngăn cách
+                                  Divider(
+                                    color: Colors.grey,
+                                    height: 20.0,
+                                    // thickness: 5.0,
+                                  ),
+                              ],
+                            ],
+                          )
+                        : SizedBox.shrink(),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    margin: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.thumbsUp,
+                                size: 15.0, color: Colors.blue),
+                            Text(' ${widget.post.feel}'),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text('${widget.post.commentMark} comments  •  '),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(height: 10.0),
+                  LikeRowWidget(),
+                  Divider(height: 10.0),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: 10, // Số lượng bình luận
+                    itemBuilder: (context, index) {
+                      // Tạo widget cho từng bình luận
+                      return ListTile(
+                        title: Text('Tiêu đề bình luận $index'),
+                        subtitle: Text('Nội dung bình luận $index'),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            Container(
-              width: double.infinity,
-              child: widget.post.images.isNotEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.post.images.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ImageDetailPage(
-                                  imageUrls: widget.post.images,
-                                  initialIndex: index,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8.0), // Khoảng cách dọc giữa các ảnh
-                            child: Image.network(
-                              widget.post.images[index].url,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : SizedBox.shrink(),
+          ),
+          Divider(height: 1.0),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[300], // Màu nền xám của vùng chứa
+              borderRadius: BorderRadius.circular(15), // Viền bo cong 10 độ
             ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(FontAwesomeIcons.thumbsUp,
-                        size: 15.0, color: Colors.blue),
-                    Text(' ${widget.post.feel}'),
-                  ],
+            margin: EdgeInsets.all(16),
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Viết bình luận...',
+                      border: InputBorder.none, // Ẩn viền của TextField
+                    ),
+                  ),
                 ),
-                Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                'Comments',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Icon(FontAwesomeIcons.thumbsUp,
-                                                size: 15.0, color: Colors.blue),
-                                            Text(' ${widget.post.feel}'),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Text(
-                                                '${widget.post.commentMark} comments  •  '),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10.0,
-                                      width: 500,
-                                    ),
-                                    Container(
-                                      height: 200.0,
-                                      width: 500,
-                                      child: PageView.builder(
-                                        itemCount: 1,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return Text(
-                                            "Comment",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                                hintText: 'Write a comment...',
-                                                fillColor: Colors.black),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.send),
-                                          onPressed: () {
-                                            // Xử lý khi người dùng gửi bình luận
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Text('${widget.post.commentMark} comments  •  '),
-                    )
-                  ],
+                SizedBox(width: 8),
+                IconButton(
+                  onPressed: () {
+                    // Xử lý khi người dùng nhấn biểu tượng gửi
+                  },
+                  icon: Icon(Icons.send), // Biểu tượng gửi
                 ),
               ],
             ),
-            Divider(height: 30.0),
-            LikeRowWidget(),
-            SizedBox(height: 20.0),
-            Divider(height: 30.0),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 10, // Số lượng bình luận
-              itemBuilder: (context, index) {
-                // Tạo widget cho từng bình luận
-                return ListTile(
-                  title: Text('Tiêu đề bình luận $index'),
-                  subtitle: Text('Nội dung bình luận $index'),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

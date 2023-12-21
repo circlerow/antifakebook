@@ -19,8 +19,8 @@ class _LikeRowWidgetState extends State<LikeRowWidget> {
         Overlay.of(context)?.context.findRenderObject() as RenderBox;
     final overlaySize = overlay.size;
 
-    final menuWidth = 100.0;
-    final menuHeight = 100.0;
+    final menuWidth = 70.0;
+    final menuHeight = 80.0;
     final borderRadius = BorderRadius.circular(15.0);
 
     final menuPositionX =
@@ -69,8 +69,8 @@ class _LikeRowWidgetState extends State<LikeRowWidget> {
                         children: [
                           Image.asset(
                             'assets/img/reaction/like.gif',
-                            width: 50,
-                            height: 50,
+                            width: 30,
+                            height: 30,
                           ),
                           SizedBox(height: 8.0),
                           Text(
@@ -91,8 +91,8 @@ class _LikeRowWidgetState extends State<LikeRowWidget> {
                         children: [
                           Image.asset(
                             'assets/img/reaction/love.gif',
-                            width: 50,
-                            height: 50,
+                            width: 30,
+                            height: 30,
                           ),
                           SizedBox(height: 8.0),
                           Text(
@@ -196,28 +196,17 @@ class _LikeRowWidgetState extends State<LikeRowWidget> {
             ),
           ],
         ),
-        // Row(
-        //   children: <Widget>[
-        //     GestureDetector(
-        //       onTap: () {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => PostDetailsPage(
-        //                 post: widget.post), // Truyền dữ liệu bài viết vào
-        //           ),
-        //         );
-        //       },
-        //       child: Row(
-        //         children: <Widget>[
-        //           Icon(FontAwesomeIcons.commentAlt, size: 20.0),
-        //           SizedBox(width: 5.0),
-        //           Text('Comment', style: TextStyle(fontSize: 14.0)),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        Row(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+                SizedBox(width: 5.0),
+                Text('Comment', style: TextStyle(fontSize: 14.0)),
+              ],
+            ),
+          ],
+        ),
         Row(
           children: <Widget>[
             Icon(FontAwesomeIcons.share, size: 20.0),

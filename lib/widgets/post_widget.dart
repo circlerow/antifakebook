@@ -124,25 +124,94 @@ class _PostWidgetState extends State<PostWidget> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        FontAwesomeIcons.thumbsUp,
-                        size: 15.0,
-                        color: Colors.blue,
-                      ),
-                      Text(' ${widget.post.feel}'),
-                    ],
-                  ),
+                  Icon(FontAwesomeIcons.thumbsUp,
+                      size: 15.0, color: Colors.blue),
+                  Text(' ${widget.post.feel}'),
                 ],
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text('${widget.post.commentMark} comments  •  '),
-                  ],
-                ),
+              Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              'Comments',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Icon(FontAwesomeIcons.thumbsUp,
+                                              size: 15.0, color: Colors.blue),
+                                          Text(' ${widget.post.feel}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                              '${widget.post.commentMark} comments  •  '),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10.0,
+                                    width: 500,
+                                  ),
+                                  Container(
+                                    height: 200.0,
+                                    width: 500,
+                                    child: PageView.builder(
+                                      itemCount: 1,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Text(
+                                          "Comment",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          decoration: InputDecoration(
+                                              hintText: 'Write a comment...',
+                                              fillColor: Colors.black),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.send),
+                                        onPressed: () {
+                                          // Xử lý khi người dùng gửi bình luận
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text('${widget.post.commentMark} comments  •  '),
+                  )
+                ],
               ),
             ],
           ),
@@ -347,61 +416,108 @@ class _PostWidgetState extends State<PostWidget> {
 
   dynamic isFeltKudo = -1;
 
-  void showReactionMenu(BuildContext context) {
-    // Get the position of the button
-    // RenderBox button = context.findRenderObject() as RenderBox;
-    // Offset buttonPosition = button.localToGlobal(Offset.zero);
+  void showReactionMenu(BuildContext context) async {
+    final button = context.findRenderObject() as RenderBox;
+    final buttonSize = button.size;
+    final buttonPosition = button.localToGlobal(Offset.zero);
 
-    showMenu(
+    final overlay =
+        Overlay.of(context)?.context.findRenderObject() as RenderBox;
+    final overlaySize = overlay.size;
+
+    final menuWidth = 70.0;
+    final menuHeight = 80.0;
+    final borderRadius = BorderRadius.circular(15.0);
+
+    final menuPositionX =
+        (buttonPosition.dx + buttonSize.width / 2) - (menuWidth / 2);
+    final menuPositionY = buttonPosition.dy - menuHeight - 10.0;
+
+    final menuPosition = RelativeRect.fromLTRB(
+      menuPositionX,
+      menuPositionY,
+      overlaySize.width - (menuPositionX + menuWidth),
+      overlaySize.height - (menuPositionY + menuHeight),
+    );
+
+    await showMenu(
       context: context,
-      position: const RelativeRect.fromLTRB(-80, 315, 0, 0),
-      // position: RelativeRect.fromLTRB(
-      //   buttonPosition.dx,
-      //   buttonPosition.dy + button.size.height+300,
-      //   buttonPosition.dx + button.size.width,
-      //   buttonPosition.dy + button.size.height, // Height of the menu
-      // ),
+      position: menuPosition,
       elevation: 0,
-      // Đặt độ nâng của PopupMenu để loại bỏ border
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0), // Đặt độ cong của border
+        borderRadius: borderRadius,
+        side: BorderSide(color: Colors.grey.shade300),
       ),
-      color: Colors.transparent,
-      // color: Colors.blue,
+      color: Colors.grey.shade100,
       items: [
         PopupMenuItem<String>(
           padding: const EdgeInsets.all(0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              PopupMenuItem<String>(
-                padding: const EdgeInsets.all(0),
-                value: '1',
-                child: Image.asset(
-                  'assets/img/reaction/like.gif',
-                  width: 30,
-                  height: 30,
+          child: Container(
+            width: menuWidth,
+            height: menuHeight,
+            decoration: BoxDecoration(
+              borderRadius: borderRadius,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFeltKudo = '1';
+                        });
+                        Navigator.pop(context, '1');
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/img/reaction/like.gif',
+                            width: 30,
+                            height: 30,
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Like',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFeltKudo = '0';
+                        });
+                        Navigator.pop(context, '0');
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/img/reaction/love.gif',
+                            width: 30,
+                            height: 30,
+                          ),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'Love',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              PopupMenuItem<String>(
-                padding: const EdgeInsets.all(0),
-                value: '0',
-                child: Image.asset(
-                  'assets/img/reaction/love.gif',
-                  width: 30,
-                  height: 30,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
-    ).then((value) async {
+    ).then((value) {
       if (value != null) {
-        setState(() {
-          isFeltKudo = value == '1' ? '1' : '0';
-        });
-        // Thực hiện các hành động tương ứng
+        // Thực hiện các hành động tương ứng (không cần setState vì đã thay đổi trạng thái trong GestureDetector)
       }
     });
   }
