@@ -104,7 +104,7 @@ class _PostWidgetState extends State<PostWidget> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ImageDetailPage(
-                                imageUrl: widget.post.images[index].url,
+                                imageUrls: widget.post.images,
                               ),
                             ),
                           );
