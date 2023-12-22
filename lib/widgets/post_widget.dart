@@ -6,6 +6,8 @@ import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../application/post_service.dart';
+import '../data/post_repository.dart';
 import '../presentation/friend/FriendInfo.dart';
 
 class PostWidget extends StatefulWidget {
@@ -19,10 +21,20 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   IconData selectedReaction = FontAwesomeIcons.thumbsUp;
+  final GlobalKey _buttonKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
+  late String isFeltKudo;
+  final PostService postService =
+      PostService(postRepository: PostRepositoryImpl());
+
+  @override
+  void initState() {
+    super.initState();
+    isFeltKudo = widget.post.isFelt;
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.post.toJson());
     return Container(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -62,13 +74,13 @@ class _PostWidgetState extends State<PostWidget> {
                           ),
                         ),
                         if (widget.post.state != '')
-                        TextSpan(
-                          text: " - Đang cảm thấy ${widget.post.state}",
-                          style: const TextStyle(
-                            fontSize: 12.0, // Đặt kích thước font chữ nhẹ hơn
-                            color: Colors.grey, // Đặt màu chữ nhẹ hơn
+                          TextSpan(
+                            text: " - Đang cảm thấy ${widget.post.state}",
+                            style: const TextStyle(
+                              fontSize: 12.0, // Đặt kích thước font chữ nhẹ hơn
+                              color: Colors.grey, // Đặt màu chữ nhẹ hơn
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -202,77 +214,49 @@ class _PostWidgetState extends State<PostWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 10.0),
+                  LongPressDraggable(
+                    data: "drag_data", // You can set any data you need to pass
+                    onDragStarted: () {
+                      _showReactionMenu(context);
+                    },
+                    feedback: Container(
+                      // Provide a simple feedback appearance, you can customize this
+                      width: 50,
+                      height: 50,
+                      color: Colors.blue,
+                    ),
+                    childWhenDragging: Container(),
                     child: GestureDetector(
+                      key: _buttonKey,
                       onTap: () async {
                         if (isFeltKudo == '1' || isFeltKudo == '0') {
                           setState(() {
                             isFeltKudo = '-1';
                           });
+                          await postService.deleteFell(widget.post.id);
                         } else {
-                          //cập nhật lại trạng thái của isFeltKudo
                           setState(() {
                             isFeltKudo = '1';
                           });
+                          await postService.feelPost(widget.post.id, '1');
                         }
                       },
-                      onLongPress: () {
-                        showReactionMenu(context);
-                      },
                       child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(right: 5),
-                            child: () {
-                              if (isFeltKudo == '-1') {
-                                return Image.asset(
-                                  'assets/like.png',
-                                  width: 20,
-                                  height: 20,
-                                );
-                              } else if (isFeltKudo == '0') {
-                                return Image.asset(
-                                  'assets/img/reaction/love2.png',
-                                  width: 20,
-                                  height: 20,
-                                );
-                              } else {
-                                return Image.asset(
-                                  'assets/liked.png',
-                                  width: 20,
-                                  height: 20,
-                                );
-                              }
-                            }(),
+                        children: <Widget>[
+                          Image.asset(
+                            getKudoImage(),
+                            width: 20,
+                            height: 20,
                           ),
-                          () {
-                            if (isFeltKudo == '-1') {
-                              return const Text(
-                                "Like",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              );
-                            } else if (isFeltKudo == '0') {
-                              return const Text(
-                                "Phẫn nộ",
-                                style: TextStyle(
-                                    color: Colors.pink,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              );
-                            } else {
-                              return const Text(
-                                "Like",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              );
-                            }
-                          }(),
+                          const SizedBox(width: 5.0),
+                          Text(
+                            getKudoText(),
+                            style: TextStyle(
+                              color: getKudoColor(),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -286,15 +270,13 @@ class _PostWidgetState extends State<PostWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PostDetailsPage(
-                              post: widget.post), // Truyền dữ liệu bài viết vào
+                          builder: (context) =>
+                              PostDetailsPage(post: widget.post),
                         ),
                       );
                     },
                     child: Row(
                       children: <Widget>[
-                        //Icon(FontAwesomeIcons.commentAlt, size: 20.0),
-
                         Image.asset('assets/comment.png',
                             width: 20.0, height: 20.0),
                         const SizedBox(width: 5.0),
@@ -305,16 +287,7 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                   ),
                 ],
-              ),
-              Row(
-                children: <Widget>[
-                  Image.asset('assets/share.png', width: 20.0, height: 20.0),
-                  const SizedBox(width: 5.0),
-                  const Text('Share',
-                      style: TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.bold)),
-                ],
-              ),
+              )
             ],
           ),
         ],
@@ -395,6 +368,39 @@ class _PostWidgetState extends State<PostWidget> {
     return textSpans;
   }
 
+  String getKudoImage() {
+    switch (isFeltKudo) {
+      case '-1':
+        return 'assets/like.png';
+      case '0':
+        return 'assets/dislike.png';
+      default:
+        return 'assets/liked.png';
+    }
+  }
+
+  String getKudoText() {
+    switch (isFeltKudo) {
+      case '-1':
+        return 'Fell';
+      case '0':
+        return 'Disappointed';
+      default:
+        return 'Kudos';
+    }
+  }
+
+  Color getKudoColor() {
+    switch (isFeltKudo) {
+      case '-1':
+        return Colors.black;
+      case '0':
+        return Colors.pink;
+      default:
+        return Colors.blue;
+    }
+  }
+
   void launchUrl(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -403,110 +409,69 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
-  dynamic isFeltKudo = -1;
+  void _showReactionMenu(BuildContext context) {
+    if (_overlayEntry != null) {
+      // If the overlay is already visible, remove it
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+      return;
+    }
 
-  void showReactionMenu(BuildContext context) async {
-    final button = context.findRenderObject() as RenderBox;
-    final buttonSize = button.size;
-    final buttonPosition = button.localToGlobal(Offset.zero);
+    final RenderBox buttonBox =
+        _buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset buttonPosition = buttonBox.localToGlobal(Offset.zero);
 
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    final overlaySize = overlay.size;
-
-    const menuWidth = 70.0;
-    const menuHeight = 80.0;
-    final borderRadius = BorderRadius.circular(15.0);
-
-    final menuPositionX =
-        (buttonPosition.dx + buttonSize.width / 2) - (menuWidth / 2);
-    final menuPositionY = buttonPosition.dy - menuHeight - 10.0;
-
-    final menuPosition = RelativeRect.fromLTRB(
-      menuPositionX,
-      menuPositionY,
-      overlaySize.width - (menuPositionX + menuWidth),
-      overlaySize.height - (menuPositionY + menuHeight),
-    );
-
-    await showMenu(
-      context: context,
-      position: menuPosition,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius,
-        side: BorderSide(color: Colors.grey.shade300),
-      ),
-      color: Colors.grey.shade100,
-      items: [
-        PopupMenuItem<String>(
-          padding: const EdgeInsets.all(0),
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: buttonPosition.dy - 60.0,
+        left: buttonPosition.dx - 20.0,
+        child: Material(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
           child: Container(
-            width: menuWidth,
-            height: menuHeight,
             decoration: BoxDecoration(
-              borderRadius: borderRadius,
+              border: Border.all(color: Colors.blue),
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isFeltKudo = '1';
-                        });
-                        Navigator.pop(context, '1');
-                      },
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/img/reaction/like.gif',
-                            width: 30,
-                            height: 30,
-                          ),
-                          const SizedBox(height: 8.0),
-                          const Text(
-                            'Like',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isFeltKudo = '0';
-                        });
-                        Navigator.pop(context, '0');
-                      },
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/img/reaction/love.gif',
-                            width: 30,
-                            height: 30,
-                          ),
-                          const SizedBox(height: 8.0),
-                          const Text(
-                            'Love',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                _buildMenuItem(
+                    Image.asset('assets/liked.png', width: 23, height: 23),
+                    '1'),
+                _buildMenuItem(
+                    Image.asset('assets/dislike.png', width: 23, height: 23),
+                    '0'),
               ],
             ),
           ),
         ),
-      ],
-    ).then((value) {
-      if (value != null) {
-        // Thực hiện các hành động tương ứng (không cần setState vì đã thay đổi trạng thái trong GestureDetector)
-      }
-    });
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  Widget _buildMenuItem(Image iconData, String value) {
+    return InkWell(
+      onTap: () async {
+        await postService.feelPost(widget.post.id, value);
+        setState(() {
+          isFeltKudo = value;
+        });
+        _overlayEntry!.remove();
+        _overlayEntry = null;
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            iconData,
+            const SizedBox(width: 8.0),
+          ],
+        ),
+      ),
+    );
   }
 }
