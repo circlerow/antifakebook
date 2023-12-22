@@ -11,7 +11,7 @@ import '../presentation/friend/FriendInfo.dart';
 class PostWidget extends StatefulWidget {
   final Post post;
 
-  PostWidget({required this.post});
+  const PostWidget({super.key, required this.post});
 
   @override
   _PostWidgetState createState() => _PostWidgetState();
@@ -22,9 +22,11 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.post.toJson());
     return Container(
       padding: const EdgeInsets.all(15.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -45,57 +47,90 @@ class _PostWidgetState extends State<PostWidget> {
               ),
               const SizedBox(width: 7.0),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    widget.post.author.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17.0,
-                      color: Colors.black,
+                  RichText(
+                    text: TextSpan(
+                      style: DefaultTextStyle.of(context).style,
+                      children: [
+                        TextSpan(
+                          text: widget.post.author.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                        if (widget.post.state != '')
+                        TextSpan(
+                          text: " - Đang cảm thấy ${widget.post.state}",
+                          style: const TextStyle(
+                            fontSize: 12.0, // Đặt kích thước font chữ nhẹ hơn
+                            color: Colors.grey, // Đặt màu chữ nhẹ hơn
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 5.0),
-                  Text(formatTimeDifference(widget.post.created)),
+                  Text(
+                    formatTimeDifference(widget.post.created),
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               ),
-              const Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
+              const Spacer(),
               PopupMenuButton(
                 itemBuilder: (BuildContext context) {
-                  return [
-                    const PopupMenuItem(
-                      child: Text('Chỉnh sửa bài'),
-                      value: 'edit',
-                    ),
-                    const PopupMenuItem(
-                      child: Text('Xóa bài'),
-                      value: 'delete',
-                    ),
-                  ];
+                  if (widget.post.canEdit == '1') {
+                    return [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Text('Chỉnh sửa bài'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Xóa bài'),
+                      ),
+                    ];
+                  } else {
+                    return [
+                      const PopupMenuItem(
+                        value: 'report',
+                        child: Text('Báo cáo'),
+                      ),
+                    ];
+                  }
                 },
                 onSelected: (value) {
                   if (value == 'edit') {
                     // Xử lý sự kiện chỉnh sửa bài
                   } else if (value == 'delete') {
                     // Xử lý sự kiện xóa bài
+                  } else if (value == 'report') {
+                    // Xử lý sự kiện báo cáo
                   }
                 },
                 icon: const Icon(Icons.more_vert),
-              ),
+              )
             ],
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 10.0),
           RichText(
-            textAlign: TextAlign.start,
+            textAlign: TextAlign.left,
             text: TextSpan(
-                children: convertUrlsToTextSpans(widget.post.described),
-                style: TextStyle(
-                  color: Colors.black,
-                )),
+              children: convertUrlsToTextSpans(widget.post.described),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16.0,
+              ),
+            ),
           ),
           const SizedBox(height: 10.0),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: widget.post.images.isNotEmpty
                 ? GridView.builder(
@@ -136,96 +171,23 @@ class _PostWidgetState extends State<PostWidget> {
                   )
                 : const SizedBox.shrink(),
           ),
+          const SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp,
-                      size: 15.0, color: Colors.blue),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(FontAwesomeIcons.thumbsUp,
+                        size: 15.0, color: Colors.blue),
+                  ),
                   Text(' ${widget.post.feel}'),
                 ],
               ),
               Row(
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              'Comments',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(FontAwesomeIcons.thumbsUp,
-                                              size: 15.0, color: Colors.blue),
-                                          Text(' ${widget.post.feel}'),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                              '${widget.post.commentMark} comments  •  '),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                    width: 500,
-                                  ),
-                                  Container(
-                                    height: 200.0,
-                                    width: 500,
-                                    child: PageView.builder(
-                                      itemCount: 1,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Text(
-                                          "Comment",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          decoration: InputDecoration(
-                                              hintText: 'Write a comment...',
-                                              fillColor: Colors.black),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.send),
-                                        onPressed: () {
-                                          // Xử lý khi người dùng gửi bình luận
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
                     child: Text('${widget.post.commentMark} comments  •  '),
                   )
                 ],
@@ -245,8 +207,6 @@ class _PostWidgetState extends State<PostWidget> {
                     child: GestureDetector(
                       onTap: () async {
                         if (isFeltKudo == '1' || isFeltKudo == '0') {
-                          // xử lý delete feel
-                          //cập nhật lại trạng thái của isFeltKudo
                           setState(() {
                             isFeltKudo = '-1';
                           });
@@ -258,7 +218,6 @@ class _PostWidgetState extends State<PostWidget> {
                         }
                       },
                       onLongPress: () {
-                        // Xử lý khi nhấn giữ nút like
                         showReactionMenu(context);
                       },
                       child: Row(
@@ -451,12 +410,11 @@ class _PostWidgetState extends State<PostWidget> {
     final buttonSize = button.size;
     final buttonPosition = button.localToGlobal(Offset.zero);
 
-    final overlay =
-        Overlay.of(context)?.context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final overlaySize = overlay.size;
 
-    final menuWidth = 70.0;
-    final menuHeight = 80.0;
+    const menuWidth = 70.0;
+    const menuHeight = 80.0;
     final borderRadius = BorderRadius.circular(15.0);
 
     final menuPositionX =
@@ -508,8 +466,8 @@ class _PostWidgetState extends State<PostWidget> {
                             width: 30,
                             height: 30,
                           ),
-                          SizedBox(height: 8.0),
-                          Text(
+                          const SizedBox(height: 8.0),
+                          const Text(
                             'Like',
                             style: TextStyle(fontSize: 16.0),
                           ),
@@ -530,8 +488,8 @@ class _PostWidgetState extends State<PostWidget> {
                             width: 30,
                             height: 30,
                           ),
-                          SizedBox(height: 8.0),
-                          Text(
+                          const SizedBox(height: 8.0),
+                          const Text(
                             'Love',
                             style: TextStyle(fontSize: 16.0),
                           ),

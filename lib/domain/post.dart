@@ -54,6 +54,24 @@ class Post {
       author: Author.fromJson(json['author'] ?? {}),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': images,
+      'described': described,
+      'created': created,
+      'feel': feel,
+      'comment_mark': commentMark,
+      'is_felt': isFelt,
+      'is_blocked': isBlocked,
+      'can_edit': canEdit,
+      'banned': banned,
+      'state': state,
+      'author': author,
+    };
+  }
 }
 
 class ImageInfo {
