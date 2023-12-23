@@ -1,8 +1,6 @@
 
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
-
 class Post {
   final String id;
   final String name;
@@ -133,6 +131,38 @@ class PostCreate{
       'described': described,
       'status': status,
       'auto_accept': autoAccept,
+    };
+  }
+}
+
+class PostEdit{
+  final String id;
+  final List<File>? image;
+  final File? video;
+  final String? described;
+  final String? status;
+  final String? autoAccept;
+  final String? imageDelete;
+
+  PostEdit({
+    required this.id,
+    required this.image,
+    required this.video,
+    required this.described,
+    required this.status,
+    required this.autoAccept,
+    this.imageDelete,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'image': image,
+      'video': video,
+      'described': described,
+      'status': status,
+      'auto_accept': autoAccept,
+      'image_del': imageDelete,
     };
   }
 }

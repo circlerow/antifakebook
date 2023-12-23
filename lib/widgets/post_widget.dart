@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../application/post_service.dart';
 import '../data/post_repository.dart';
 import '../presentation/friend/FriendInfo.dart';
+import '../presentation/post/edit_post.dart';
 
 class PostWidget extends StatefulWidget {
   final Post post;
@@ -119,7 +120,14 @@ class _PostWidgetState extends State<PostWidget> {
                 },
                 onSelected: (value) {
                   if (value == 'edit') {
-                    // Xử lý sự kiện chỉnh sửa bài
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditPost(post: widget.post),
+                        ),
+                      );
                   } else if (value == 'delete') {
                     // Xử lý sự kiện xóa bài
                   } else if (value == 'report') {
@@ -158,10 +166,6 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                     itemCount: widget.post.images.length,
                     itemBuilder: (context, index) {
-                      // return Image.network(
-                      //   widget.post.images[index].url,
-                      //   fit: BoxFit.cover,
-                      // );
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(

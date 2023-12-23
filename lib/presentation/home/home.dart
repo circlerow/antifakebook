@@ -74,9 +74,6 @@ class _HomePageState extends State<HomePage>
                   child: const Icon(Icons.search, color: Colors.black),
                 ),
                 const SizedBox(width: 15.0),
-                const Icon(Icons.message,
-                    color: Colors
-                        .black), // Thay thế FontAwesomeIcons.facebookMessenger bằng Icon thông thường
               ],
             ),
           ],

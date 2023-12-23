@@ -24,4 +24,8 @@ class PostService {
   Future<bool> deleteFell(String id) async {
     return await postRepository.deleteFell(id);
   }
+
+  Future<bool> editPost(PostEdit postEdit) async {
+    return await postRepository.editPost(postEdit);
+  }
 }

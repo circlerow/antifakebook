@@ -9,6 +9,7 @@ abstract class PostRepository {
   Future<dynamic> createPost(PostCreate body);
   Future<dynamic> feelPost(String id, String feel);
   Future<dynamic> deleteFell(String id);
+  Future<dynamic> editPost(PostEdit postEdit);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -40,7 +41,6 @@ class PostRepositoryImpl implements PostRepository {
         '/feel', 'POST',
         isToken: true, body: {"id": id, "type": feel});
     Map<String, dynamic> data = json.decode(response.body);
-    print(data);
     if (data["code"] == "1000") {
       return true;
     }
@@ -53,6 +53,19 @@ class PostRepositoryImpl implements PostRepository {
         '/delete_feel', 'POST',
         isToken: true, body: {"id": id});
     Map<String, dynamic> data = json.decode(response.body);
+    if (data["code"] == "1000") {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<dynamic> editPost(PostEdit postEdit) async {
+    final http.StreamedResponse response = await editPostRequest(
+        '/edit_post', 'POST',
+        isToken: true, postEdit: postEdit);
+    Map<String, dynamic> data =
+        json.decode(await response.stream.bytesToString());
     if (data["code"] == "1000") {
       return true;
     }
