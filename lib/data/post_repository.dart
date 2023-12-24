@@ -51,6 +51,7 @@ class PostRepositoryImpl implements PostRepository {
     final http.Response response =
         await request('/delete_post', 'POST', isToken: true, body: {"id": id});
     Map<String, dynamic> data = json.decode(response.body);
+    return data;
   }
 
   @override

@@ -11,7 +11,6 @@ class VerifyCodeScreen extends StatefulWidget {
 }
 
 class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
-  late List<FocusNode> _focusNodes;
   late List<TextEditingController> _controllers;
   late String initialCode;
 
@@ -19,7 +18,6 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   void initState() {
     initialCode = '';
     super.initState();
-    _focusNodes = List.generate(6, (index) => FocusNode());
     _controllers = List.generate(6, (index) => TextEditingController());
     _initCodeFromSharedPreferences();
   }

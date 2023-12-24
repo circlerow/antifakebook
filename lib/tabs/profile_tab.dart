@@ -373,7 +373,7 @@ class ProfileTab extends State<Profile> {
               SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () async {
-                  final result = await Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OptionProfile(

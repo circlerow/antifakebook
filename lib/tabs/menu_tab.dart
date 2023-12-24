@@ -98,7 +98,7 @@ class MenuTab extends StatelessWidget {
                       ),
                       GestureDetector(
                           onTap: () async {
-                            final result = await Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => VideoPage()),
@@ -126,7 +126,7 @@ class MenuTab extends StatelessWidget {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 onTap: () async {
-                                  final result = await Navigator.push(
+                                  await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => VideoPage()),

@@ -28,7 +28,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   GlobalKey<CommentWidgetState> commentKey = GlobalKey<CommentWidgetState>();
 
   late CommentService service;
-  bool _isChanged = false;
   bool _comment = false;
   String name = "";
   String id = "";
@@ -41,7 +40,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
     String idMark,
   ) {
     setState(() {
-      _isChanged = value;
       _comment = value;
       name = nameUsser;
       id = idMark;

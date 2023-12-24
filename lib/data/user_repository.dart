@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -38,17 +40,6 @@ class UserRepositoryImpl implements UserRepository {
       String country,
       File cover,
       String link) async {
-    dynamic body = {
-      "username": username,
-      "description": description,
-      "avatar": avatar,
-      "address": address,
-      "city": city,
-      "country": country,
-      "cover": cover,
-      "link": "khanh",
-    };
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     var request = http.MultipartRequest(
@@ -94,8 +85,6 @@ class UserRepositoryImpl implements UserRepository {
 
     // Gửi request và nhận response
     var response = await request.send();
-    var resdata = await http.Response.fromStream(response);
-    Map<String, dynamic> data = json.decode(resdata.body);
 
     if (response.statusCode == 200) {
       // Xử lý dữ liệu nhận được

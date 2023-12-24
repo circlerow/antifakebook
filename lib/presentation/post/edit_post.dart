@@ -457,7 +457,7 @@ class _EditPostState extends State<EditPost> {
 
     String deleteList = deleteImage.join(', ');
 
-    dynamic res = await postService.editPost(PostEdit(
+    await postService.editPost(PostEdit(
         id: widget.post.id,
         image: _selectedImages,
         video: _selectedVideos,
