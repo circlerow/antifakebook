@@ -29,7 +29,7 @@ class _StatusScreenState extends State<StatusScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Facebook'),
+        title: const Text('AntiFakebook'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

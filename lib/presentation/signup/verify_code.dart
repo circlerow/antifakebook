@@ -75,9 +75,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          initialCode.length > index
-                              ? initialCode[index]
-                              : '',
+                          initialCode.length > index ? initialCode[index] : '',
                           style: const TextStyle(fontSize: 18),
                         ),
                       ),

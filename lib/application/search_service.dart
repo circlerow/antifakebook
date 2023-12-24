@@ -1,4 +1,7 @@
+import 'package:flutter_application/domain/friend.dart';
+
 import '../data/search_repository.dart';
+import '../domain/post.dart';
 import '../domain/search.dart';
 
 class SearchService {
@@ -14,12 +17,25 @@ class SearchService {
         .toList();
   }
 
-  Future<List<Search>> search(String keyword) async {
-    dynamic data = await searchRepository.getSearch(keyword);
+  Future<List<Post>> search(dynamic body) async {
+    dynamic data = await searchRepository.getSearch(body);
     var statusCode = data["code"];
-    if (statusCode == 1000) {
+    if (statusCode == '1000') {
       List<dynamic> dataSearch = data["data"];
-      return dataSearch.map((search) => Search.fromJson(search)).toList();
+      return dataSearch.map((search) => Post.fromJson(search)).toList();
+    }
+    if(statusCode == 9994){
+      return [];
+    }
+    return [];
+  }
+
+  Future<List<Friend>> searchUser(dynamic body) async {
+    dynamic data = await searchRepository.getSearchUser(body);
+    var statusCode = data["code"];
+    if (statusCode == '1000') {
+      List<dynamic> dataSearch = data["data"];
+      return dataSearch.map((search) => Friend.fromJson(search)).toList();
     }
     if(statusCode == 9994){
       return [];

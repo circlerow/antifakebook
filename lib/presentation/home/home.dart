@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 
 import 'package:flutter_application/controller/notificationController.dart';
+import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/models/user_notification.dart';
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   late NotificationController notificationController;
-
+  late UserController userController;
   @override
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
@@ -29,7 +30,8 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     widget.notificationController = new NotificationController();
-
+    widget.userController = new UserController();
+    widget.userController.init();
     _tabController = TabController(vsync: this, length: 5);
   }
 
@@ -68,9 +70,6 @@ class _HomePageState extends State<HomePage>
                   child: const Icon(Icons.search, color: Colors.black),
                 ),
                 const SizedBox(width: 15.0),
-                const Icon(Icons.message,
-                    color: Colors
-                        .black), // Thay thế FontAwesomeIcons.facebookMessenger bằng Icon thông thường
               ],
             ),
           ],
@@ -104,7 +103,9 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(controller: _tabController, children: [
         HomeTab(),
         FriendsTab(),
-        Profile(),
+        Profile(
+          userCtrl: widget.userController,
+        ),
         NotificationsTab(
           ctrl: widget.notificationController,
         ),

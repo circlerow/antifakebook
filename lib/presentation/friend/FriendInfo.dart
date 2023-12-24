@@ -187,16 +187,16 @@ class _FriendInfoState extends State<FriendInfo> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Icon(Icons.home,
+                      const Icon(Icons.home,
                           color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       Text.rich(
                         TextSpan(
                           children: <TextSpan>[
-                            TextSpan(text: 'Sống tại '),
+                            const TextSpan(text: 'Sống tại '),
                             TextSpan(
                                 text: friend.address,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       )
@@ -205,16 +205,16 @@ class _FriendInfoState extends State<FriendInfo> {
                   const SizedBox(height: 15.0),
                   Row(
                     children: <Widget>[
-                      Icon(Icons.location_on,
+                      const Icon(Icons.location_on,
                           color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
-                      SizedBox(width: 10.0),
+                      const SizedBox(width: 10.0),
                       Text.rich(
                         TextSpan(
                           children: <TextSpan>[
-                            TextSpan(text: 'Đến từ '),
+                            const TextSpan(text: 'Đến từ '),
                             TextSpan(
                                 text: friend.city,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       )

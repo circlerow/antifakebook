@@ -17,8 +17,22 @@ class PostService {
     return await postRepository.createPost(body);
   }
 
+<<<<<<< HEAD
   Future<bool> deletePost(String id) async {
     return await postRepository.deletePost(id);
   }
 
+=======
+  Future<bool> feelPost(String id, String feel) async {
+    return await postRepository.feelPost(id, feel);
+  }
+
+  Future<bool> deleteFell(String id) async {
+    return await postRepository.deleteFell(id);
+  }
+
+  Future<bool> editPost(PostEdit postEdit) async {
+    return await postRepository.editPost(postEdit);
+  }
+>>>>>>> c69ca5386fec99c1c122fc6a606149f1e53f46ed
 }
