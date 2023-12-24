@@ -6,6 +6,10 @@ import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendList.dart';
+import 'package:flutter_application/presentation/home/home.dart';
+import 'package:flutter_application/tabs/home_tab.dart';
+import 'package:flutter_application/tabs/profile_tab.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FriendInfo extends StatefulWidget {
   final String friendId;
@@ -34,6 +38,17 @@ class _FriendInfoState extends State<FriendInfo> {
   }
 
   Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String userId = prefs.getString('user_id')!;
+    if(widget.friendId == userId){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
+    }
     Map<String, dynamic> fetchedPosts =
         await _friendService.getUserFriends("0", "6", widget.friendId);
     

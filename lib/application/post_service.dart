@@ -17,4 +17,8 @@ class PostService {
     return await postRepository.createPost(body);
   }
 
+  Future<bool> deletePost(String id) async {
+    return await postRepository.deletePost(id);
+  }
+
 }

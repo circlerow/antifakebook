@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,7 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   IconData selectedReaction = FontAwesomeIcons.thumbsUp;
+  PostService postService = PostService(postRepository: PostRepositoryImpl());
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class _PostWidgetState extends State<PostWidget> {
                     // Xử lý sự kiện chỉnh sửa bài
                   } else if (value == 'delete') {
                     // Xử lý sự kiện xóa bài
+                    postService.deletePost(widget.post.id);
                   }
                 },
                 icon: Icon(Icons.more_vert),

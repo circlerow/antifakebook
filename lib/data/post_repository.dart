@@ -7,6 +7,7 @@ import '../domain/post.dart';
 abstract class PostRepository {
   Future<dynamic> getListPost(dynamic body);
   Future<dynamic> createPost(PostCreate body);
+  Future<dynamic> deletePost(String id);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -26,7 +27,17 @@ class PostRepositoryImpl implements PostRepository {
         isToken: true, postCreate: postCreate);
     Map<String, dynamic> data =
         json.decode(await response.stream.bytesToString());
-    print(data);
+    if (data["code"] == "1000") {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<dynamic> deletePost(String id) async {
+    final http.Response response =
+        await request('/delete_post', 'POST', isToken: true, body: {"id":id});
+    Map<String, dynamic> data = json.decode(response.body);
     if (data["code"] == "1000") {
       return true;
     }
