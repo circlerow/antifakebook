@@ -1,16 +1,18 @@
 // ignore_for_file: must_be_immutable, library_private_types_in_public_api
 
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/controller/profileController.dart';
-import 'package:flutter_application/models/user_notification.dart';
-import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
-
-import 'package:flutter_application/tabs/profile_tab.dart';
-import 'package:flutter_application/tabs/notifications_tab.dart';
+import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/menu_tab.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_application/tabs/notifications_tab.dart';
+import 'package:flutter_application/tabs/profile_tab.dart';
 
+import './no_connection.dart';
 import '../search/search.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,10 +28,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  bool _isConnected = true;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+
+  void _checkConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _isConnected = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _checkConnectivity();
     print("RUNNN HOME");
     print("RUNNN HOME");
     print("RUNNN HOME");
@@ -37,11 +51,24 @@ class _HomePageState extends State<HomePage>
     widget.userController = new UserController();
     widget.userController.init();
     _tabController = TabController(vsync: this, length: 5);
+
+    // Khi có lại internet
+    _connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result != ConnectivityResult.none) {
+        setState(() {
+          _isConnected = true;
+          _tabController!.animateTo(0); // Navigate to the home tab
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController!.dispose();
+    _connectivitySubscription!.cancel();
     super.dispose();
   }
 
@@ -64,12 +91,15 @@ class _HomePageState extends State<HomePage>
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    // Chuyển đến trang tìm kiếm khi ấn vào biểu tượng tìm kiếm
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchScreen()),
-                    );
+                    if (_isConnected) // Khi có internet
+                    {
+                      // Chuyển đến trang tìm kiếm khi ấn vào biểu tượng tìm kiếm
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchScreen()),
+                      );
+                    }
                   },
                   child: const Icon(Icons.search, color: Colors.black),
                 ),
@@ -104,17 +134,19 @@ class _HomePageState extends State<HomePage>
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        HomeTab(),
-        FriendsTab(),
-        Profile(
-          userCtrl: widget.userController,
-        ),
-        NotificationsTab(
-          ctrl: widget.notificationController,
-        ),
-        MenuTab()
-      ]),
+      body: _isConnected
+          ? TabBarView(controller: _tabController, children: [
+              HomeTab(),
+              FriendsTab(),
+              Profile(
+                userCtrl: widget.userController,
+              ),
+              NotificationsTab(
+                ctrl: widget.notificationController,
+              ),
+              MenuTab()
+            ])
+          : NoConnectionScreen(),
     );
   }
 }
