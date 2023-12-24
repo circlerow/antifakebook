@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/data/post_repository.dart';
+import 'package:flutter_application/domain/feel.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/like_row_widget.dart';
@@ -165,12 +168,18 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Icon(FontAwesomeIcons.thumbsUp,
-                                size: 15.0, color: Colors.blue),
-                            Text(' ${widget.post.feel}'),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            _showDialogLikeDetail(context, widget.post.id);
+                          },
+                          child:
+                          Row(
+                            children: <Widget>[
+                              Icon(FontAwesomeIcons.thumbsUp,
+                                  size: 15.0, color: Colors.blue),
+                              Text(' ${widget.post.feel}'),
+                            ],
+                          ),
                         ),
                         Row(
                           children: <Widget>[
@@ -304,4 +313,90 @@ List<TextSpan> convertUrlsToTextSpans(String text) {
   }
 
   return textSpans;
+}
+
+void _showDialogLikeDetail(BuildContext context, String id) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return FutureBuilder<List<FeelData>>(
+        future: _fetchData(id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading indicator or any placeholder
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            // Handle error
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            // Use the fetched data here
+            List<FeelData> feels = snapshot.data!;
+            return AlertDialog(
+              title: Text('Những người đã thích'),
+              insetPadding: EdgeInsets.only(bottom: 0, right: 0, left: 0, top: MediaQuery.of(context).size.height/3),
+              content: Container(
+                  height : MediaQuery.of(context).size.height/3*2,
+                  width : MediaQuery.of(context).size.width,
+                  child:
+              SingleChildScrollView(
+                child:
+                Column(
+                  children: [
+                    // Display your data in the AlertDialog
+                    for (var feel in feels)
+                      Padding(padding: EdgeInsets.only(bottom: 10),
+                      child:
+                        Row(
+                        children: <Widget>[
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(feel.feel.user.avatar),
+                                radius: 20.0,
+                              ),
+                              Positioned(
+                                bottom: 0.0,
+                                right: 0.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white, // Màu nền trắng
+                                  ),
+                                  padding: EdgeInsets.all(4.0), // Khoảng cách giữa biểu tượng và viền nền
+                                  child: Icon(
+                                    feel.feel.type == "0" ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.heart,
+                                    size: 15.0,
+                                    color: feel.feel.type == "0" ? Colors.blue : Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 8.0), // Khoảng cách giữa Stack và Column
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(feel.feel.user.name),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ),
+            );
+          } else {
+            return Text('No data available');
+          }
+        },
+      );
+    },
+  );
+}
+
+Future<List<FeelData>> _fetchData(String id) async {
+  PostService postService = PostService(postRepository: PostRepositoryImpl());
+  return await postService.getListFeels({"id": id, "index": "0", "count": "10"});
 }

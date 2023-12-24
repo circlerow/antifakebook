@@ -1,4 +1,5 @@
 import 'package:flutter_application/data/post_repository.dart';
+import 'package:flutter_application/domain/feel.dart';
 import 'package:flutter_application/domain/post.dart';
 
 class PostService {
@@ -17,12 +18,10 @@ class PostService {
     return await postRepository.createPost(body);
   }
 
-<<<<<<< HEAD
   Future<bool> deletePost(String id) async {
     return await postRepository.deletePost(id);
   }
 
-=======
   Future<bool> feelPost(String id, String feel) async {
     return await postRepository.feelPost(id, feel);
   }
@@ -34,5 +33,10 @@ class PostService {
   Future<bool> editPost(PostEdit postEdit) async {
     return await postRepository.editPost(postEdit);
   }
->>>>>>> c69ca5386fec99c1c122fc6a606149f1e53f46ed
+
+  Future<List<FeelData>> getListFeels(dynamic body) async {
+    dynamic data =  await postRepository.getListFeels(body);
+    List<dynamic> dataFeel = data["data"];
+    return dataFeel.map((dataFeel) => FeelData.fromJson(dataFeel)).toList();
+  }
 }
