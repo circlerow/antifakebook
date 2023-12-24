@@ -54,7 +54,7 @@ Future<StreamedResponse> multipartRequest(String route, String method,
     method,
     Uri.parse('$baseUrl$route'),
   );
-  print(infoAfter.toJson());
+
   request.headers.addAll(headers);
   request.fields['username'] = infoAfter.userName;
   if (infoAfter.avatar != null) {
@@ -86,7 +86,6 @@ Future<http.StreamedResponse> addPostRequest(
     method,
     Uri.parse('$baseUrl$route'),
   );
-  print(postCreate.toJson());
 
   request.headers.addAll(headers);
   request.fields['described'] = postCreate.described ?? '';
@@ -109,6 +108,56 @@ Future<http.StreamedResponse> addPostRequest(
     request.files.add(await http.MultipartFile.fromPath(
       'video',
       postCreate.video!.path,
+      contentType: MediaType('video', 'mp4'),
+    ));
+  }
+
+  var response = await request.send();
+  return response;
+}
+
+Future<http.StreamedResponse> editPostRequest(
+  String route,
+  String method, {
+  bool isToken = true,
+  required PostEdit postEdit,
+}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+  String baseUrl = "https://it4788.catan.io.vn";
+
+  var headers = {
+    'Authorization': isToken ? 'Bearer $token' : '',
+  };
+
+  var request = http.MultipartRequest(
+    method,
+    Uri.parse('$baseUrl$route'),
+  );
+
+  request.headers.addAll(headers);
+  request.fields['id'] = postEdit.id;
+  request.fields['described'] = postEdit.described ?? '';
+  request.fields['status'] = postEdit.status ?? '';
+  request.fields['auto_accept'] = postEdit.autoAccept ?? '';
+  request.fields['image_del'] = postEdit.imageDelete ?? '';
+
+  if (postEdit.image != null) {
+    for (int i = 0; i < postEdit.image!.length; i++) {
+      if (postEdit.image!.isNotEmpty) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          postEdit.image![i].path,
+          contentType: MediaType('image', 'jpg'),
+        ));
+      }
+    }
+  }
+
+  if (postEdit.video != null) {
+    request.files.add(await http.MultipartFile.fromPath(
+      'video',
+      postEdit.video!.path,
       contentType: MediaType('video', 'mp4'),
     ));
   }

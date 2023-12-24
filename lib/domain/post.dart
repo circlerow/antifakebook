@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_application/application/comment_service.dart';
+import 'package:flutter_application/domain/comment.dart';
 
 class Post {
   final String id;
@@ -17,6 +18,7 @@ class Post {
   final String banned;
   final String state;
   final Author author;
+  late List<Comment> comments = [];
 
   late int kudos;
   late int disappointed;
@@ -60,6 +62,44 @@ class Post {
       state: json['state'] ?? '',
       author: Author.fromJson(json['author'] ?? {}),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': images,
+      'described': described,
+      'created': created,
+      'feel': feel,
+      'comment_mark': commentMark,
+      'is_felt': isFelt,
+      'is_blocked': isBlocked,
+      'can_edit': canEdit,
+      'banned': banned,
+      'state': state,
+      'author': author,
+    };
+  }
+
+  Future<void> addMark(
+    CommentService service,
+    String id_bai_viet,
+    String noi_dung,
+  ) async {
+    List<Comment> newComments = await service.addMark(id_bai_viet, noi_dung);
+    this.comments = newComments;
+  }
+
+  Future<void> addComment(
+    CommentService service,
+    String id_bai_viet,
+    String id_mark,
+    String noi_dung,
+  ) async {
+    List<Comment> newComments =
+        await service.addComment(id_bai_viet, id_mark, noi_dung);
+    this.comments = newComments;
   }
 }
 
@@ -132,6 +172,38 @@ class PostCreate {
       'described': described,
       'status': status,
       'auto_accept': autoAccept,
+    };
+  }
+}
+
+class PostEdit {
+  final String id;
+  final List<File>? image;
+  final File? video;
+  final String? described;
+  final String? status;
+  final String? autoAccept;
+  final String? imageDelete;
+
+  PostEdit({
+    required this.id,
+    required this.image,
+    required this.video,
+    required this.described,
+    required this.status,
+    required this.autoAccept,
+    this.imageDelete,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'image': image,
+      'video': video,
+      'described': described,
+      'status': status,
+      'auto_accept': autoAccept,
+      'image_del': imageDelete,
     };
   }
 }

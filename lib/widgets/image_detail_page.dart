@@ -32,10 +32,26 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
-class ImageDetailPage extends StatelessWidget {
-  final String imageUrl;
+class ImageDetailPage extends StatefulWidget {
+  final List imageUrls;
+  final int initialIndex;
 
-  const ImageDetailPage({required this.imageUrl});
+  const ImageDetailPage({required this.imageUrls, this.initialIndex = 0});
+
+  @override
+  _ImageDetailPageState createState() => _ImageDetailPageState();
+}
+
+class _ImageDetailPageState extends State<ImageDetailPage> {
+  late PageController _pageController;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: _currentIndex);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +61,22 @@ class ImageDetailPage extends StatelessWidget {
         onTap: () {
           Navigator.pop(context);
         },
-        child: Center(
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.contain,
-          ),
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.imageUrls.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          itemBuilder: (context, index) {
+            return Center(
+              child: Image.network(
+                widget.imageUrls[index].url,
+                fit: BoxFit.contain,
+              ),
+            );
+          },
         ),
       ),
     );

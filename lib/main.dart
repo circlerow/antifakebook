@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
-          scaffoldBackgroundColor:
-              Colors.grey[200], // Thiết lập màu nền cho toàn bộ ứng dụng
-          // Các thiết lập theme khác
+            scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+            appBarTheme:
+                AppBarTheme(iconTheme: IconThemeData(color: Colors.black))
         ),
         debugShowCheckedModeBanner: false,
         home: SplashScreen());

@@ -8,6 +8,10 @@ import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendList.dart';
+import 'package:flutter_application/presentation/home/home.dart';
+import 'package:flutter_application/tabs/home_tab.dart';
+import 'package:flutter_application/tabs/profile_tab.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/home.dart';
 
@@ -38,6 +42,17 @@ class _FriendInfoState extends State<FriendInfo> {
   }
 
   Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String userId = prefs.getString('user_id')!;
+    if(widget.friendId == userId){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
+    }
     Map<String, dynamic> fetchedPosts =
         await _friendService.getUserFriends("0", "6", widget.friendId);
 
@@ -195,30 +210,57 @@ class _FriendInfoState extends State<FriendInfo> {
                                   const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 15.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(Icons.location_on,
-                        color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
-                    const SizedBox(width: 10.0),
-                    Text.rich(
-                      TextSpan(
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Đến từ '),
-                          TextSpan(
-                              text: friend.city,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 15.0),
-              ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+              child: Divider(height: 40.0),
+            ),            
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      const Icon(Icons.home,
+                          color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
+                      const SizedBox(width: 10.0),
+                      Text.rich(
+                        TextSpan(
+                          children: <TextSpan>[
+                            const TextSpan(text: 'Sống tại '),
+                            TextSpan(
+                                text: friend.address,
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      const Icon(Icons.location_on,
+                          color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
+                      const SizedBox(width: 10.0),
+                      Text.rich(
+                        TextSpan(
+                          children: <TextSpan>[
+                            const TextSpan(text: 'Đến từ '),
+                            TextSpan(
+                                text: friend.city,
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                ],
+              ),
             ),
           ),
           const Divider(height: 40.0),

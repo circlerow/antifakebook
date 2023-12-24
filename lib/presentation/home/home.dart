@@ -21,7 +21,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
 }
-
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
@@ -29,9 +28,6 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    print("RUNNN HOME");
-    print("RUNNN HOME");
-    print("RUNNN HOME");
     widget.notificationController = new NotificationController();
     widget.userController = new UserController();
     widget.userController.init();
@@ -73,9 +69,6 @@ class _HomePageState extends State<HomePage>
                   child: const Icon(Icons.search, color: Colors.black),
                 ),
                 const SizedBox(width: 15.0),
-                const Icon(Icons.message,
-                    color: Colors
-                        .black), // Thay thế FontAwesomeIcons.facebookMessenger bằng Icon thông thường
               ],
             ),
           ],
