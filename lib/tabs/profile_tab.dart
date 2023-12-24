@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/application/user_service.dart';
@@ -15,10 +16,8 @@ import 'package:flutter_application/presentation/friend/FriendList.dart';
 import 'package:flutter_application/presentation/profile/option_profile.dart';
 import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   late UserController userCtrl;
@@ -30,6 +29,7 @@ class Profile extends StatefulWidget {
 
 class ProfileTab extends State<Profile> {
   late User user;
+  late int coin;
   late List<Friend> friends;
   late String total;
   late Future<void> _dataFuture;
@@ -59,6 +59,7 @@ class ProfileTab extends State<Profile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id')!;
     User fetchedUser = await UserController.getUser();
+    int coinPrefs = prefs.getInt('coin')!;
     furures.add(postService.getListPost({
       "user_id": userId,
       "in_campaign": "1",
@@ -79,6 +80,7 @@ class ProfileTab extends State<Profile> {
       friends = listFriend["friends"];
       total = listFriend["total"];
       user = fetchedUser;
+      coin = coinPrefs;
 
       selectedAvatar = File(UserController.fileAvatar);
 
@@ -272,7 +274,7 @@ class ProfileTab extends State<Profile> {
                               SizedBox(
                                   width: 5.0), // Khoảng cách giữa icon và text
                               Text(
-                                '${user.coins} coin',
+                                '${coin} coin',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 1, 101, 255),
                                   fontWeight: FontWeight.bold,

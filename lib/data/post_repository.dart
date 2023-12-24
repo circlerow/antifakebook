@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:io';
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +42,7 @@ class PostRepositoryImpl implements PostRepository {
     Map<String, dynamic> data =
         json.decode(await response.stream.bytesToString());
     if (data["code"] == "1000") {
-      return true;
+      return data;
     }
     return false;
   }
@@ -55,21 +56,19 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<dynamic> feelPost(String id, String feel) async {
-    final http.Response response = await request(
-        '/feel', 'POST',
+    final http.Response response = await request('/feel', 'POST',
         isToken: true, body: {"id": id, "type": feel});
     Map<String, dynamic> data = json.decode(response.body);
     if (data["code"] == "1000") {
-      return true;
+      return data;
     }
     return false;
   }
 
   @override
   Future<dynamic> deleteFell(String id) async {
-    final http.Response response = await request(
-        '/delete_feel', 'POST',
-        isToken: true, body: {"id": id});
+    final http.Response response =
+        await request('/delete_feel', 'POST', isToken: true, body: {"id": id});
     Map<String, dynamic> data = json.decode(response.body);
     if (data["code"] == "1000") {
       return true;

@@ -28,6 +28,7 @@ class _CreatePostState extends State<CreatePost> {
   late Future<void> _dataFuture;
   final TextEditingController _postTextController = TextEditingController();
   late User user;
+  late int coin;
   late String status = 'Bình thường';
   List<File>? _selectedImages;
   List<File>? _selectedImagesVideos;
@@ -45,10 +46,12 @@ class _CreatePostState extends State<CreatePost> {
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id')!;
+    int coinPrefs = prefs.getInt('coin')!;
     UserService userService = UserService(userRepository: UserRepositoryImpl());
     User fetchedUser = await userService.getUserInfo(userId);
     setState(() {
       user = fetchedUser;
+      coin = coinPrefs;
     });
   }
 
@@ -401,21 +404,28 @@ class _CreatePostState extends State<CreatePost> {
   Future<void> _createPost() async {
     String described = _postTextController.text;
 
-    await postService.createPost(
-      PostCreate(
-        image: _selectedImages,
-        video: _selectedVideos,
-        described: described,
-        status: status,
-        autoAccept: '1',
-      ),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Post created: $described'),
-      ),
-    );
+    if (coin < 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bạn không có đủ coin để đăng bài'),
+        ),
+      );
+    } else {
+      await postService.createPost(
+        PostCreate(
+          image: _selectedImages,
+          video: _selectedVideos,
+          described: described,
+          status: status,
+          autoAccept: '1',
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bài viết đã được đăng: $described'),
+        ),
+      );
+    }
   }
 
   Widget buildErrorWidget(String error) {
