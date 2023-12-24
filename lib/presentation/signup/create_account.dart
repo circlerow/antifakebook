@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application/domain/user_signup.dart';
 import 'package:flutter_application/presentation/login/login.dart';
@@ -176,6 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 } else {
                                   isUsernameEmpty = false;
                                 }
+                                return null;
                               },
                             ),
                           ),

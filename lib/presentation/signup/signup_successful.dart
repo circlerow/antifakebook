@@ -34,11 +34,12 @@ class RegistrationSuccessScreen extends StatelessWidget {
                 // Quay lại trang đăng nhập khi nút được nhấn
                 Navigator.pop(context);
                 Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const LoginPage(title: '',)),
-                          );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage(
+                            title: '',
+                          )),
+                );
               },
               child: const Text('Quay lại trang đăng nhập'),
             ),
@@ -48,4 +49,3 @@ class RegistrationSuccessScreen extends StatelessWidget {
     );
   }
 }
-

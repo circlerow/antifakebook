@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'dart:io';
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,7 +49,7 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<dynamic> deletePost(String id) async {
     final http.Response response =
-        await request('/delete_post', 'POST', isToken: true, body: {"id":id});
+        await request('/delete_post', 'POST', isToken: true, body: {"id": id});
     Map<String, dynamic> data = json.decode(response.body);
   }
 
@@ -91,7 +90,8 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<dynamic> getListFeels(dynamic body) async {
-    final http.Response response = await request('/get_list_feels', 'POST', isToken: true, body: body);
+    final http.Response response =
+        await request('/get_list_feels', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }

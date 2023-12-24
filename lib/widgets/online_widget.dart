@@ -13,14 +13,11 @@ class OnlineWidget extends StatelessWidget {
         children: <Widget>[
           const SizedBox(width: 15.0),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40.0),
-              border: Border.all(
-                width: 1.0,
-                color: Colors.blue
-              )
-            ),
+                borderRadius: BorderRadius.circular(40.0),
+                border: Border.all(width: 1.0, color: Colors.blue)),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,9 +34,7 @@ class OnlineWidget extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -56,9 +51,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -75,9 +68,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -94,9 +85,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -113,9 +102,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -132,9 +119,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -151,9 +136,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -170,9 +153,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -189,9 +170,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -208,9 +187,7 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
-
           const Stack(
             children: <Widget>[
               CircleAvatar(
@@ -227,7 +204,6 @@ class OnlineWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(width: 15.0),
         ],
       ),

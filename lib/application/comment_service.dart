@@ -1,9 +1,5 @@
-import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/data/comment_repository.dart';
 import 'package:flutter_application/domain/comment.dart';
-import 'package:flutter_application/domain/user_login.dart';
-import 'package:flutter_application/domain/user_signup.dart';
-import '../domain/change_info_after_signup.dart';
 
 class CommentService {
   final CommentRepository repo;

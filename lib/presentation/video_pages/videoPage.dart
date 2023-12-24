@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
-import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter_application/widgets/video/video_post_widget.dart';
 

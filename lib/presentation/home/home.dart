@@ -6,8 +6,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/controller/profileController.dart';
-
-import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/menu_tab.dart';
@@ -26,6 +24,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
 }
+
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;

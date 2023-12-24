@@ -82,48 +82,42 @@ class FriendsTabPage extends State<FriendsTab> {
               Row(
                 children: <Widget>[
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FriendsView(isListFriend: false, userId: userId )
-                                )
-                              );
-                    },
-                    child:
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text('Gợi ý',
-                          style: TextStyle(
-                              fontSize: 17.0, fontWeight: FontWeight.bold)),
-                    )
-                  ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FriendsView(
+                                    isListFriend: false, userId: userId)));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 10.0),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(30.0)),
+                        child: const Text('Gợi ý',
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.bold)),
+                      )),
                   const SizedBox(width: 10.0),
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FriendsView(isListFriend: true, userId: userId )
-                                )
-                              );
-                    },
-                    child:
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text('Tất cả bạn bè',
-                          style: TextStyle(
-                              fontSize: 17.0, fontWeight: FontWeight.bold)),
-                    )
-                  )
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FriendsView(
+                                    isListFriend: true, userId: userId)));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 10.0),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(30.0)),
+                        child: const Text('Tất cả bạn bè',
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.bold)),
+                      ))
                 ],
               ),
               const Divider(height: 30.0),

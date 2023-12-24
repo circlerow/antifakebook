@@ -8,9 +8,9 @@ import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart';
 
 class OptionProfile extends StatefulWidget {
   late User user;

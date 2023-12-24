@@ -3,8 +3,6 @@ import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/domain/notification.dart';
 import 'package:flutter_application/widgets/notification_widget.dart';
 
-import '../widgets/separator_widget.dart';
-
 class NotificationsTab extends StatefulWidget {
   late NotificationController ctrl;
   NotificationsTab({Key? key, required this.ctrl}) : super(key: key);

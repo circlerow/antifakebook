@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, unnecessary_null_comparison, use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -50,7 +48,8 @@ class _EditPostState extends State<EditPost> {
     status = widget.post.state;
     _selectedImages ??= [];
     _selectedImagesVideosUrl = widget.post.images.map((e) => e.url).toList();
-   temp = List.generate(_selectedImagesVideosUrl!.length, (index) => index + 1);
+    temp =
+        List.generate(_selectedImagesVideosUrl!.length, (index) => index + 1);
     _dataFuture = fetchData();
   }
 
@@ -373,8 +372,7 @@ class _EditPostState extends State<EditPost> {
   }
 
   Widget _buildImageUrlItem(int index) {
-    String imageUrl = _selectedImagesVideosUrl![
-        index];
+    String imageUrl = _selectedImagesVideosUrl![index];
     return Stack(
       children: [
         Padding(
@@ -399,7 +397,7 @@ class _EditPostState extends State<EditPost> {
             onPressed: () {
               setState(() {
                 _selectedImagesVideosUrl!.removeAt(index);
-                deleteImage.add(temp![index]);                
+                deleteImage.add(temp![index]);
                 temp!.removeAt(index);
               });
             },

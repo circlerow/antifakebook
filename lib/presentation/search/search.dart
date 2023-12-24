@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 
 import '../../application/search_service.dart';
@@ -26,7 +24,6 @@ class _SearchScreenState extends State<SearchScreen> {
   late List<Friend> searchUserData = [];
   int currentPage = 0;
   final ScrollController _scrollController = ScrollController();
-  
 
   @override
   void initState() {

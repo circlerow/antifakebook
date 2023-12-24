@@ -13,5 +13,4 @@ class VerifyCode {
       'code_verify': verifyCode,
     };
   }
-
 }

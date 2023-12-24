@@ -27,7 +27,4 @@ class UserService {
         username, description, avatar, address, city, country, cover, link);
     //print("Data =" + data.toString());
   }
-
- 
-
 }

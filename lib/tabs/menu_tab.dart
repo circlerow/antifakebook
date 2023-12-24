@@ -1,8 +1,5 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/auth_service.dart';
-import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:flutter_application/presentation/setting/change_password.dart';
@@ -10,7 +7,7 @@ import 'package:flutter_application/presentation/video_pages/videoPage.dart';
 import 'package:flutter_application/widgets/avatar/avatar.dart';
 import 'package:flutter_application/widgets/avatar/username.dart';
 import 'package:flutter_application/widgets/menu/shortcut.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../presentation/setting/deposit_coin.dart';
 import '../presentation/setting/list_block.dart';
 import '../presentation/setting/setting_notification.dart';
@@ -227,17 +224,14 @@ class _MyWidgetState extends State<MyWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                   
                     Image.asset('assets/img/icon/settings.png',
                         width: 20.0, height: 20.0),
                     const SizedBox(width: 10.0),
-
                     const Text('Cài đặt & quyền riêng tư',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
                         )),
-
                   ],
                 ),
                 Icon(

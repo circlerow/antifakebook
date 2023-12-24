@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/auth_service.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/domain/user_login.dart';
 import 'package:flutter_application/presentation/home/home.dart';
-import 'package:flutter_application/application/auth_service.dart';
 
 import '../signup/create_account.dart';
 
@@ -247,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(
+                                  backgroundColor: Color.fromARGB(
                                       255, 6, 103, 223), // Màu nền xanh
                                 ),
                                 child: const Text(

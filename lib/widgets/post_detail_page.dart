@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/comment_service.dart';
-import 'package:flutter_application/data/comment_repository.dart';
-import 'package:flutter_application/domain/comment.dart';
 import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/data/comment_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
+import 'package:flutter_application/domain/comment.dart';
 import 'package:flutter_application/domain/feel.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';

@@ -24,8 +24,7 @@ class Friend {
   }
 }
 
-
-class Block{
+class Block {
   final String id;
   final String name;
   final String avatar;
