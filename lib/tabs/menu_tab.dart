@@ -6,10 +6,13 @@ import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/auth_repository.dart';
 import 'package:flutter_application/presentation/login/login.dart';
 import 'package:flutter_application/presentation/setting/change_password.dart';
+import 'package:flutter_application/presentation/video_pages/videoPage.dart';
 import 'package:flutter_application/widgets/avatar/avatar.dart';
 import 'package:flutter_application/widgets/avatar/username.dart';
+import 'package:flutter_application/widgets/menu/shortcut.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../presentation/setting/deposit_coin.dart';
+import '../presentation/setting/list_block.dart';
 import '../presentation/setting/setting_notification.dart';
 
 class MenuTab extends StatelessWidget {
@@ -43,8 +46,8 @@ class MenuTab extends StatelessWidget {
                   UsernameWidget(),
                   SizedBox(height: 5.0),
                   Text(
-                    'See your profile',
-                    style: TextStyle(color: Colors.grey),
+                    'Xem trang cá nhân của bạn',
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   )
                 ],
               ),
@@ -54,225 +57,137 @@ class MenuTab extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Divider(height: 20.0),
           ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.group, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Groups',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              color: Colors.black12,
+                              width: 0.5,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 20,
+                                offset: const Offset(0, 0),
+                                spreadRadius: 0,
+                              ),
+                            ]),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: () {},
+                            child: const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Shortcut(
+                                  img: 'assets/images/menu/friends.png',
+                                  title: 'Bạn bè'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => VideoPage()),
+                            );
+                          },
+                          child: Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  border: Border.all(
+                                    color: Colors.black12,
+                                    width: 0.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 0),
+                                      spreadRadius: 0,
+                                    ),
+                                  ]),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(10),
+                                onTap: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VideoPage()),
+                                  );
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: const Shortcut(
+                                      img: 'assets/images/menu/video.png',
+                                      title: 'Video'),
+                                ),
+                              ))),
                     ],
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.shopping_basket,
-                          color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Marketplace',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.person, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Friends',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.history, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Memories',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.flag, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Pages',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.save_alt, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Saved',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(FontAwesomeIcons.shoppingBag,
-                          color: Colors.blue, size: 25.0),
-                      SizedBox(height: 5.0),
-                      Text('Jobs',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.event, color: Colors.blue, size: 30.0),
-                      SizedBox(height: 5.0),
-                      Text('Events',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                )
               ],
             ),
           ),
           const Divider(),
           const MyWidget(),
           const Divider(),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 65.0,
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 10,
+            ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () async {
-                    await authService.logout();
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Icon(Icons.exit_to_app,
-                          size: 40.0, color: Colors.grey[700]),
-                      const SizedBox(width: 10.0),
-                      const Text('Logout', style: TextStyle(fontSize: 17.0)),
-                    ],
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            10.0), // Điều chỉnh độ cong tại đây
+                        side: const BorderSide(
+                          color: Colors.black12,
+                          width: 0,
+                        ),
+                      ),
+                      backgroundColor: Colors.grey[300],
+                      shadowColor: Colors.transparent,
+                    ),
+                    onPressed: () async {
+                      await authService.logout();
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                      );
+                    },
+                    child: const Text(
+                      'Đăng xuất',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -312,10 +227,17 @@ class _MyWidgetState extends State<MyWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Icon(Icons.settings, size: 40.0, color: Colors.grey[700]),
+                   
+                    Image.asset('assets/img/icon/settings.png',
+                        width: 20.0, height: 20.0),
                     const SizedBox(width: 10.0),
-                    const Text('Settings & Privacy',
-                        style: TextStyle(fontSize: 17.0)),
+
+                    const Text('Cài đặt & quyền riêng tư',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        )),
+
                   ],
                 ),
                 Icon(
@@ -335,7 +257,7 @@ class _MyWidgetState extends State<MyWidget> {
                         const Divider(),
                         _settingNotification('Cài đặt thông báo'),
                         const Divider(),
-                        _buildOptionButton('Thiết lập mã thiết bị'),
+                        _listBlock('Danh sách chặn'),
                         const Divider(),
                         _changePassword('Đổi mật khẩu'),
                       ],
@@ -348,13 +270,18 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 
-  Widget _buildOptionButton(String optionText) {
+  Widget _listBlock(String optionText) {
     return SizedBox(
       height: 40.0,
       child: ListTile(
+        leading: const Icon(Icons.block,
+            size: 40.0, color: Color.fromARGB(255, 21, 237, 132)),
         title: Text(optionText),
         onTap: () {
-          print('$optionText tapped!');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListBlockScreen()),
+          );
         },
       ),
     );

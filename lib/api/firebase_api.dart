@@ -3,7 +3,6 @@ import 'package:flutter_application/application/setting_service.dart';
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/data/setting_repository.dart';
 import 'package:flutter_application/domain/notification.dart';
-import 'package:flutter_application/models/user_notification.dart';
 
 class FirebaseAPI {
   final _firebaseMessaging = FirebaseMessaging.instance;

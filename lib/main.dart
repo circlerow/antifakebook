@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
             appBarTheme:
-                AppBarTheme(iconTheme: IconThemeData(color: Colors.black))),
+                AppBarTheme(iconTheme: IconThemeData(color: Colors.black))
+        ),
         debugShowCheckedModeBanner: false,
         home: SplashScreen());
   }

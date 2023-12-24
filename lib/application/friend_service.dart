@@ -58,4 +58,22 @@ class FriendService {
     return false;
   }
 
+  Future<bool> blockFriend(String userId) async {
+    dynamic res = await friendRepository.blockFriend(userId);
+    if(res['code'] == "1000")return true;
+    return false;
+  }
+
+  Future<List<Block>> listBlock(dynamic body) async {
+    dynamic res = await friendRepository.listBlock(body);
+    List<dynamic> listBlock = res['data'] ?? [];
+    return listBlock.map((postJson) => Block.fromJson(postJson)).toList();
+  }
+
+  Future<bool> unBlockFriend(String userId) async {
+    dynamic res = await friendRepository.unBlockFriend(userId);
+    if(res['code'] == "1000")return true;
+    return false;
+  }
+
 }

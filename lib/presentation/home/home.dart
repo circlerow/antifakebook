@@ -2,7 +2,6 @@
 
 import 'package:flutter_application/controller/notificationController.dart';
 import 'package:flutter_application/controller/profileController.dart';
-import 'package:flutter_application/models/user_notification.dart';
 import 'package:flutter_application/tabs/home_tab.dart';
 import 'package:flutter_application/tabs/friend_tab.dart';
 
