@@ -22,7 +22,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
   Image img = Image.asset('asset/img/nav/topHome.png');
 }
-
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
@@ -30,9 +29,6 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    print("RUNNN HOME");
-    print("RUNNN HOME");
-    print("RUNNN HOME");
     widget.notificationController = new NotificationController();
     widget.userController = new UserController();
     widget.userController.init();

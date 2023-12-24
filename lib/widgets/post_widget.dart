@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/post_detail_page.dart';
@@ -22,6 +24,7 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   IconData selectedReaction = FontAwesomeIcons.thumbsUp;
+
   final GlobalKey _buttonKey = GlobalKey();
   OverlayEntry? _overlayEntry;
   late String isFeltKudo;
@@ -130,6 +133,7 @@ class _PostWidgetState extends State<PostWidget> {
                       );
                   } else if (value == 'delete') {
                     // Xử lý sự kiện xóa bài
+                    postService.deletePost(widget.post.id);
                   } else if (value == 'report') {
                     // Xử lý sự kiện báo cáo
                   }
