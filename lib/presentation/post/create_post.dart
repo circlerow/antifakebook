@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, unnecessary_null_comparison, use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -106,7 +104,6 @@ class _CreatePostState extends State<CreatePost> {
       setState(() {
         _selectedVideos = File(pickedVideo.path);
         _selectedImagesVideos?.add(File(thumbnailPath!));
-        print(_selectedImagesVideos);
       });
     }
   }

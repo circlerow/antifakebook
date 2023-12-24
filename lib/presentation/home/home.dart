@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
-
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
@@ -72,7 +70,6 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //brightness: Brightness.light,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

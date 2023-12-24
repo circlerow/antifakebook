@@ -43,7 +43,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
     setState(() {
       _isChanged = value;
       _comment = value;
-      print("Name = " + nameUsser);
       name = nameUsser;
       id = idMark;
     });
@@ -57,7 +56,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> getComments() async {
-    print("ID = " + widget.post.id);
     List<Comment> fetchedComments =
         await service.getMarkComment(int.parse(widget.post.id), 10);
     widget.post.comments = fetchedComments;
@@ -314,7 +312,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     IconButton(
                       onPressed: () async {
                         String comment = _textEditingController.text;
-                        print('Nội dung bình luận: $comment');
                         _textEditingController.clear();
                         _focusNode.unfocus();
 

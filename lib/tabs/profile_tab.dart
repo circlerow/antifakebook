@@ -4,11 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/post_service.dart';
-import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
-import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/domain/user.dart';
@@ -41,16 +39,12 @@ class ProfileTab extends State<Profile> {
 
   @override
   void initState() {
-    print(" RUN");
-    print(" RUN");
-    print(" RUN");
     _dataFuture = fetchData();
     super.initState();
   }
 
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
-    UserService userService = UserService(userRepository: UserRepositoryImpl());
 
     FriendService friendService =
         FriendService(friendRepository: FriendRepositoryImpl());
@@ -75,7 +69,6 @@ class ProfileTab extends State<Profile> {
     List<dynamic> result = await Future.wait(furures);
     List<Post> fetchedPosts = result[0];
     dynamic listFriend = result[1];
-    print(" Total " + fetchedPosts.length.toString() + " Posts");
     setState(() async {
       friends = listFriend["friends"];
       total = listFriend["total"];
@@ -387,8 +380,6 @@ class ProfileTab extends State<Profile> {
                               user: user,
                             )),
                   );
-                  //  print("Result = " + result);
-                  // if (result != null && result == true) {
                   setState(() {
                     user = UserController.user;
                     selectedAvatar = File(UserController.fileAvatar);
@@ -396,7 +387,6 @@ class ProfileTab extends State<Profile> {
                     selectedBackGr = File(UserController.fileBackGr);
                     _backGr = File(UserController.fileBackGr).readAsBytesSync();
                   });
-                  //  }
                 },
                 child: Container(
                   height: 40.0,

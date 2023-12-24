@@ -85,11 +85,9 @@ class UserRepositoryImpl implements UserRepository {
     else
       request.fields['link'] = "";
 
-    print("avatar path = " + avatar.path);
     request.files.add(await http.MultipartFile.fromPath('avatar', avatar.path,
         contentType: MediaType("image", getExtensionFromUrl(avatar.path))));
 
-    print("cover path = " + cover.path);
     request.files.add(await http.MultipartFile.fromPath(
         'cover_image', cover.path,
         contentType: MediaType("image", getExtensionFromUrl(cover.path))));
@@ -98,17 +96,13 @@ class UserRepositoryImpl implements UserRepository {
     var response = await request.send();
     var resdata = await http.Response.fromStream(response);
     Map<String, dynamic> data = json.decode(resdata.body);
-    print(" Code = " + data['code']);
-    print(" Message = " + data['message']);
 
     if (response.statusCode == 200) {
       // Xử lý dữ liệu nhận được
       var responseData = await response.stream.bytesToString();
       return responseData;
     } else {
-      //var responseData = await response.stream.bytesToString();
-
-      //throw Exception('Failed to update user info');
+      //
     }
   }
 

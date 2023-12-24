@@ -36,7 +36,6 @@ class CommentService {
       "mark_id": "",
       "type": "0"
     };
-    print("id = " + id_bai_viet + " noi dung = " + noi_dung);
     dynamic res = await repo.setMarkComment(body);
     List<Comment> commentList = [];
     for (var commentJson in res['data']) {

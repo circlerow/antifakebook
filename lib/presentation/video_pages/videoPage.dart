@@ -27,7 +27,6 @@ class VideoPageState extends State<VideoPage> {
       double currentScroll = _scrollController.position.pixels;
       double delta = 0.0; // or something else..
       if (maxScroll - currentScroll <= delta) {
-        print("Loading more data...");
         _loadMoreData();
       }
     });

@@ -8,7 +8,6 @@ class CommentRepository {
     final http.Response response =
         await request('/get_mark_comment', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
-    print(" DATA = " + data['code']);
     return data;
   }
 
@@ -16,7 +15,6 @@ class CommentRepository {
     final http.Response response =
         await request('/set_mark_comment', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
-    print(" DATA = " + data['code']);
     return data;
   }
 }

@@ -17,8 +17,6 @@ class _NotificationsTabState extends State<NotificationsTab> {
   @override
   Widget build(BuildContext context) {
     print(" RUN ================ ");
-    print(" RUN ================ ");
-    print(" RUN ================ ");
     print(" So luong thong bao hien tai " +
         widget.ctrl.notifications.length.toString());
 

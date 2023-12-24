@@ -17,9 +17,6 @@ class NotificationController {
 
   Future<void> init() async {
     notifications = await notificationService.getNotifications(1, 10);
-    print("DONE");
-    print("DONE");
-    print("DONE");
   }
 
   NotificationController._internal() {

@@ -92,7 +92,6 @@ class _SearchScreenState extends State<SearchScreen> {
       };
       final response = await searchService.search(body);
       searchData = response.toList();
-      print(searchData);
       setState(() {
         isSearching = true;
         isLoading = false;
@@ -114,7 +113,6 @@ class _SearchScreenState extends State<SearchScreen> {
       };
       final response = await searchService.searchUser(body);
       searchUserData = response.toList();
-      print(searchUserData);
       setState(() {
         isSearching = true;
         isLoading = false;

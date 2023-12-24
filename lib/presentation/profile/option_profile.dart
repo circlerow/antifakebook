@@ -81,8 +81,6 @@ class _OptionProfileState extends State<OptionProfile> {
     setState(() {
       _avatar = File(returnImage.path).readAsBytesSync();
       selectedAvatar = File(returnImage.path);
-
-      //Navigator.of(context, rootNavigator: true).pop();
     });
   }
 
@@ -93,7 +91,6 @@ class _OptionProfileState extends State<OptionProfile> {
     setState(() {
       _backGr = File(returnImage.path).readAsBytesSync();
       selectedBackGr = File(returnImage.path);
-      //Navigator.of(context, rootNavigator: true).pop();
     });
   }
 
@@ -127,7 +124,6 @@ class _OptionProfileState extends State<OptionProfile> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
-        //shadowColor: Colors.transparent,
         title: const Text(
           'Chỉnh sửa trang cá nhân',
           style: TextStyle(color: Colors.black),
@@ -137,8 +133,6 @@ class _OptionProfileState extends State<OptionProfile> {
       body: Padding(
         padding: EdgeInsets.fromLTRB(16.0, 0, 16, 0),
         child: ListView(
-          //mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const SizedBox(height: 16),
             Row(
@@ -173,7 +167,6 @@ class _OptionProfileState extends State<OptionProfile> {
                 ),
               ),
               onTap: () {
-                print("press");
                 // _showPopupAvatar(context);
               },
             ),
@@ -438,15 +431,6 @@ class _OptionProfileState extends State<OptionProfile> {
   }
 
   save() async {
-    print("Save");
-    print("newUser" + newUser.username);
-    print("newUser" + newUser.description);
-    print("newUser" + selectedAvatar!.path);
-    print("newUser" + newUser.address);
-    print("newUser" + newUser.city);
-    print("newUser" + newUser.country);
-    print("newUser" + selectedBackGr!.path);
-
     await UserController.setAvatar(selectedAvatar!);
 
     await UserController.setBackGr(selectedBackGr!);
