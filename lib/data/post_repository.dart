@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'dart:io';
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,9 +9,12 @@ import '../domain/post.dart';
 abstract class PostRepository {
   Future<dynamic> getListPost(dynamic body);
   Future<dynamic> createPost(PostCreate body);
+  Future<dynamic> deletePost(String id);
   Future<dynamic> feelPost(String id, String feel);
   Future<dynamic> deleteFell(String id);
   Future<dynamic> editPost(PostEdit postEdit);
+  Future<dynamic> getListFeels(dynamic body);
+  Future<dynamic> getListVideo(dynamic body);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -24,6 +28,13 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
+  Future<dynamic> getListVideo(dynamic body) async {
+    final http.Response response =
+        await request('/get_list_videos', 'POST', isToken: true, body: body);
+    return json.decode(response.body);
+  }
+
+  @override
   Future<dynamic> createPost(PostCreate postCreate) async {
     final http.StreamedResponse response = await addPostRequest(
         '/add_post', 'POST',
@@ -34,6 +45,13 @@ class PostRepositoryImpl implements PostRepository {
       return data;
     }
     return false;
+  }
+
+  @override
+  Future<dynamic> deletePost(String id) async {
+    final http.Response response =
+        await request('/delete_post', 'POST', isToken: true, body: {"id":id});
+    Map<String, dynamic> data = json.decode(response.body);
   }
 
   @override
@@ -69,5 +87,12 @@ class PostRepositoryImpl implements PostRepository {
       return true;
     }
     return false;
+  }
+
+  @override
+  Future<dynamic> getListFeels(dynamic body) async {
+    final http.Response response = await request('/get_list_feels', 'POST', isToken: true, body: body);
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
   }
 }

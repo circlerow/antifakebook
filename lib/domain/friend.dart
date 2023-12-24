@@ -23,3 +23,24 @@ class Friend {
     );
   }
 }
+
+
+class Block{
+  final String id;
+  final String name;
+  final String avatar;
+
+  Block({
+    required this.id,
+    required this.name,
+    required this.avatar,
+  });
+
+  factory Block.fromJson(Map<String, dynamic> json) {
+    return Block(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      avatar: json['avatar'] ?? '',
+    );
+  }
+}
