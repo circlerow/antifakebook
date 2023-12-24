@@ -164,8 +164,11 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                   child: RichText(
                     textAlign: TextAlign.start,
                     text: TextSpan(
-                      children: convertUrlsToTextSpans(widget.post.described),
-                    ),
+                        children: convertUrlsToTextSpans(widget.post.described),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.0,
+                        )),
                   ),
                 ),
                 Container(
@@ -218,18 +221,17 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       GestureDetector(
-                          onTap: () {
-                            _showDialogLikeDetail(context, widget.post.id);
-                          },
-                          child:
-                          Row(
-                            children: <Widget>[
-                              Icon(FontAwesomeIcons.thumbsUp,
-                                  size: 15.0, color: Colors.blue),
-                              Text(' ${widget.post.feel}'),
-                            ],
-                          ),
+                        onTap: () {
+                          _showDialogLikeDetail(context, widget.post.id);
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.thumbsUp,
+                                size: 15.0, color: Colors.blue),
+                            Text(' ${widget.post.feel}'),
+                          ],
                         ),
+                      ),
                       Row(
                         children: <Widget>[
                           Text('${widget.post.commentMark} comments  •  '),
@@ -444,58 +446,68 @@ void _showDialogLikeDetail(BuildContext context, String id) {
             List<FeelData> feels = snapshot.data!;
             return AlertDialog(
               title: Text('Những người đã thích'),
-              insetPadding: EdgeInsets.only(bottom: 0, right: 0, left: 0, top: MediaQuery.of(context).size.height/3),
+              insetPadding: EdgeInsets.only(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  top: MediaQuery.of(context).size.height / 3),
               content: Container(
-                  height : MediaQuery.of(context).size.height/3*2,
-                  width : MediaQuery.of(context).size.width,
-                  child:
-              SingleChildScrollView(
-                child:
-                Column(
-                  children: [
-                    // Display your data in the AlertDialog
-                    for (var feel in feels)
-                      Padding(padding: EdgeInsets.only(bottom: 10),
-                      child:
-                        Row(
-                        children: <Widget>[
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(feel.feel.user.avatar),
-                                radius: 20.0,
+                height: MediaQuery.of(context).size.height / 3 * 2,
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Display your data in the AlertDialog
+                      for (var feel in feels)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Stack(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(feel.feel.user.avatar),
+                                    radius: 20.0,
+                                  ),
+                                  Positioned(
+                                    bottom: 0.0,
+                                    right: 0.0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white, // Màu nền trắng
+                                      ),
+                                      padding: EdgeInsets.all(
+                                          4.0), // Khoảng cách giữa biểu tượng và viền nền
+                                      child: Icon(
+                                        feel.feel.type == "0"
+                                            ? FontAwesomeIcons.thumbsUp
+                                            : FontAwesomeIcons.heart,
+                                        size: 15.0,
+                                        color: feel.feel.type == "0"
+                                            ? Colors.blue
+                                            : Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Positioned(
-                                bottom: 0.0,
-                                right: 0.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white, // Màu nền trắng
-                                  ),
-                                  padding: EdgeInsets.all(4.0), // Khoảng cách giữa biểu tượng và viền nền
-                                  child: Icon(
-                                    feel.feel.type == "0" ? FontAwesomeIcons.thumbsUp : FontAwesomeIcons.heart,
-                                    size: 15.0,
-                                    color: feel.feel.type == "0" ? Colors.blue : Colors.red,
-                                  ),
-                                ),
+                              SizedBox(
+                                  width:
+                                      8.0), // Khoảng cách giữa Stack và Column
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(feel.feel.user.name),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(width: 8.0), // Khoảng cách giữa Stack và Column
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(feel.feel.user.name),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                        )
+                    ],
+                  ),
                 ),
-              ),
               ),
             );
           } else {
@@ -509,5 +521,6 @@ void _showDialogLikeDetail(BuildContext context, String id) {
 
 Future<List<FeelData>> _fetchData(String id) async {
   PostService postService = PostService(postRepository: PostRepositoryImpl());
-  return await postService.getListFeels({"id": id, "index": "0", "count": "10"});
+  return await postService
+      .getListFeels({"id": id, "index": "0", "count": "10"});
 }
