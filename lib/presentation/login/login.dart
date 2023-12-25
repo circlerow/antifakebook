@@ -35,8 +35,44 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
   bool isUsernameEmpty = false;
+  bool showError = false;
   final AuthService authService =
       AuthService(authRepository: AuthRepositoryImpl());
+
+  void login() {
+    String username = userNameController.text;
+    String password = passWordController.text;
+
+    if (!username.isEmpty &&
+        !password.isEmpty &&
+        showError == false &&
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+            .hasMatch(userNameController.text)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text(
+            'Tài khoản hoặc mật khẩu không đúng',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content:
+              Text('Vui lòng nhập đúng tài khoản và mật khẩu để đăng nhập.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Color.fromARGB(255, 6, 103, 223)),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +179,44 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     );
                                     isUsernameEmpty = true;
-                                  } else {
-                                    isUsernameEmpty = false;
+                                    showError = true;
+                                    return null;
+                                  } else if (!RegExp(
+                                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                                      .hasMatch(value)) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                        title: Text(
+                                          'Địa chỉ Email không hợp lệ',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        content: Text(
+                                            'Vui lòng nhập đúng Email để đăng nhập.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 6, 103, 223)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    isUsernameEmpty = true;
+                                    showError = true;
+                                    return null;
                                   }
+                                  isUsernameEmpty = false;
+                                  showError = false;
                                   return null;
                                 },
                                 decoration: const InputDecoration(
@@ -202,10 +273,11 @@ class _LoginPageState extends State<LoginPage> {
                                           ],
                                         ),
                                       );
-                                    } else {
+                                      showError = true;
                                       return null;
                                     }
                                   }
+                                  showError = false;
                                   return null;
                                 },
                                 obscureText: true,
@@ -243,6 +315,10 @@ class _LoginPageState extends State<LoginPage> {
                                         MaterialPageRoute(
                                             builder: (context) => HomePage()),
                                       );
+                                    }
+
+                                    if (!isLogin) {
+                                      login();
                                     }
                                   }
                                 },
