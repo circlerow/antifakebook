@@ -24,6 +24,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isPasswordEmpty = false;
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
+
+  void signup() {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmPasswordController.text;
+
+    if (!email.isEmpty &&
+        !password.isEmpty &&
+        !confirmPassword.isEmpty &&
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+            .hasMatch(_emailController.text) &&
+        password == confirmPassword) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text(
+            'Email đã được sử dụng',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text('Vui lòng sử dụng Email khác để có thể đăng ký.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Color.fromARGB(255, 6, 103, 223)),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   final AuthService authService =
       AuthService(authRepository: AuthRepositoryImpl());
   @override
@@ -233,9 +270,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     );
                                   }
                                   isPasswordEmpty = true;
-                                } else {
-                                  isPasswordEmpty = false;
+                                  return null;
                                 }
+                                isPasswordEmpty = false;
                                 return null;
                               },
                             ),
@@ -264,8 +301,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               obscureText: true,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  if (isUsernameEmpty == false &&
-                                      isPasswordEmpty == false) {
+                                  if (_emailController.text.isEmpty == false &&
+                                      _passwordController.text.isEmpty ==
+                                          false &&
+                                      RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                                          .hasMatch(_emailController.text)) {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -295,8 +335,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     );
                                   }
                                 } else if (value != _passwordController.text) {
-                                  if (isUsernameEmpty == false &&
-                                      isPasswordEmpty == false) {
+                                  if (_emailController.text.isEmpty == false &&
+                                      _passwordController.text.isEmpty ==
+                                          false &&
+                                      RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                                          .hasMatch(_emailController.text)) {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -358,28 +401,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   );
                                 }
                                 if (!isSignup) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Text(
-                                          'Email đã được sử dụng, vui lòng sử dụng email khác'),
-                                      backgroundColor:
-                                          Colors.red, // Màu nền của SnackBar
-                                      action: SnackBarAction(
-                                        label: 'Đóng',
-                                        onPressed: () {
-                                          // Xử lý khi nút "Đóng" được nhấn
-                                          ScaffoldMessenger.of(context)
-                                              .hideCurrentSnackBar();
-                                        },
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: const EdgeInsets.only(
-                                          bottom: 50,
-                                          left: 20,
-                                          right:
-                                              20), // Điều chỉnh vị trí xuất hiện
-                                    ),
-                                  );
+                                  signup();
                                 }
                               }
                             },
