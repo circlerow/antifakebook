@@ -75,7 +75,7 @@ class _PostWidgetState extends State<PostWidget> {
                             color: Colors.black,
                           ),
                         ),
-                        if (widget.post.state != '')
+                        if (widget.post.state != '' && widget.post.state.length < 20)
                           TextSpan(
                             text: " - Đang cảm thấy ${widget.post.state}",
                             style: const TextStyle(
@@ -129,10 +129,8 @@ class _PostWidgetState extends State<PostWidget> {
                       ),
                     );
                   } else if (value == 'delete') {
-                    // Xử lý sự kiện xóa bài
                     postService.deletePost(widget.post.id);
                   } else if (value == 'report') {
-                    // Xử lý sự kiện báo cáo
                   }
                 },
                 icon: const Icon(Icons.more_vert),
