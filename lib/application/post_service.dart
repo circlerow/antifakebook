@@ -47,11 +47,15 @@ class PostService {
 
   Future<bool> feelPost(String id, String feel) async {
     dynamic data = await postRepository.feelPost(id, feel);
+    print(data);
     if (data != false) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt('coin', int.parse(data['coins']));
     }
-    return data;
+    if(data['data'] == null) {
+      return false;
+    }
+    return true;
   }
 
   Future<bool> deleteFell(String id) async {

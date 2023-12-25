@@ -185,31 +185,6 @@ class _FriendInfoState extends State<FriendInfo> {
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
             child: Divider(height: 40.0),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    const Icon(Icons.home,
-                        color: Color.fromARGB(255, 55, 55, 55), size: 30.0),
-                    const SizedBox(width: 10.0),
-                    Text.rich(
-                      TextSpan(
-                        children: <TextSpan>[
-                          const TextSpan(text: 'Sống tại '),
-                          TextSpan(
-                              text: friend.address,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           const Padding(
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
             child: Divider(height: 40.0),

@@ -75,7 +75,9 @@ class _PostWidgetState extends State<PostWidget> {
                             color: Colors.black,
                           ),
                         ),
-                        if (widget.post.state != '' && widget.post.state.length < 20)
+                        if (widget.post.state != '' &&
+                            widget.post.state.length < 20 &&
+                            widget.post.author.name.length < 12)
                           TextSpan(
                             text: " - Đang cảm thấy ${widget.post.state}",
                             style: const TextStyle(
@@ -130,21 +132,29 @@ class _PostWidgetState extends State<PostWidget> {
                     );
                   } else if (value == 'delete') {
                     postService.deletePost(widget.post.id);
-                  } else if (value == 'report') {
-                  }
+                  } else if (value == 'report') {}
                 },
                 icon: const Icon(Icons.more_vert),
               )
             ],
           ),
           const SizedBox(height: 10.0),
-          RichText(
-            textAlign: TextAlign.left,
-            text: TextSpan(
-              children: convertUrlsToTextSpans(widget.post.described),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 16.0,
+          GestureDetector(
+            onTapUp: (TapUpDetails details) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetailsPage(post: widget.post),
+                ),
+              );
+            },
+            child: RichText(
+              text: TextSpan(
+                children: convertUrlsToTextSpans(widget.post.described),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ),
@@ -223,7 +233,6 @@ class _PostWidgetState extends State<PostWidget> {
                       _showReactionMenu(context);
                     },
                     feedback: Container(
-                      // Provide a simple feedback appearance, you can customize this
                       width: 50,
                       height: 50,
                       color: Colors.blue,
@@ -425,31 +434,47 @@ class _PostWidgetState extends State<PostWidget> {
     final Offset buttonPosition = buttonBox.localToGlobal(Offset.zero);
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: buttonPosition.dy - 60.0,
-        left: buttonPosition.dx - 20.0,
-        child: Material(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildMenuItem(
-                    Image.asset('assets/liked.png', width: 23, height: 23),
-                    '1'),
-                _buildMenuItem(
-                    Image.asset('assets/dislike.png', width: 23, height: 23),
-                    '0'),
-              ],
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              // Đóng popup khi chạm vào bên ngoài
+              _overlayEntry!.remove();
+              _overlayEntry = null;
+            },
+            child: Container(
+              color: Colors
+                  .transparent, // Tạo một lớp nền trong suốt để lắng nghe sự kiện onTap
             ),
           ),
-        ),
+          Positioned(
+            top: buttonPosition.dy - 60.0,
+            left: buttonPosition.dx - 20.0,
+            child: Material(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildMenuItem(
+                        Image.asset('assets/liked.png', width: 23, height: 23),
+                        '1'),
+                    _buildMenuItem(
+                        Image.asset('assets/dislike.png',
+                            width: 23, height: 23),
+                        '0'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
 

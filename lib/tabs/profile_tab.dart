@@ -242,14 +242,14 @@ class ProfileTab extends State<Profile> {
                 ),
               ),
               Positioned(
-                  left: 52.0,
+                  left: 42.0,
                   top: 190.0,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
                         height: 40.0,
-                        width: MediaQuery.of(context).size.width / 8 * 2,
+                        width: MediaQuery.of(context).size.width / 8 * 2.5,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 233, 242, 252),
                           borderRadius: BorderRadius.circular(45.0),
@@ -267,7 +267,7 @@ class ProfileTab extends State<Profile> {
                               SizedBox(
                                   width: 5.0), // Khoảng cách giữa icon và text
                               Text(
-                                '${coin} coin',
+                                formatCoinValue(coin),
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 1, 101, 255),
                                   fontWeight: FontWeight.bold,
@@ -438,4 +438,16 @@ class ProfileTab extends State<Profile> {
       ),
     );
   }
+
+  String formatCoinValue(int coin) {
+  if (coin > 1000000) {
+    double valueInMillion = coin / 1000000;
+    return '${valueInMillion.toStringAsFixed(1)}m coin';
+  } else if (coin > 1000) {
+    double valueInK = coin / 1000;
+    return '${valueInK.toStringAsFixed(1)}k coin';
+  } else {
+    return '$coin coin';
+  }
+}
 }
