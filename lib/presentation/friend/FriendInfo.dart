@@ -204,7 +204,7 @@ class _FriendInfoState extends State<FriendInfo> {
                                   const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
