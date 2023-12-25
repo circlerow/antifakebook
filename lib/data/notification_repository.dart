@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,7 +13,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
   Future<dynamic> getNotifications(dynamic body) async {
     final http.Response response =
         await request('/get_notification', 'POST', isToken: true, body: body);
-   
+
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }

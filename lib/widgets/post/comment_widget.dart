@@ -38,9 +38,6 @@ class CommentWidgetState extends State<CommentWidget> {
   }
 
   Future<void> getComments() async {
-    // print("ID = " + widget.post.id);
-    // List<Comment> fetchedComments =
-    //     await service.getMarkComment(int.parse(widget.post.id), 10);
     setState(() {
       comments = widget.comments;
     });
@@ -58,8 +55,6 @@ class CommentWidgetState extends State<CommentWidget> {
         Comment comment = comments[index];
 
         return Container(
-          // constraints:
-          //     BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
           child: Column(
             children: [
               Row(

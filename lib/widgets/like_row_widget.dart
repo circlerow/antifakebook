@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LikeRowWidget extends StatefulWidget {
@@ -15,8 +14,7 @@ class _LikeRowWidgetState extends State<LikeRowWidget> {
     final buttonSize = button.size;
     final buttonPosition = button.localToGlobal(Offset.zero);
 
-    final overlay =
-        Overlay.of(context)?.context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final overlaySize = overlay.size;
 
     final menuWidth = 70.0;

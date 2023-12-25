@@ -8,8 +8,6 @@ import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../application/post_service.dart';
-import '../data/post_repository.dart';
 import '../presentation/friend/FriendInfo.dart';
 import '../presentation/post/edit_post.dart';
 
@@ -77,7 +75,7 @@ class _PostWidgetState extends State<PostWidget> {
                             color: Colors.black,
                           ),
                         ),
-                        if (widget.post.state != '')
+                        if (widget.post.state != '' && widget.post.state.length < 20)
                           TextSpan(
                             text: " - Đang cảm thấy ${widget.post.state}",
                             style: const TextStyle(
@@ -125,17 +123,14 @@ class _PostWidgetState extends State<PostWidget> {
                   if (value == 'edit') {
                     Navigator.pop(context);
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditPost(post: widget.post),
-                        ),
-                      );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditPost(post: widget.post),
+                      ),
+                    );
                   } else if (value == 'delete') {
-                    // Xử lý sự kiện xóa bài
                     postService.deletePost(widget.post.id);
                   } else if (value == 'report') {
-                    // Xử lý sự kiện báo cáo
                   }
                 },
                 icon: const Icon(Icons.more_vert),

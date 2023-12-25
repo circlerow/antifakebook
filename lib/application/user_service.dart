@@ -23,11 +23,7 @@ class UserService {
       String country,
       File cover,
       String link) async {
-    final data = await userRepository.updateUserInfo(
+    await userRepository.updateUserInfo(
         username, description, avatar, address, city, country, cover, link);
-    //print("Data =" + data.toString());
   }
-
- 
-
 }

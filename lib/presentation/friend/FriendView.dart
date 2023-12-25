@@ -30,21 +30,11 @@ class FriendsViewPage extends State<FriendsView> {
   void initState() {
     super.initState();
     _dataFuture = fetchData();
-    _scrollController.addListener(_scrollListener);
-  }
-
-  void _scrollListener() {
-    if (_scrollController.offset >=
-            _scrollController.position.maxScrollExtent &&
-        !_scrollController.position.outOfRange) {
-      fetchData();
-    }
   }
 
   Future<void> fetchData() async {
     if (!isLoading) {
       setState(() {
-        isLoading = true;
       });
     }
 

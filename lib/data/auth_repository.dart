@@ -23,7 +23,6 @@ class AuthRepositoryImpl implements AuthRepository {
     final http.Response response =
         await request('/login', 'POST', isToken: false, body: user.toJson());
     Map<String, dynamic> data = json.decode(response.body);
-    print(data);
     if (data["code"] == "1000") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", data["data"]["token"]);
@@ -37,8 +36,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> signUp(UserSignup user) async {
     final http.Response response =
         await request('/signup', 'POST', isToken: false, body: user.toJson());
-    print('object');
-    print(json.decode(response.body));
     Map<String, dynamic> data = json.decode(response.body);
     if (data["code"] == "1000") {
       SharedPreferences prefs = await SharedPreferences.getInstance();

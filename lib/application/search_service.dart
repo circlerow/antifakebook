@@ -24,7 +24,7 @@ class SearchService {
       List<dynamic> dataSearch = data["data"];
       return dataSearch.map((search) => Post.fromJson(search)).toList();
     }
-    if(statusCode == 9994){
+    if (statusCode == 9994) {
       return [];
     }
     return [];
@@ -37,25 +37,25 @@ class SearchService {
       List<dynamic> dataSearch = data["data"];
       return dataSearch.map((search) => Friend.fromJson(search)).toList();
     }
-    if(statusCode == 9994){
+    if (statusCode == 9994) {
       return [];
     }
     return [];
   }
 
-  Future<bool> deleteSearchById(String id) async{
-    dynamic data  = await searchRepository.deleteSearchById(id);
+  Future<bool> deleteSearchById(String id) async {
+    dynamic data = await searchRepository.deleteSearchById(id);
     var statusCode = data["code"];
-    if(statusCode == 1000){
+    if (statusCode == 1000) {
       return true;
     }
     return false;
   }
 
-  Future<bool> deleteSearchAll() async{
-    dynamic data  = await searchRepository.deleteSearchAll();
+  Future<bool> deleteSearchAll() async {
+    dynamic data = await searchRepository.deleteSearchAll();
     var statusCode = data["code"];
-    if(statusCode == 1000){
+    if (statusCode == 1000) {
       return true;
     }
     return false;

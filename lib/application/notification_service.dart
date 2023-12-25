@@ -4,10 +4,6 @@ import 'package:flutter_application/domain/notification.dart';
 class NotificationService {
   final NotificationRepository repository = new NotificationRepositoryImpl();
 
-  // PostService() {
-  //   repository = new NotificationRepositoryImpl();
-  // }
-
   Future<List<Noti>> getNotifications(int index, int count) async {
     dynamic body = {
       "index": index.toString(),

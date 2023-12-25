@@ -41,8 +41,6 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    var id = json['id'] ?? '';
-
     return Post(
       id: json['id'] ?? '',
       name: json['name'] ?? '',

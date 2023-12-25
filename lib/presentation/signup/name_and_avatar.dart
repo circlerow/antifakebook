@@ -1,11 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/domain/change_info_after_signup.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../application/auth_service.dart';
 import '../../data/auth_repository.dart';
@@ -26,9 +23,6 @@ class _NameAndAvatarScreenState extends State<NameAndAvatarScreen> {
       AuthService(authRepository: AuthRepositoryImpl());
   bool _loading = false;
   String? _validateName(String value) {
-    SharedPreferences.getInstance().then((prefs) {
-      String email = prefs.getString('email') ?? '';
-    });
     if (value.isEmpty) {
       return 'Vui lòng nhập mật khẩu';
     }

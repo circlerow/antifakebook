@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, file_names, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/user_service.dart';
@@ -9,11 +7,7 @@ import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:flutter_application/presentation/friend/FriendList.dart';
 import 'package:flutter_application/presentation/home/home.dart';
-import 'package:flutter_application/tabs/home_tab.dart';
-import 'package:flutter_application/tabs/profile_tab.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../home/home.dart';
 
 class FriendInfo extends StatefulWidget {
   final String friendId;

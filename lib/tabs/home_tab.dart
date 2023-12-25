@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/application/post_service.dart';
 import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
-import 'package:flutter_application/widgets/write_something_widget.dart';
-import 'package:flutter_application/widgets/separator_widget.dart';
 import 'package:flutter_application/widgets/post_widget.dart';
+import 'package:flutter_application/widgets/separator_widget.dart';
+import 'package:flutter_application/widgets/write_something_widget.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -32,7 +32,8 @@ class HomeTabPage extends State<HomeTab> {
         isLoading = true;
       });
 
-      PostService postService = PostService(postRepository: PostRepositoryImpl());
+      PostService postService =
+          PostService(postRepository: PostRepositoryImpl());
 
       List<Post> fetchedPosts = await postService.getListPost({
         "user_id": "",
