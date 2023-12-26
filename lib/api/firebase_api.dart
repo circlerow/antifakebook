@@ -17,7 +17,9 @@ class FirebaseAPI {
         new SettingService(settingRepository: new SettingRepositoryImpl());
 
     FirebaseMessaging.onMessage.listen((message) {
-      print('Got a message whilst in the foreground!');
+      print('Got a message whilst in the foreground! ============== ');
+      print('Got a message whilst in the foreground! ============== ');
+      print('Got a message whilst in the foreground! ============== ');
       print('Message data: ${message.notification!.title.toString()}');
 
       Noti noti = Noti.fromJson(message.data);

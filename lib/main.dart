@@ -6,7 +6,8 @@ import 'package:flutter_application/presentation/splash/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+      name: 'nhom6', options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAPI().initNotifications();
   runApp(const MyApp());
 }
