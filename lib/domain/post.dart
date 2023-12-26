@@ -52,7 +52,7 @@ class Post {
       described: json['described'] ?? '',
       created: json['created'] ?? '',
       feel: json['feel'] ?? '',
-      commentMark: json['comment_mark'] ?? '',
+      commentMark: json['comment_mark'] ?? '0',
       isFelt: json['is_felt'] ?? '',
       isBlocked: json['is_blocked'] ?? '',
       canEdit: json['can_edit'] ?? '',

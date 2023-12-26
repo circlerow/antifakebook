@@ -67,4 +67,11 @@ class PostService {
     List<dynamic> dataFeel = data["data"];
     return dataFeel.map((dataFeel) => FeelData.fromJson(dataFeel)).toList();
   }
+
+  Future<Post> getPost(String id) async {
+    dynamic body = {"id": id};
+
+    dynamic data = await postRepository.getPost(body);
+    return Post.fromJson(data['data']);
+  }
 }

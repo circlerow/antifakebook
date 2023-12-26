@@ -50,6 +50,7 @@ class _CreatePostState extends State<CreatePost> {
     setState(() {
       user = fetchedUser;
       coin = coinPrefs;
+      print("SET USER " + user.toString());
     });
   }
 
