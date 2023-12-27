@@ -1,5 +1,8 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -37,17 +40,6 @@ class UserRepositoryImpl implements UserRepository {
       String country,
       File cover,
       String link) async {
-    dynamic body = {
-      "username": username,
-      "description": description,
-      "avatar": avatar,
-      "address": address,
-      "city": city,
-      "country": country,
-      "cover": cover,
-      "link": "khanh",
-    };
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     var request = http.MultipartRequest(
@@ -84,30 +76,22 @@ class UserRepositoryImpl implements UserRepository {
     else
       request.fields['link'] = "";
 
-    print("avatar path = " + avatar.path);
     request.files.add(await http.MultipartFile.fromPath('avatar', avatar.path,
         contentType: MediaType("image", getExtensionFromUrl(avatar.path))));
 
-    print("cover path = " + cover.path);
     request.files.add(await http.MultipartFile.fromPath(
         'cover_image', cover.path,
         contentType: MediaType("image", getExtensionFromUrl(cover.path))));
 
     // Gửi request và nhận response
     var response = await request.send();
-    var resdata = await http.Response.fromStream(response);
-    Map<String, dynamic> data = json.decode(resdata.body);
-    print(" Code = " + data['code']);
-    print(" Message = " + data['message']);
 
     if (response.statusCode == 200) {
       // Xử lý dữ liệu nhận được
       var responseData = await response.stream.bytesToString();
       return responseData;
     } else {
-      //var responseData = await response.stream.bytesToString();
-
-      //throw Exception('Failed to update user info');
+      //
     }
   }
 

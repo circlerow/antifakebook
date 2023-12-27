@@ -1,7 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter_application/shared/request.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class SearchRepository {
   Future<dynamic> getSavedSearch();
@@ -36,7 +36,6 @@ class SearchRepositoryImpl implements SearchRepository {
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }
-
 
   @override
   Future<dynamic> deleteSearchById(String id) async {

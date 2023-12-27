@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application/application/friend_service.dart';
 import 'package:flutter_application/application/post_service.dart';
-import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/controller/profileController.dart';
 import 'package:flutter_application/data/friend_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
-import 'package:flutter_application/data/user_repository.dart';
 import 'package:flutter_application/domain/friend.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/domain/user.dart';
@@ -15,10 +14,8 @@ import 'package:flutter_application/presentation/friend/FriendList.dart';
 import 'package:flutter_application/presentation/profile/option_profile.dart';
 import 'package:flutter_application/widgets/post_widget.dart';
 import 'package:flutter_application/widgets/separator_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   late UserController userCtrl;
@@ -30,6 +27,7 @@ class Profile extends StatefulWidget {
 
 class ProfileTab extends State<Profile> {
   late User user;
+  late int coin;
   late List<Friend> friends;
   late String total;
   late Future<void> _dataFuture;
@@ -41,16 +39,12 @@ class ProfileTab extends State<Profile> {
 
   @override
   void initState() {
-    print(" RUN");
-    print(" RUN");
-    print(" RUN");
     _dataFuture = fetchData();
     super.initState();
   }
 
   Future<void> fetchData() async {
     PostService postService = PostService(postRepository: PostRepositoryImpl());
-    UserService userService = UserService(userRepository: UserRepositoryImpl());
 
     FriendService friendService =
         FriendService(friendRepository: FriendRepositoryImpl());
@@ -59,6 +53,7 @@ class ProfileTab extends State<Profile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('user_id')!;
     User fetchedUser = await UserController.getUser();
+    int coinPrefs = prefs.getInt('coin')!;
     furures.add(postService.getListPost({
       "user_id": userId,
       "in_campaign": "1",
@@ -74,11 +69,11 @@ class ProfileTab extends State<Profile> {
     List<dynamic> result = await Future.wait(furures);
     List<Post> fetchedPosts = result[0];
     dynamic listFriend = result[1];
-    print(" Total " + fetchedPosts.length.toString() + " Posts");
     setState(() async {
       friends = listFriend["friends"];
       total = listFriend["total"];
       user = fetchedUser;
+      coin = coinPrefs;
 
       selectedAvatar = File(UserController.fileAvatar);
 
@@ -272,7 +267,7 @@ class ProfileTab extends State<Profile> {
                               SizedBox(
                                   width: 5.0), // Khoảng cách giữa icon và text
                               Text(
-                                '${user.coins} coin',
+                                '${coin} coin',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 1, 101, 255),
                                   fontWeight: FontWeight.bold,
@@ -378,15 +373,13 @@ class ProfileTab extends State<Profile> {
               SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () async {
-                  final result = await Navigator.push(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OptionProfile(
                               user: user,
                             )),
                   );
-                  //  print("Result = " + result);
-                  // if (result != null && result == true) {
                   setState(() {
                     user = UserController.user;
                     selectedAvatar = File(UserController.fileAvatar);
@@ -394,7 +387,6 @@ class ProfileTab extends State<Profile> {
                     selectedBackGr = File(UserController.fileBackGr);
                     _backGr = File(UserController.fileBackGr).readAsBytesSync();
                   });
-                  //  }
                 },
                 child: Container(
                   height: 40.0,

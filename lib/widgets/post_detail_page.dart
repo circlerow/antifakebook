@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/application/comment_service.dart';
-import 'package:flutter_application/data/comment_repository.dart';
-import 'package:flutter_application/domain/comment.dart';
 import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/data/comment_repository.dart';
 import 'package:flutter_application/data/post_repository.dart';
+import 'package:flutter_application/domain/comment.dart';
 import 'package:flutter_application/domain/feel.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
@@ -13,6 +13,8 @@ import 'package:flutter_application/widgets/post/comment_widget.dart';
 import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../presentation/post/edit_post.dart';
 
 class PostDetailsPage extends StatefulWidget {
   final Post post;
@@ -29,22 +31,21 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   GlobalKey<CommentWidgetState> commentKey = GlobalKey<CommentWidgetState>();
 
   late CommentService service;
-  bool _isChanged = false;
   bool _comment = false;
   String name = "";
   String id = "";
   TextEditingController _textEditingController = TextEditingController();
   late FocusNode _focusNode = FocusNode();
   late Widget commentWidget = Container();
+  final PostService postService =
+      PostService(postRepository: PostRepositoryImpl());
   void _updateState(
     bool value,
     String nameUsser,
     String idMark,
   ) {
     setState(() {
-      _isChanged = value;
       _comment = value;
-      print("Name = " + nameUsser);
       name = nameUsser;
       id = idMark;
     });
@@ -58,7 +59,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   }
 
   Future<void> getComments() async {
-    print("ID = " + widget.post.id);
     List<Comment> fetchedComments =
         await service.getMarkComment(int.parse(widget.post.id), 10);
     widget.post.comments = fetchedComments;
@@ -136,32 +136,48 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       Spacer(), // Để tạo khoảng trống giữa Column và PopupMenuButton
                       PopupMenuButton(
                         itemBuilder: (BuildContext context) {
-                          return [
-                            PopupMenuItem(
-                              child: Text('Chỉnh sửa bài'),
-                              value: 'edit',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Xóa bài'),
-                              value: 'delete',
-                            ),
-                          ];
+                          if (widget.post.canEdit == '1') {
+                            return [
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: Text('Chỉnh sửa bài'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Xóa bài'),
+                              ),
+                            ];
+                          } else {
+                            return [
+                              const PopupMenuItem(
+                                value: 'report',
+                                child: Text('Báo cáo'),
+                              ),
+                            ];
+                          }
                         },
                         onSelected: (value) {
                           if (value == 'edit') {
-                            // Xử lý sự kiện chỉnh sửa bài
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditPost(post: widget.post),
+                              ),
+                            );
                           } else if (value == 'delete') {
-                            // Xử lý sự kiện xóa bài
-                          }
+                            postService.deletePost(widget.post.id);
+                          } else if (value == 'report') {}
                         },
-                        icon: Icon(Icons.more_vert),
+                        icon: const Icon(Icons.more_vert),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20.0),
                 Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 10),
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 10.0, left: 20),
                   child: RichText(
                     textAlign: TextAlign.start,
                     text: TextSpan(
@@ -224,7 +240,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                         )
                       : SizedBox.shrink(),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 Container(
                   margin: EdgeInsets.all(16),
                   child: Row(
@@ -324,7 +340,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                     IconButton(
                       onPressed: () async {
                         String comment = _textEditingController.text;
-                        print('Nội dung bình luận: $comment');
                         _textEditingController.clear();
                         _focusNode.unfocus();
 

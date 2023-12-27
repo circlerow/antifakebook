@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_application/application/user_service.dart';
 import 'package:flutter_application/data/user_repository.dart';
-import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/domain/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
