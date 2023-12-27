@@ -15,6 +15,7 @@ abstract class PostRepository {
   Future<dynamic> getListFeels(dynamic body);
   Future<dynamic> getListVideo(dynamic body);
   Future<dynamic> getPost(dynamic body);
+  Future<dynamic> reportPost(dynamic body);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -102,6 +103,14 @@ class PostRepositoryImpl implements PostRepository {
   Future<dynamic> getPost(dynamic body) async {
     final http.Response response =
         await request('/get_post', 'POST', isToken: true, body: body);
+    Map<String, dynamic> data = json.decode(response.body);
+    return data;
+  }
+
+  @override
+  Future<dynamic> reportPost(dynamic body) async {
+    final http.Response response =
+        await request('/report_post', 'POST', isToken: true, body: body);
     Map<String, dynamic> data = json.decode(response.body);
     return data;
   }

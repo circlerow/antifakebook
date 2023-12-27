@@ -28,10 +28,12 @@ class _FriendInfoState extends State<FriendInfo> {
   late Future<void> _dataFuture;
   late List<Friend> friends;
   late String total;
+  late bool isLoading;
 
   @override
   void initState() {
     super.initState();
+    isLoading = false;
     _dataFuture = fetchData();
   }
 
@@ -127,23 +129,35 @@ class _FriendInfoState extends State<FriendInfo> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
-                            height: 40.0,
-                            width:
-                                ((MediaQuery.of(context).size.width - 80) / 2),
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(5.0)),
-                            child: Center(
-                              child: GestureDetector(
-                                  onTap: () async {
-                                    _handleIsFriend(isFriends);
-                                  },
-                                  child: Text(_convertIsFriend(isFriends),
+                          height: 40.0,
+                          width: ((MediaQuery.of(context).size.width - 80) / 2),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () async {
+                                // Chỉ gọi hàm khi không có loading
+                                if (!isLoading) {
+                                  _handleIsFriend(isFriends);
+                                }
+                              },
+                              child: isLoading
+                                  ? CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    )// Hiển thị loading khi đang xử lý
+                                  : Text(
+                                      _convertIsFriend(isFriends),
                                       style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0))),
-                            )),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
                         Container(
                             height: 40.0,
                             width:
@@ -253,7 +267,13 @@ class _FriendInfoState extends State<FriendInfo> {
     return "";
   }
 
-  void _handleIsFriend(String isFriend) async {
+void _handleIsFriend(String isFriend) async {
+  try {
+    // Bắt đầu loading
+    setState(() {
+      isLoading = true;
+    });
+
     switch (isFriend) {
       case "0":
         await _friendService.setRequestFriend(friend.id);
@@ -274,7 +294,13 @@ class _FriendInfoState extends State<FriendInfo> {
         });
         break;
     }
+  } finally {
+    // Kết thúc loading dù có lỗi hay không
+    setState(() {
+      isLoading = false;
+    });
   }
+}
 
   Widget buildErrorWidget(String error) {
     // Giao diện khi có lỗi

@@ -5,6 +5,7 @@ import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/post_detail_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -132,7 +133,9 @@ class _PostWidgetState extends State<PostWidget> {
                     );
                   } else if (value == 'delete') {
                     postService.deletePost(widget.post.id);
-                  } else if (value == 'report') {}
+                  } else if (value == 'report') {
+                    _showPopup(context);
+                  }
                 },
                 icon: const Icon(Icons.more_vert),
               )
@@ -306,6 +309,80 @@ class _PostWidgetState extends State<PostWidget> {
       ),
     );
   }
+
+  Widget _buildReportOption(String title, String subtitle, BuildContext context) {
+  return ListTile(
+    title: Text(title),
+    subtitle: Text(subtitle),
+    onTap: () async {
+      bool res = await postService.reportPost({"id": widget.post.id, "subject": title, "details": subtitle});
+      if (res) {
+                Fluttertoast.showToast(
+                  msg: "Báo cáo thành công",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Báo cáo không thành công",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              }
+      Navigator.pop(context); // Đóng dialog sau khi chọn
+    },
+  );
+  }
+
+  void _showPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Báo cáo bài viết',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        insetPadding: EdgeInsets.only(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  top: MediaQuery.of(context).size.height / 3),
+        content: Container(
+          height: MediaQuery.of(context).size.height / 3 * 2,
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildReportOption('Spam', 'Nội dung không phù hợp', context),
+              _buildReportOption(
+                  'Bạo lực hoặc kích động', 'Bài viết chứa hình ảnh hoặc nội dung bạo lực', context),
+              _buildReportOption('Gây rối hoặc làm phiền', 'Bài viết gây rối hoặc làm phiền người đọc', context),
+              _buildReportOption('Thông tin giả mạo', 'Bài viết chứa thông tin giả mạo hoặc đánh lừa', context),
+              _buildReportOption('Quấy rối', 'Bài viết tạo cảm giác quấy rối hoặc đe dọa', context),
+              _buildReportOption('Nội dung không phù hợp', 'Bài viết chứa nội dung không phù hợp', context),
+              // Thêm các tùy chọn báo cáo khác tại đây
+            ],
+          ),
+        ),
+        ),
+      );
+    },
+  );
+}
 
   String formatTimeDifference(String createdString) {
     DateTime createdAt = DateTime.parse(createdString);
@@ -503,3 +580,5 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 }
+
+
