@@ -5,6 +5,7 @@ import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/post_detail_page.dart';
+import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -125,12 +126,11 @@ class _PostWidgetState extends State<PostWidget> {
                   if (value == 'edit') {
                     Navigator.pop(context);
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditPost(post: widget.post),
-                        ),
-                      );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditPost(post: widget.post),
+                      ),
+                    );
                   } else if (value == 'delete') {
                     // Xử lý sự kiện xóa bài
                     postService.deletePost(widget.post.id);
@@ -156,40 +156,67 @@ class _PostWidgetState extends State<PostWidget> {
           const SizedBox(height: 10.0),
           SizedBox(
             width: double.infinity,
-            child: widget.post.images.isNotEmpty
-                ? GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Số lượng ảnh trên một hàng
-                      mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
-                      crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
-                      childAspectRatio:
-                          1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
-                    ),
-                    itemCount: widget.post.images.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ImageDetailPage(
-                                imageUrls: widget.post.images,
-                                initialIndex: index,
+            child: Column(
+              children: [
+                if (widget.post.video != null)
+                  Container(
+                      width: double.infinity,
+                      child: VideoPlayerWidget(url: widget.post.video.url)),
+                SizedBox(height: 5),
+                if (widget.post.images.isNotEmpty)
+                  widget.post.images.length == 1
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ImageDetailPage(
+                                  imageUrls: widget.post.images,
+                                  initialIndex: 0,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: Image.network(
-                          widget.post.images[index].url,
-                          fit: BoxFit.cover,
+                            );
+                          },
+                          child: Image.network(
+                            widget.post.images[0].url,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // Số lượng ảnh trên một hàng
+                            mainAxisSpacing: 8.0, // Khoảng cách giữa các hàng
+                            crossAxisSpacing: 8.0, // Khoảng cách giữa các cột
+                            childAspectRatio:
+                                1.0, // Tỉ lệ giữa chiều rộng và chiều dài của ảnh
+                          ),
+                          itemCount: widget.post.images.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ImageDetailPage(
+                                      imageUrls: widget.post.images,
+                                      initialIndex: index,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Image.network(
+                                widget.post.images[index].url,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  )
-                : const SizedBox.shrink(),
+              ],
+            ),
           ),
           const SizedBox(height: 10.0),
           Row(

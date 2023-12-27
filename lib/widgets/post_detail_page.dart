@@ -10,6 +10,7 @@ import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/like_row_widget.dart';
 import 'package:flutter_application/widgets/post/comment_widget.dart';
+import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -170,6 +171,15 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                           fontSize: 16.0,
                         )),
                   ),
+                ),
+                Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.all(16),
+                    child: VideoPlayerWidget(url: widget.post.video.url)),
+                Divider(
+                  color: Colors.grey,
+                  height: 20.0,
+                  // thickness: 5.0,
                 ),
                 Container(
                   width: double.infinity,
