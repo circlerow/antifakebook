@@ -6,7 +6,9 @@ import 'package:flutter_application/domain/post.dart';
 import 'package:flutter_application/widgets/image_detail_page.dart';
 import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:flutter_application/widgets/video/videoWidget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../presentation/friend/FriendInfo.dart';
@@ -77,7 +79,8 @@ class _PostWidgetState extends State<PostWidget> {
                           ),
                         ),
                         if (widget.post.state != '' &&
-                            widget.post.state.length < 20)
+                            widget.post.state.length < 20 &&
+                            widget.post.author.name.length < 12)
                           TextSpan(
                             text: " - Đang cảm thấy ${widget.post.state}",
                             style: const TextStyle(
@@ -132,20 +135,31 @@ class _PostWidgetState extends State<PostWidget> {
                     );
                   } else if (value == 'delete') {
                     postService.deletePost(widget.post.id);
-                  } else if (value == 'report') {}
+                  } else if (value == 'report') {
+                    _showPopup(context);
+                  }
                 },
                 icon: const Icon(Icons.more_vert),
               )
             ],
           ),
           const SizedBox(height: 10.0),
-          RichText(
-            textAlign: TextAlign.left,
-            text: TextSpan(
-              children: convertUrlsToTextSpans(widget.post.described),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 16.0,
+          GestureDetector(
+            onTapUp: (TapUpDetails details) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetailsPage(post: widget.post),
+                ),
+              );
+            },
+            child: RichText(
+              text: TextSpan(
+                children: convertUrlsToTextSpans(widget.post.described),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ),
@@ -283,7 +297,6 @@ class _PostWidgetState extends State<PostWidget> {
                       _showReactionMenu(context);
                     },
                     feedback: Container(
-                      // Provide a simple feedback appearance, you can customize this
                       width: 50,
                       height: 50,
                       color: Colors.blue,
@@ -357,6 +370,80 @@ class _PostWidgetState extends State<PostWidget> {
       ),
     );
   }
+
+  Widget _buildReportOption(String title, String subtitle, BuildContext context) {
+  return ListTile(
+    title: Text(title),
+    subtitle: Text(subtitle),
+    onTap: () async {
+      bool res = await postService.reportPost({"id": widget.post.id, "subject": title, "details": subtitle});
+      if (res) {
+                Fluttertoast.showToast(
+                  msg: "Báo cáo thành công",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Báo cáo không thành công",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              }
+      Navigator.pop(context); // Đóng dialog sau khi chọn
+    },
+  );
+  }
+
+  void _showPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Báo cáo bài viết',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        insetPadding: EdgeInsets.only(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  top: MediaQuery.of(context).size.height / 3),
+        content: Container(
+          height: MediaQuery.of(context).size.height / 3 * 2,
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildReportOption('Spam', 'Nội dung không phù hợp', context),
+              _buildReportOption(
+                  'Bạo lực hoặc kích động', 'Bài viết chứa hình ảnh hoặc nội dung bạo lực', context),
+              _buildReportOption('Gây rối hoặc làm phiền', 'Bài viết gây rối hoặc làm phiền người đọc', context),
+              _buildReportOption('Thông tin giả mạo', 'Bài viết chứa thông tin giả mạo hoặc đánh lừa', context),
+              _buildReportOption('Quấy rối', 'Bài viết tạo cảm giác quấy rối hoặc đe dọa', context),
+              _buildReportOption('Nội dung không phù hợp', 'Bài viết chứa nội dung không phù hợp', context),
+              // Thêm các tùy chọn báo cáo khác tại đây
+            ],
+          ),
+        ),
+        ),
+      );
+    },
+  );
+}
 
   String formatTimeDifference(String createdString) {
     DateTime createdAt = DateTime.parse(createdString);
@@ -485,31 +572,47 @@ class _PostWidgetState extends State<PostWidget> {
     final Offset buttonPosition = buttonBox.localToGlobal(Offset.zero);
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: buttonPosition.dy - 60.0,
-        left: buttonPosition.dx - 20.0,
-        child: Material(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildMenuItem(
-                    Image.asset('assets/liked.png', width: 23, height: 23),
-                    '1'),
-                _buildMenuItem(
-                    Image.asset('assets/dislike.png', width: 23, height: 23),
-                    '0'),
-              ],
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              // Đóng popup khi chạm vào bên ngoài
+              _overlayEntry!.remove();
+              _overlayEntry = null;
+            },
+            child: Container(
+              color: Colors
+                  .transparent, // Tạo một lớp nền trong suốt để lắng nghe sự kiện onTap
             ),
           ),
-        ),
+          Positioned(
+            top: buttonPosition.dy - 60.0,
+            left: buttonPosition.dx - 20.0,
+            child: Material(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildMenuItem(
+                        Image.asset('assets/liked.png', width: 23, height: 23),
+                        '1'),
+                    _buildMenuItem(
+                        Image.asset('assets/dislike.png',
+                            width: 23, height: 23),
+                        '0'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -538,3 +641,5 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 }
+
+

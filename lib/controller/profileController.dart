@@ -25,6 +25,7 @@ class UserController {
     String userId = prefs.getString('user_id')!;
     User fetchedUser = await userService.getUserInfo(userId);
     user = fetchedUser;
+    prefs.setInt('coin', int.parse(fetchedUser.coins));
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     String extensionAvatar = getExtensionFromUrl(fetchedUser.avatar);

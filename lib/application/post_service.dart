@@ -51,7 +51,10 @@ class PostService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setInt('coin', int.parse(data['coins']));
     }
-    return data;
+    if(data['data'] == null) {
+      return false;
+    }
+    return true;
   }
 
   Future<bool> deleteFell(String id) async {
@@ -66,5 +69,18 @@ class PostService {
     dynamic data = await postRepository.getListFeels(body);
     List<dynamic> dataFeel = data["data"];
     return dataFeel.map((dataFeel) => FeelData.fromJson(dataFeel)).toList();
+  }
+
+  Future<Post> getPost(String id) async {
+    dynamic body = {"id": id};
+
+    dynamic data = await postRepository.getPost(body);
+    return Post.fromJson(data['data']);
+  }
+
+  Future<bool> reportPost(dynamic body) async {
+    dynamic res = await postRepository.reportPost(body);
+    if (res['code'] == "1000") return true;
+    return false;
   }
 }

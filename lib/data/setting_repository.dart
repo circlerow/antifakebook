@@ -66,6 +66,9 @@ class SettingRepositoryImpl implements SettingRepository {
 
   Future<void> setDevToken(String token) async {
     var body = {"devtype": "1", "devtoken": token};
-    await request('/set_devtoken', 'POST', isToken: true, body: body);
+    final http.Response response =
+        await request('/set_devtoken', 'POST', isToken: true, body: body);
+
+    Map<String, dynamic> data = json.decode(response.body);
   }
 }

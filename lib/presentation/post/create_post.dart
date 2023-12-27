@@ -139,14 +139,22 @@ class _CreatePostState extends State<CreatePost> {
         actions: [
           InkResponse(
             onTap: () {
-              _createPost();
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
+              if (_postTextController.text.trim().isNotEmpty) {
+                _createPost();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                  (route) => false,
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Bài viết không được để trống'),
+                  ),
+                );
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(12.0),
@@ -400,7 +408,6 @@ class _CreatePostState extends State<CreatePost> {
 
   Future<void> _createPost() async {
     String described = _postTextController.text;
-
     if (coin < 10) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

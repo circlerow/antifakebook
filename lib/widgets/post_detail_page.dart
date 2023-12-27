@@ -34,6 +34,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   bool _comment = false;
   String name = "";
   String id = "";
+  late int countComment = int.parse(widget.post.commentMark);
   TextEditingController _textEditingController = TextEditingController();
   late FocusNode _focusNode = FocusNode();
   late Widget commentWidget = Container();
@@ -260,7 +261,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                       ),
                       Row(
                         children: <Widget>[
-                          Text('${widget.post.commentMark} comments  •  '),
+                          Text('${countComment} comments  •  '),
                         ],
                       ),
                     ],
@@ -348,10 +349,9 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                               .addMark(service, widget.post.id, comment);
                           commentKey.currentState!
                               .updateState(widget.post.comments);
-                          //  commentWidget = Container();
+
                           setState(() async {
-                            // commentKey.currentState!
-                            //     .updateState(widget.post.comments);
+                            countComment++;
                             _comment = false;
                           });
                         } else {
@@ -361,6 +361,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                           commentKey.currentState!
                               .updateState(widget.post.comments);
                           setState(() {
+                            countComment++;
                             // commentKey.currentState!
                             //     .updateState(widget.post.comments);
                             _comment = false;
@@ -506,11 +507,11 @@ void _showDialogLikeDetail(BuildContext context, String id) {
                                       padding: EdgeInsets.all(
                                           4.0), // Khoảng cách giữa biểu tượng và viền nền
                                       child: Icon(
-                                        feel.feel.type == "0"
+                                        feel.feel.type != "0"
                                             ? FontAwesomeIcons.thumbsUp
-                                            : FontAwesomeIcons.heart,
+                                            : FontAwesomeIcons.thumbsDown,
                                         size: 15.0,
-                                        color: feel.feel.type == "0"
+                                        color: feel.feel.type != "0"
                                             ? Colors.blue
                                             : Colors.red,
                                       ),

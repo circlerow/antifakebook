@@ -62,8 +62,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               ),
             ),
             onVisibilityChanged: (VisibilityInfo info) {
-              debugPrint(
-                  "ket: ${info.key} has ${info.visibleFraction} of my widget is visible");
               if (info.visibleFraction > 0.9) {
                 if (inited == false) {
                   _controller.initialize();

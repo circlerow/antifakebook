@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/application/post_service.dart';
+import 'package:flutter_application/application/user_service.dart';
+import 'package:flutter_application/data/post_repository.dart';
 import 'package:flutter_application/domain/notification.dart';
+import 'package:flutter_application/domain/post.dart';
+import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:intl/intl.dart';
 
 class NotificationWidget extends StatelessWidget {
@@ -344,7 +349,20 @@ class NotificationWidget extends StatelessWidget {
     return Container(
         color: Colors.transparent,
         child: InkWell(
-            onTap: () {},
+            onTap: () async {
+              if (noti.post != null) {
+                PostService postService =
+                    new PostService(postRepository: new PostRepositoryImpl());
+                Post postx = await postService.getPost(noti.post!.id);
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PostDetailsPage(
+                            post: postx,
+                          )),
+                );
+              }
+            },
             child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
