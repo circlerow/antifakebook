@@ -70,6 +70,5 @@ class SettingRepositoryImpl implements SettingRepository {
         await request('/set_devtoken', 'POST', isToken: true, body: body);
 
     Map<String, dynamic> data = json.decode(response.body);
-    print(" CODE send devToken = " + data['code']);
   }
 }

@@ -354,7 +354,6 @@ class NotificationWidget extends StatelessWidget {
                 PostService postService =
                     new PostService(postRepository: new PostRepositoryImpl());
                 Post postx = await postService.getPost(noti.post!.id);
-                print(" id = " + postx.id);
                 await Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -29,7 +29,6 @@ class NotificationController {
   Future<void> _initialize() async {
     notifications = await notificationService.getNotifications(1, 10);
     _isInitialized = true;
-    print("Initialization complete");
   }
 
   void addNotification(Noti noti) {

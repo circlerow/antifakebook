@@ -497,11 +497,11 @@ void _showDialogLikeDetail(BuildContext context, String id) {
                                       padding: EdgeInsets.all(
                                           4.0), // Khoảng cách giữa biểu tượng và viền nền
                                       child: Icon(
-                                        feel.feel.type == "0"
+                                        feel.feel.type != "0"
                                             ? FontAwesomeIcons.thumbsUp
-                                            : FontAwesomeIcons.heart,
+                                            : FontAwesomeIcons.thumbsDown,
                                         size: 15.0,
-                                        color: feel.feel.type == "0"
+                                        color: feel.feel.type != "0"
                                             ? Colors.blue
                                             : Colors.red,
                                       ),

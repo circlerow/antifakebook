@@ -297,8 +297,6 @@ class _LoginPageState extends State<LoginPage> {
                                   if (_formKey.currentState!.validate()) {
                                     String userName = userNameController.text;
                                     String passWord = passWordController.text;
-                                    print("userName: $userName");
-                                    print("passWord: $passWord");
 
                                     bool isLogin = await authService.login(
                                         UserLogin(

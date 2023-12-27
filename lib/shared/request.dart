@@ -17,7 +17,6 @@ Future<http.Response> request(String route, String method,
     // 'Content-Type': 'application/json',
     'Authorization': isToken ? 'Bearer $token' : '',
   };
-  print("token  = " + token!);
   switch (method) {
     case 'GET':
       response = await http.get(Uri.parse('$baseUrl$route'), headers: headers);

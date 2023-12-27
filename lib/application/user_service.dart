@@ -10,8 +10,6 @@ class UserService {
 
   Future<User> getUserInfo(String userId) async {
     final data = await userRepository.getUserInfo(userId);
-    print(" CODE = " + data['code']);
-    print(" CODE = " + data['data'].toString());
     dynamic user = data['data'];
     return User.fromJson(user);
   }
