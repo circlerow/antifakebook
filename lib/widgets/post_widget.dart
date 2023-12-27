@@ -76,7 +76,8 @@ class _PostWidgetState extends State<PostWidget> {
                             color: Colors.black,
                           ),
                         ),
-                        if (widget.post.state != '' && widget.post.state.length < 20)
+                        if (widget.post.state != '' &&
+                            widget.post.state.length < 20)
                           TextSpan(
                             text: " - Đang cảm thấy ${widget.post.state}",
                             style: const TextStyle(
@@ -131,8 +132,7 @@ class _PostWidgetState extends State<PostWidget> {
                     );
                   } else if (value == 'delete') {
                     postService.deletePost(widget.post.id);
-                  } else if (value == 'report') {
-                  }
+                  } else if (value == 'report') {}
                 },
                 icon: const Icon(Icons.more_vert),
               )
@@ -161,23 +161,37 @@ class _PostWidgetState extends State<PostWidget> {
                 SizedBox(height: 5),
                 if (widget.post.images.isNotEmpty)
                   widget.post.images.length == 1
-                      ? GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ImageDetailPage(
-                                  imageUrls: widget.post.images,
-                                  initialIndex: 0,
-                                ),
+                      ? Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ImageDetailPage(
+                                      imageUrls: widget.post.images,
+                                      initialIndex: 0,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Image.network(
+                                widget.post.images[0].url,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                },
                               ),
-                            );
-                          },
-                          child: Image.network(
-                            widget.post.images[0].url,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
+                            ),
+                          ],
                         )
                       : GridView.builder(
                           shrinkWrap: true,
@@ -204,9 +218,27 @@ class _PostWidgetState extends State<PostWidget> {
                                   ),
                                 );
                               },
-                              child: Image.network(
-                                widget.post.images[index].url,
-                                fit: BoxFit.cover,
+                              child: Stack(
+                                children: [
+                                  AspectRatio(
+                                    aspectRatio:
+                                        1.0, // Tỉ lệ giữa chiều rộng và chiều cao của ảnh
+                                    child: Image.network(
+                                      widget.post.images[index].url,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           },
