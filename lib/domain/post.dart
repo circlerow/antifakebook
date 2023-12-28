@@ -84,8 +84,10 @@ class Post {
     CommentService service,
     String id_bai_viet,
     String noi_dung,
+    int type,
   ) async {
-    List<Comment> newComments = await service.addMark(id_bai_viet, noi_dung);
+    List<Comment> newComments =
+        await service.addMark(id_bai_viet, noi_dung, type);
     this.comments = newComments;
   }
 
@@ -94,9 +96,10 @@ class Post {
     String id_bai_viet,
     String id_mark,
     String noi_dung,
+    int type,
   ) async {
     List<Comment> newComments =
-        await service.addComment(id_bai_viet, id_mark, noi_dung);
+        await service.addComment(id_bai_viet, id_mark, noi_dung, type);
     this.comments = newComments;
   }
 }

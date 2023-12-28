@@ -34,6 +34,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   bool _comment = false;
   String name = "";
   String id = "";
+  bool type = true;
   late int countComment = int.parse(widget.post.commentMark);
   TextEditingController _textEditingController = TextEditingController();
   late FocusNode _focusNode = FocusNode();
@@ -346,7 +347,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
 
                         if (_comment == false) {
                           await widget.post
-                              .addMark(service, widget.post.id, comment);
+                              .addMark(service, widget.post.id, comment, 0);
                           commentKey.currentState!
                               .updateState(widget.post.comments);
 
@@ -355,8 +356,8 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                             _comment = false;
                           });
                         } else {
-                          await widget.post
-                              .addComment(service, widget.post.id, id, comment);
+                          await widget.post.addComment(
+                              service, widget.post.id, id, comment, 0);
                           //    commentWidget = Container();
                           commentKey.currentState!
                               .updateState(widget.post.comments);
@@ -368,8 +369,44 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                           });
                         }
                       },
-                      icon: Icon(Icons.send), // Biểu tượng gửi
+                      icon: Icon(Icons.send,
+                          color: Colors.blue), // Biểu tượng gửi
                     ),
+                    IconButton(
+                      onPressed: () async {
+                        String comment = _textEditingController.text;
+                        _textEditingController.clear();
+                        _focusNode.unfocus();
+
+                        if (_comment == false) {
+                          await widget.post
+                              .addMark(service, widget.post.id, comment, 1);
+                          commentKey.currentState!
+                              .updateState(widget.post.comments);
+
+                          setState(() async {
+                            countComment++;
+                            _comment = false;
+                          });
+                        } else {
+                          await widget.post.addComment(
+                              service, widget.post.id, id, comment, 1);
+                          //    commentWidget = Container();
+                          commentKey.currentState!
+                              .updateState(widget.post.comments);
+                          setState(() {
+                            countComment++;
+                            // commentKey.currentState!
+                            //     .updateState(widget.post.comments);
+                            _comment = false;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.red,
+                      ), // Biểu tượng gửi
+                    )
                   ],
                 )
               ],

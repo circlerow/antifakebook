@@ -53,7 +53,8 @@ class CommentWidgetState extends State<CommentWidget> {
       itemCount: comments.length,
       itemBuilder: (context, index) {
         Comment comment = comments[index];
-
+        var colorx = Colors.blue[200];
+        if (comment.type == '1') colorx = Colors.red[200];
         return Container(
           child: Column(
             children: [
@@ -85,7 +86,7 @@ class CommentWidgetState extends State<CommentWidget> {
                           padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.grey[200],
+                            color: colorx,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
