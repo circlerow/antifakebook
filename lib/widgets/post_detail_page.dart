@@ -190,15 +190,17 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                         )),
                   ),
                 ),
-                Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.all(16),
-                    child: VideoPlayerWidget(url: widget.post.video!.url)),
-                Divider(
-                  color: Colors.grey,
-                  height: 20.0,
-                  // thickness: 5.0,
-                ),
+                if (widget.post.video!.url.length > 0)
+                  Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.all(16),
+                      child: VideoPlayerWidget(url: widget.post.video!.url)),
+                if (widget.post.video!.url.length > 0)
+                  Divider(
+                    color: Colors.grey,
+                    height: 20.0,
+                    // thickness: 5.0,
+                  ),
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.all(16),
@@ -242,7 +244,6 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                         )
                       : SizedBox.shrink(),
                 ),
-                SizedBox(height: 10.0),
                 Container(
                   margin: EdgeInsets.all(16),
                   child: Row(
