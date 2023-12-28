@@ -4,13 +4,15 @@ class Comment {
   final DateTime createAt;
   final Poster poster;
   final List<ChildComment> childComment;
+  final String type;
 
   Comment(
       {required this.id,
       required this.mark_content,
       required this.createAt,
       required this.poster,
-      required this.childComment});
+      required this.childComment,
+      required this.type});
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
@@ -18,6 +20,7 @@ class Comment {
       mark_content: json['mark_content'] ?? '',
       createAt: DateTime.parse(json['created'] ?? ''),
       poster: Poster.fromJson(json['poster'] ?? {}),
+      type: json['type_of_mark'] ?? '0',
       childComment: (json['comments'] as List<dynamic>?)?.map((commentJson) {
             return ChildComment.fromJson(commentJson as Map<String, dynamic>);
           }).toList() ??

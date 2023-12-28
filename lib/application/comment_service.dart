@@ -27,6 +27,7 @@ class CommentService {
   Future<List<Comment>> addMark(
     String id_bai_viet,
     String noi_dung,
+    int type,
   ) async {
     dynamic body = {
       "id": id_bai_viet,
@@ -34,7 +35,7 @@ class CommentService {
       "index": "0",
       "count": "100",
       "mark_id": "",
-      "type": "0"
+      "type": type.toString()
     };
     dynamic res = await repo.setMarkComment(body);
     List<Comment> commentList = [];
@@ -50,6 +51,7 @@ class CommentService {
     String id_bai_viet,
     String id_mark,
     String noi_dung,
+    int type,
   ) async {
     dynamic body = {
       "id": id_bai_viet,
@@ -57,7 +59,7 @@ class CommentService {
       "index": "0",
       "count": "100",
       "mark_id": id_mark,
-      "type": "1"
+      "type": type.toString()
     };
 
     dynamic res = await repo.setMarkComment(body);
