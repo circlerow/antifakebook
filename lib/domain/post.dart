@@ -7,7 +7,7 @@ class Post {
   final String id;
   final String name;
   final List<ImageInfo> images;
-  final VideoInfo video;
+  final VideoInfo? video;
   final String described;
   final String created;
   final String feel;
@@ -125,6 +125,10 @@ class VideoInfo {
 
   factory VideoInfo.fromJson(Map<String, dynamic> json) {
     return VideoInfo(url: json['url'] ?? '');
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'url': url};
   }
 }
 

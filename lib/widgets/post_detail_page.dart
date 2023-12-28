@@ -192,7 +192,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                 Container(
                     width: double.infinity,
                     margin: EdgeInsets.all(16),
-                    child: VideoPlayerWidget(url: widget.post.video.url)),
+                    child: VideoPlayerWidget(url: widget.post.video!.url)),
                 Divider(
                   color: Colors.grey,
                   height: 20.0,

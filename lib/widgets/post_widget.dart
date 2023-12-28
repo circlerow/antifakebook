@@ -8,7 +8,6 @@ import 'package:flutter_application/widgets/post_detail_page.dart';
 import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_application/widgets/video/videoWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../presentation/friend/FriendInfo.dart';
@@ -168,10 +167,10 @@ class _PostWidgetState extends State<PostWidget> {
             width: double.infinity,
             child: Column(
               children: [
-                if (widget.post.video != null)
+                if (widget.post.video!.url.length > 0)
                   Container(
                       width: double.infinity,
-                      child: VideoPlayerWidget(url: widget.post.video.url)),
+                      child: VideoPlayerWidget(url: widget.post.video!.url)),
                 SizedBox(height: 5),
                 if (widget.post.images.isNotEmpty)
                   widget.post.images.length == 1

@@ -67,7 +67,7 @@ class _VideoPostWidgetState extends State<VideoPostWidget> {
               ),
             ),
           ),
-          VideoPlayerWidget(url: widget.post.video.url),
+          VideoPlayerWidget(url: widget.post.video!.url),
           LikeShareButton(post: widget.post),
         ],
       ),
