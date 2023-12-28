@@ -633,11 +633,11 @@ class _PostWidgetState extends State<PostWidget> {
   Widget _buildMenuItem(Image iconData, String value) {
     return InkWell(
       onTap: () async {
-        await postService.feelPost(widget.post.id, value);
-        setState(() {
+           setState(() {
           isFeltKudo = value;
           if(!boolLike)countLike++;
         });
+        await postService.feelPost(widget.post.id, value);
         _overlayEntry!.remove();
         _overlayEntry = null;
       },
