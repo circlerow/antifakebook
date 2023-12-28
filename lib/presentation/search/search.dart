@@ -232,35 +232,11 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: searchSavedData.length,
+              itemCount: (searchSavedData.length / 2).ceil(),
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Row(
-                    children: [
-                      const Icon(Icons.access_time_outlined),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          searchSavedData[index].keyword,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            deleteId(searchSavedData[index].id);
-                            searchSavedData.removeAt(index);
-                          });
-                        },
-                        child: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                );
+                int dataIndex = index * 2;
+
+                return buildListTile(dataIndex);
               },
             ),
           ),
@@ -402,6 +378,36 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         const SizedBox(height: 20.0),
       ],
+    );
+  }
+
+  Widget buildListTile(int index) {
+    return ListTile(
+      title: Row(
+        children: [
+          const Icon(Icons.access_time_outlined),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              searchSavedData[index].keyword,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                deleteId(searchSavedData[index].id);
+                searchSavedData.removeAt(index);
+              });
+            },
+            child: const Icon(Icons.close),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -24,6 +24,8 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   IconData selectedReaction = FontAwesomeIcons.thumbsUp;
+  int countLike = 0;
+  bool boolLike = false;
 
   final GlobalKey _buttonKey = GlobalKey();
   OverlayEntry? _overlayEntry;
@@ -35,6 +37,8 @@ class _PostWidgetState extends State<PostWidget> {
   void initState() {
     super.initState();
     isFeltKudo = widget.post.isFelt;
+    countLike = int.parse(widget.post.feel);
+    boolLike = widget.post.isFelt == -1 ? false : true;
   }
 
   @override
@@ -270,7 +274,7 @@ class _PostWidgetState extends State<PostWidget> {
                     child: Icon(FontAwesomeIcons.thumbsUp,
                         size: 15.0, color: Colors.blue),
                   ),
-                  Text(' ${widget.post.feel}'),
+                  Text(' ${countLike}'),
                 ],
               ),
               Row(
@@ -307,11 +311,15 @@ class _PostWidgetState extends State<PostWidget> {
                         if (isFeltKudo == '1' || isFeltKudo == '0') {
                           setState(() {
                             isFeltKudo = '-1';
+                            countLike--;
+                            boolLike = false;
                           });
                           await postService.deleteFell(widget.post.id);
                         } else {
                           setState(() {
                             isFeltKudo = '1';
+                            countLike++;
+                            boolLike = true;
                           });
                           await postService.feelPost(widget.post.id, '1');
                         }
@@ -403,46 +411,50 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void _showPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text(
-          'Báo cáo bài viết',
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Báo cáo bài viết',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        insetPadding: EdgeInsets.only(
-                  bottom: 0,
-                  right: 0,
-                  left: 0,
-                  top: MediaQuery.of(context).size.height / 3),
-        content: Container(
-          height: MediaQuery.of(context).size.height / 3 * 2,
-          width: MediaQuery.of(context).size.width,
-          child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildReportOption('Spam', 'Nội dung không phù hợp', context),
-              _buildReportOption(
-                  'Bạo lực hoặc kích động', 'Bài viết chứa hình ảnh hoặc nội dung bạo lực', context),
-              _buildReportOption('Gây rối hoặc làm phiền', 'Bài viết gây rối hoặc làm phiền người đọc', context),
-              _buildReportOption('Thông tin giả mạo', 'Bài viết chứa thông tin giả mạo hoặc đánh lừa', context),
-              _buildReportOption('Quấy rối', 'Bài viết tạo cảm giác quấy rối hoặc đe dọa', context),
-              _buildReportOption('Nội dung không phù hợp', 'Bài viết chứa nội dung không phù hợp', context),
-              // Thêm các tùy chọn báo cáo khác tại đây
-            ],
+          insetPadding: EdgeInsets.only(
+              bottom: 0,
+              right: 0,
+              left: 0,
+              top: MediaQuery.of(context).size.height / 3),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 3 * 2,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildReportOption('Spam', 'Nội dung không phù hợp', context),
+                  _buildReportOption('Bạo lực hoặc kích động',
+                      'Bài viết chứa hình ảnh hoặc nội dung bạo lực', context),
+                  _buildReportOption('Gây rối hoặc làm phiền',
+                      'Bài viết gây rối hoặc làm phiền người đọc', context),
+                  _buildReportOption('Thông tin giả mạo',
+                      'Bài viết chứa thông tin giả mạo hoặc đánh lừa', context),
+                  _buildReportOption('Quấy rối',
+                      'Bài viết tạo cảm giác quấy rối hoặc đe dọa', context),
+                  _buildReportOption('Nội dung không phù hợp',
+                      'Bài viết chứa nội dung không phù hợp', context),
+                  // Thêm các tùy chọn báo cáo khác tại đây
+                ],
+              ),
+            ),
           ),
-        ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   String formatTimeDifference(String createdString) {
     DateTime createdAt = DateTime.parse(createdString);
@@ -624,6 +636,7 @@ class _PostWidgetState extends State<PostWidget> {
         await postService.feelPost(widget.post.id, value);
         setState(() {
           isFeltKudo = value;
+          if(!boolLike)countLike++;
         });
         _overlayEntry!.remove();
         _overlayEntry = null;
@@ -640,5 +653,3 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 }
-
-
